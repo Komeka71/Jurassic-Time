@@ -1,0 +1,352 @@
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import correctSound from "../assets/sounds/correct.mp3";
+import wrongSound from "../assets/sounds/wrong.mp3";
+import levelUpSound from "../assets/sounds/levelup.mp3";
+
+
+const AudioContext = createContext(null);
+
+const USERNAME = "Shreya";
+
+
+const effectSources = {
+  correct: correctSound,
+  wrong: wrongSound,
+  levelup: levelUpSound,
+};
+
+
+export function AudioProvider({ children }) {
+
+  const [musicEnabled, setMusicEnabled] =
+    useState(true);
+
+  const [effectsEnabled, setEffectsEnabled] =
+    useState(true);
+
+  const [preferencesLoaded, setPreferencesLoaded] =
+    useState(false);
+
+
+  const activeSoundsRef = useRef([]);
+
+
+  /*
+  ========================================
+  LOAD SOUND PREFERENCES FROM BACKEND
+  ========================================
+  */
+
+  useEffect(() => {
+
+    const loadSoundPreferences = async () => {
+
+      try {
+
+        const response = await fetch(
+          `/api/user/${encodeURIComponent(
+            USERNAME
+          )}`
+        );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Could not load sound preferences"
+          );
+
+        }
+
+
+        const data = await response.json();
+
+
+        const preferences =
+          data.stats?.soundPreferences;
+
+
+        if (preferences) {
+
+          if (
+            typeof preferences.music ===
+            "boolean"
+          ) {
+
+            setMusicEnabled(
+              preferences.music
+            );
+
+          }
+
+
+          if (
+            typeof preferences.effects ===
+            "boolean"
+          ) {
+
+            setEffectsEnabled(
+              preferences.effects
+            );
+
+          }
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "LOAD SOUND PREFERENCES ERROR:",
+          error
+        );
+
+      } finally {
+
+        setPreferencesLoaded(true);
+
+      }
+
+    };
+
+
+    loadSoundPreferences();
+
+  }, []);
+
+
+  /*
+  ========================================
+  PLAY SOUND EFFECT
+  ========================================
+  */
+
+  const playEffect = (
+    soundName,
+    volume = 0.7
+  ) => {
+
+    /*
+    Do not play sounds until the player's
+    saved preferences have loaded.
+    */
+
+    if (!preferencesLoaded) {
+      return;
+    }
+
+
+    if (!effectsEnabled) {
+      return;
+    }
+
+
+    const source =
+      effectSources[soundName];
+
+
+    if (!source) {
+
+      console.warn(
+        `Unknown sound effect: ${soundName}`
+      );
+
+      return;
+
+    }
+
+
+    const audio =
+      new Audio(source);
+
+
+    audio.volume =
+      Math.min(
+        Math.max(volume, 0),
+        1
+      );
+
+
+    activeSoundsRef.current.push(
+      audio
+    );
+
+
+    const removeSound = () => {
+
+      activeSoundsRef.current =
+        activeSoundsRef.current.filter(
+          (item) => item !== audio
+        );
+
+    };
+
+
+    audio.addEventListener(
+      "ended",
+      removeSound
+    );
+
+
+    audio.addEventListener(
+      "error",
+      removeSound
+    );
+
+
+    audio
+      .play()
+      .catch((error) => {
+
+        removeSound();
+
+
+        console.warn(
+          "Could not play sound:",
+          error
+        );
+
+      });
+
+  };
+
+
+  /*
+  ========================================
+  TOGGLE MUSIC
+  ========================================
+  */
+
+  const toggleMusic = () => {
+
+    setMusicEnabled(
+      (current) => !current
+    );
+
+  };
+
+
+  /*
+  ========================================
+  TOGGLE EFFECTS
+  ========================================
+  */
+
+  const toggleEffects = () => {
+
+    setEffectsEnabled(
+      (current) => !current
+    );
+
+  };
+
+
+  /*
+  ========================================
+  APPLY SOUND PREFERENCES
+  ========================================
+  */
+
+  const applySoundPreferences = (
+    preferences
+  ) => {
+
+    if (!preferences) {
+      return;
+    }
+
+
+    if (
+      typeof preferences.music ===
+      "boolean"
+    ) {
+
+      setMusicEnabled(
+        preferences.music
+      );
+
+    }
+
+
+    if (
+      typeof preferences.effects ===
+      "boolean"
+    ) {
+
+      setEffectsEnabled(
+        preferences.effects
+      );
+
+    }
+
+  };
+
+
+  /*
+  ========================================
+  CONTEXT VALUE
+  ========================================
+  */
+
+  const value = {
+
+    musicEnabled,
+
+    effectsEnabled,
+
+    preferencesLoaded,
+
+    playEffect,
+
+    toggleMusic,
+
+    toggleEffects,
+
+    setMusicEnabled,
+
+    setEffectsEnabled,
+
+    applySoundPreferences,
+
+  };
+
+
+  return (
+
+    <AudioContext.Provider
+      value={value}
+    >
+
+      {children}
+
+    </AudioContext.Provider>
+
+  );
+
+}
+
+
+export function useAudio() {
+
+  const context =
+    useContext(AudioContext);
+
+
+  if (!context) {
+
+    throw new Error(
+      "useAudio must be used inside AudioProvider"
+    );
+
+  }
+
+
+  return context;
+
+}
