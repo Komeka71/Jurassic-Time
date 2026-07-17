@@ -579,17 +579,25 @@ const [topic, setTopic] = useState("mixed");
               whileTap={{
                 scale: 0.97,
               }}
-              onClick={() =>
-                navigate("/quiz", {
-                  state: {
-                    level,
-                    levelTitle,
-                    difficulty,
-                    topic,
-                    questionCount,
-                  },
-                })
-              }
+             onClick={() => {
+  const difficultyMap = {
+    1: "easy",
+    2: "easy",
+    3: "medium",
+    4: "hard",
+    5: "boss",
+  };
+
+  navigate("/quiz", {
+    state: {
+      level,
+      levelTitle,
+      difficulty: difficultyMap[level],
+      topic: "mixed",
+      questionCount,
+    },
+  });
+}}
               className={`
                 w-full
 

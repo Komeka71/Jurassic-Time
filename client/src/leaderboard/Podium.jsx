@@ -753,9 +753,9 @@ export default function Podium({
 }) {
   const topThree = players.slice(0, 3);
 
-  if (topThree.length === 3) {
-    return null;
-  }
+if (players.length < 3) {
+  return null;
+}
 
   return (
     <section
