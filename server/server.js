@@ -3,6 +3,15 @@ require("./utils/dailyMissionReset");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+const authRoutes = require("./routes/authRoutes");
+const authUserRoutes = require("./routes/userRoutes");
+
+const {
+  notFound,
+  errorHandler,
+} = require("./middleware/errorMiddleware");
 const dailyMissionRoutes = require("./routes/dailyMission");
 /*
 ========================================
@@ -47,6 +56,7 @@ MIDDLEWARE
 ========================================
 */
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
@@ -98,6 +108,14 @@ app.use("/api/chat", (req, res, next) => {
 });
 
 app.use("/api/chat", chatRoutes);
+/*
+========================================
+AUTH
+========================================
+*/
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", authUserRoutes);
 /*
 ----------------------------------------
 USER
@@ -170,7 +188,14 @@ app.get("/", (req, res) => {
     "🦖 Jurassic Time backend is running!"
   );
 });
+/*
+========================================
+ERROR HANDLING
+========================================
+*/
 
+app.use(notFound);
+app.use(errorHandler);
 /*
 ========================================
 PORT
