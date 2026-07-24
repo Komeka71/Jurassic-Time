@@ -9,15 +9,18 @@ import DinoShop from "./pages/DinoShop";
 import Collection from "./pages/Collection";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import LandingPage from "./components/LandingPage";
+import CursorGlow from "./components/landing/CursorGlow";
+import ResearchHub from "./components/ResearchHub/ResearchHub";
+
 
 function App() {
   return (
     <BrowserRouter>
+    <CursorGlow/>
       <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
 <Route
     path="/daily"
     element={<DailyMissions />}
@@ -59,6 +62,7 @@ function App() {
   path="/profile"
   element={<Profile />}
 />
+<Route path="/research" element={<ResearchHub />} />
       </Routes>
     </BrowserRouter>
   );

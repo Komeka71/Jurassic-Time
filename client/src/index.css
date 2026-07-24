@@ -60,3 +60,22 @@ body {
     transform: scale(1);
   }
 }
+/* 
+body {
+  cursor: none;
+}
+
+a,
+button {
+  cursor: none;
+}
+html,
+body,
+#root {
+  cursor: none;
+}
+
+a,
+button {
+  cursor: none;
+} */

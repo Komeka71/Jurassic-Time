@@ -16,7 +16,7 @@ const quizRoutes = require("./routes/quiz");
 const questionRoutes = require(
   "./routes/questions"
 );
-
+const discoveryRoutes = require("./routes/discoveries");
 // const leaderboardRoutes = require(
 //   "./routes/leaderboard"
 // );
@@ -28,7 +28,8 @@ const shopRoutes = require("./routes/shop");
 const collectionRoutes = require(
   "./routes/collection"
 );
-
+const chatRoutes = require("./routes/chat");
+const path = require("path");
 /*
 ========================================
 APP
@@ -36,14 +37,20 @@ APP
 */
 
 const app = express();
-
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 /*
 ========================================
 MIDDLEWARE
 ========================================
 */
 app.use(express.json());
-
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 app.use(cors());
 app.use("/api/daily", dailyMissionRoutes);
 app.use(
@@ -85,7 +92,12 @@ LEADERBOARD
 //   "/api/leaderboard",
 //   leaderboardRoutes
 // );
+app.use("/api/chat", (req, res, next) => {
+  console.log("🔥 /api/chat reached");
+  next();
+});
 
+app.use("/api/chat", chatRoutes);
 /*
 ----------------------------------------
 USER
@@ -142,7 +154,11 @@ app.use(
   "/api/collection",
   collectionRoutes
 );
+/*********************************
+DISCOVERIES
+*********************************/
 
+app.use("/api/discoveries", discoveryRoutes);
 /*
 ========================================
 HOME ROUTE
