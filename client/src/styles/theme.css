@@ -1,0 +1,503 @@
+:root {
+  /* --- Color: unified with auth-theme.css — light sage & forest green --- */
+  --soil: #eef2ec; /* page background (was dark soil, now light sage) */
+  --soil-raised: #ffffff; /* card/panel background (was raised dark panel, now white) */
+  --bone: #1f3620; /* main text (was bone/cream, now dark forest green) */
+  --bone-dim: #6f7c6f; /* secondary text */
+  --amber: #4c7a4f; /* primary accent — matches auth-theme's active nav / eyebrow green */
+  --amber-deep: #35502f; /* darker green, used in gradients + hover states */
+  --fern: #4c7a4f; /* secondary accent — success / "done" states */
+  --clay: #d8ded6; /* borders, dividers (light, was dark clay) */
+  --gold: #d4a72c; /* kept as a deliberate warm accent for points/badges only */
+  --danger: #b3503f;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Work Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--soil);
+  background-image: radial-gradient(circle at 1px 1px, rgba(31, 54, 32, 0.05) 1px, transparent 0);
+  background-size: 22px 22px;
+  color: var(--bone);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.4em;
+}
+
+a {
+  color: var(--amber);
+}
+
+.app-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  min-height: 100vh;
+}
+
+/* --- Onboarding page background image --- */
+.onboarding-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(238, 242, 236, 0), rgba(238, 242, 236, 0)),
+    url('/images/dig-site-hero.jpeg') center/cover no-repeat;
+}
+
+/* --- Navbar --- */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px dashed var(--clay);
+}
+.navbar .brand {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--amber-deep);
+  text-decoration: none;
+}
+.navbar .brand .eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+}
+.navbar nav {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+.navbar button.linklike {
+  background: none;
+  border: none;
+  color: var(--bone-dim);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+.navbar button.linklike:hover {
+  color: var(--amber);
+}
+
+/* --- Card: "specimen tag" signature element --- */
+.field-card {
+  background: var(--soil-raised);
+  border: 1px solid var(--clay);
+  border-radius: var(--radius);
+  padding: 24px;
+  position: relative;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(31, 54, 32, 0.06);
+}
+.field-card::before {
+  content: attr(data-tag);
+  position: absolute;
+  top: -11px;
+  left: 18px;
+  background: linear-gradient(135deg, var(--amber), var(--amber-deep));
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 3px;
+}
+
+/* --- Forms (underline style, matching auth-theme) --- */
+.field {
+  margin-bottom: 18px;
+}
+.field label {
+  display: block;
+  font-size: 0.66rem;
+  color: var(--bone-dim);
+  margin-bottom: 7px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 8px 2px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--clay);
+  border-radius: 0;
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+.field input::placeholder {
+  color: #b2bcb0;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-bottom-color: var(--amber-deep);
+}
+button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+.field-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-top: 6px;
+}
+.form-error-banner {
+  background: #fbeae6;
+  border: 1px solid #e3b6ab;
+  color: #9a4634;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+button.primary {
+  background: linear-gradient(135deg, var(--amber), var(--amber-deep));
+  color: #ffffff;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 8px 18px rgba(53, 80, 47, 0.25);
+}
+button.primary:hover {
+  transform: translateY(-1px);
+}
+button.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+button.ghost {
+  background: #ffffff;
+  border: 1px solid var(--clay);
+  color: var(--bone);
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.helper-text {
+  color: var(--bone-dim);
+  font-size: 0.85rem;
+}
+
+/* --- Onboarding steps --- */
+.step-tracker {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--bone-dim);
+  flex-wrap: wrap;
+}
+.step-tracker .step {
+  padding: 4px 10px;
+  border: 1px solid var(--clay);
+  border-radius: 20px;
+}
+.step-tracker .step.active {
+  border-color: var(--amber-deep);
+  color: var(--amber-deep);
+}
+.step-tracker .step.done {
+  border-color: var(--fern);
+  color: var(--fern);
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.option-card {
+  border: 1px solid var(--clay);
+  background: var(--soil-raised);
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--bone);
+  font-family: var(--font-body);
+}
+.option-card.selected {
+  border-color: var(--amber-deep);
+  background: rgba(76, 122, 79, 0.08);
+}
+.option-card strong {
+  display: block;
+  font-family: var(--font-display);
+  margin-bottom: 2px;
+}
+
+/* --- Companion picker --- */
+.companion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.companion-card {
+  border: 1px solid var(--clay);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--soil-raised);
+}
+.companion-card.selected {
+  border-color: var(--amber-deep);
+  box-shadow: 0 0 0 1px var(--amber-deep);
+}
+.companion-emoji {
+  font-size: 2.2rem;
+  display: inline-block;
+  animation: idle-bob 2.4s ease-in-out infinite;
+}
+@keyframes idle-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.skin-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.skin-toggle button {
+  border: 1px solid var(--clay);
+  background: none;
+  color: var(--bone-dim);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+.skin-toggle button.active {
+  border-color: var(--fern);
+  color: var(--fern);
+}
+
+/* ================= PROFILE ================= */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.profile-photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 2.2rem;
+
+  background: rgba(255,255,255,.08);
+
+  border: 3px solid #72d76d;
+
+  box-shadow:
+      0 0 0 6px rgba(114,215,109,.15),
+      0 0 35px rgba(114,215,109,.45);
+
+  flex-shrink: 0;
+}
+
+.verified-badge{
+    position:absolute;
+    right:2px;
+    bottom:2px;
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    background:#4caf50;
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:.7rem;
+
+    border:2px solid #08130c;
+}
+
+/* ---------- Stats ---------- */
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin:28px 0;
+}
+
+.stat-box{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    border-radius:16px;
+
+    padding:18px;
+
+    text-align:center;
+
+    transition:.3s;
+}
+
+.stat-box:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#72d76d;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+
+}
+
+.stat-box .value{
+
+    display:block;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:#72d76d;
+
+    margin-bottom:8px;
+}
+
+.stat-box .label{
+
+    color:#d8e7d8;
+
+    text-transform:uppercase;
+
+    font-size:.72rem;
+
+    letter-spacing:.12em;
+}
+
+/* ---------- Badges ---------- */
+
+.badge-row{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin-top:18px;
+}
+
+.badge-pill{
+
+    padding:8px 16px;
+
+    border-radius:50px;
+
+    background:rgba(114,215,109,.12);
+
+    border:1px solid rgba(114,215,109,.45);
+
+    color:#c9f7c5;
+
+    font-size:.8rem;
+
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.badge-pill:hover{
+
+    background:#72d76d;
+
+    color:#07120a;
+
+    transform:translateY(-2px);
+
+}
+
+/* ---------- Empty State ---------- */
+
+.empty-state{
+
+    color:#cbd8cb;
+
+    font-size:1rem;
+
+    font-style:italic;
+
+    padding:18px 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width:768px){
+
+.stat-grid{
+    grid-template-columns:1fr;
+}
+
+.profile-header{
+    flex-direction:column;
+    text-align:center;
+}
+
+.profile-photo{
+    width:74px;
+    height:74px;
+    font-size:1.8rem;
+}
+
+}
