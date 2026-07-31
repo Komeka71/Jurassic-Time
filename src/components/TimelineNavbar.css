@@ -1,0 +1,77 @@
+.timeline-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px clamp(20px, 5vw, 56px);
+  background: rgba(8, 13, 26, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.timeline-navbar__brand {
+  order: 1;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* Nav links are hidden by default to reduce clutter while viewing
+   exhibits, and smoothly reveal when the visitor hovers over (or
+   keyboard-focuses into) the navbar. The brand above is intentionally
+   left out of this rule so the logo always stays visible. */
+.timeline-navbar__list {
+  order: 3;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 32px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-cinematic);
+}
+
+.timeline-navbar:hover .timeline-navbar__list,
+.timeline-navbar:focus-within .timeline-navbar__list {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.timeline-navbar__link {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-cinematic);
+}
+
+.timeline-navbar__link:hover,
+.timeline-navbar__link:focus-visible {
+  color: var(--era-primary);
+}
+
+@media (max-width: 700px) {
+  .timeline-navbar {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .timeline-navbar__list {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px 20px;
+  }
+}

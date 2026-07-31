@@ -1,0 +1,92 @@
+/* ==========================================================================
+   Design tokens
+   Derived from Jurassic Museum Without Walls — Design Moodboard v2.0
+   Palette: deep blacks, navy blues, muted purples, soft cyan accents.
+   ========================================================================== */
+:root {
+  /* Color */
+  --color-void: #04060b;          /* deepest background, sits under the video */
+  --color-navy-900: #080d1a;      /* overlay gradient base */
+  --color-navy-800: #10192f;      /* card glass base */
+  --color-navy-700: #1b2745;      /* card border / divider base */
+  --color-purple: #6a5a95;        /* muted purple accent */
+  --color-purple-soft: #9284c2;   /* lighter purple for gradients */
+  --color-cyan: #6fe4e0;          /* soft cyan accent (interactive) */
+  --color-cyan-dim: rgba(111, 228, 224, 0.32);
+
+  --color-text-primary: #eef3f8;
+  --color-text-secondary: #a7b6cf;
+  --color-text-tertiary: #6d7ea0;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --content-max-width: 1280px;
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 10px;
+
+  /* Motion */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-slow: 0.9s;
+  --duration-medium: 0.6s;
+  --duration-fast: 0.3s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* No global overflow lock here — the landing page enforces its own
+     single-viewport, non-scrolling layout on its own root element so
+     that other pages (e.g. the timeline) can scroll normally. */
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+/* Respect reduced-motion preferences across the app */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
