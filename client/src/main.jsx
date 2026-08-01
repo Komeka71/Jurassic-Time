@@ -1,13 +1,31 @@
+// import { StrictMode } from "react";
+// import { createRoot } from "react-dom/client";
+// import "./index.css";
+// import App from "./App";
+// import { AudioProvider } from "./context/AudioContext";
+
+// createRoot(document.getElementById("root")).render(
+//   <StrictMode>
+//     <AudioProvider>
+//       <App />
+//     </AudioProvider>
+//   </StrictMode>
+// );
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
+
 import { AudioProvider } from "./context/AudioContext";
+import { AuthProvider } from "./context/AuthContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AudioProvider>
-      <App />
-    </AudioProvider>
+    <AuthProvider>
+      <AudioProvider>
+        <App />
+      </AudioProvider>
+    </AuthProvider>
   </StrictMode>
 );

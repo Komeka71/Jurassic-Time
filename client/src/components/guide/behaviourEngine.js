@@ -35,7 +35,7 @@ export const actionStates = [
   "angry",
   "sad",
   "shushing",
-  "camp",
+
   "wakeup",
 ];
 
@@ -48,25 +48,29 @@ Higher weight = more common
 */
 
 const idleBehaviourPool = [
-  { mood: "idle", weight: 32 },
+  { mood: "idle", weight: 20 },
 
   { mood: "lookingAround", weight: 18 },
 
-  { mood: "standing", weight: 14 },
+  { mood: "standing", weight: 12 },
 
   { mood: "thinking", weight: 10 },
 
-  { mood: "walkingRight", weight: 8 },
+  { mood: "walkingRight", weight: 12 },
 
-  { mood: "wave", weight: 7 },
+  { mood: "wave", weight: 8 },
 
-  { mood: "eating", weight: 6 },
+  { mood: "eating", weight: 8 },
 
-  { mood: "pointingRight", weight: 3 },
+  { mood: "pointingRight", weight: 5 },
 
-  { mood: "camp", weight: 1 },
+  // { mood: "camp", weight: 3 },
 
-  { mood: "roar", weight: 1 },
+  { mood: "roar", weight: 2 },
+
+  { mood: "happy", weight: 1 },
+
+  { mood: "happyJumps", weight: 1 },
 ];
 
 /*

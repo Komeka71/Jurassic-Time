@@ -1,3 +1,78 @@
+
+const sectionMessages = {
+  hero: {
+    idle: [
+      "Welcome to PaleoVerse! 🦖",
+      "Hover over a dinosaur to begin.",
+      "Click on a glowing bone!",
+      "Choose a specimen to explore.",
+      "Millions of years of history await!",
+    ],
+
+    lookingAround: [
+      "I think I spotted something...",
+      "Those bones look interesting.",
+      "Try examining the skull.",
+      "Every fossil tells a story.",
+    ],
+
+    pointingRight: [
+      "Check the information panel!",
+      "Look at that dinosaur!",
+      "Let's inspect this specimen.",
+    ],
+
+    thinking: [
+      "Which dinosaur should we study first?",
+      "So many incredible species...",
+    ],
+  },
+  miniGames: {
+  idle: [
+    "🎮 Ready for today's expedition?",
+    "Which challenge will you conquer first?",
+    "Three games. Endless discoveries!",
+    "Let's sharpen your explorer skills!",
+    "Adventure starts here!",
+  ],
+
+  lookingAround: [
+    "Hmm... I think I spotted footprints.",
+    "There's a fossil hidden nearby!",
+    "Something ancient is waiting to be discovered.",
+    "Look carefully... every clue matters.",
+  ],
+
+  thinking: [
+    "Which game should we play first?",
+    "Track... Sort... or Excavate?",
+    "Every great explorer starts with practice.",
+    "Hmm... that's an interesting challenge.",
+  ],
+
+  pointingRight: [
+    "Try Dino Track Detective!",
+    "Era Sorting is over there!",
+    "Don't miss Fossil Excavation!",
+    "Choose your next adventure!",
+  ],
+
+  happy: [
+    "Great job, explorer! 🦖",
+    "You're getting better every expedition!",
+    "Awesome work!",
+    "You're becoming a real paleontologist!",
+  ],
+
+  celebrate: [
+    "Mission Complete! 🎉",
+    "Excellent exploration!",
+    "Another challenge conquered!",
+    "Fantastic work, explorer!",
+  ],
+},
+};
+
 export const messages = {
   idle: [
     "Hello Explorer! 👋",
@@ -143,7 +218,16 @@ wakeup: [
     "This camp feels cozy.",
   ],
 };
-export function getRandomMessage(mood) {
+
+export function getRandomMessage(mood, section = "default") {
+  const sectionPool = sectionMessages[section]?.[mood];
+
+  if (sectionPool && sectionPool.length > 0) {
+    return sectionPool[
+      Math.floor(Math.random() * sectionPool.length)
+    ];
+  }
+
   const pool = messages[mood];
 
   if (!pool || pool.length === 0) return "";

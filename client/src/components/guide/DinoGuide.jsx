@@ -1,5 +1,4 @@
 
-
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import DinoPlayer from "./DinoPlayer";
@@ -14,11 +13,12 @@ import {
 import { getRandomMessage } from "./messages";
 
 export default function DinoGuide({
+  section = "default",
   controlled = false,
   mood: controlledMood = "idle",
   message: controlledMessage = "",
   disableClick = false,
-}) {  /*
+}) { /*
   =====================================
   STATE
   =====================================
@@ -29,6 +29,12 @@ export default function DinoGuide({
   const [message, setMessage] = useState(
     "Welcome to PaleoVerse!"
   );
+
+  // NEW: bumps by 1 every time play() runs, even if the mood picked
+  // is identical to the current one. DinoPlayer uses this in its
+  // video key so it always remounts/reloads the clip -> no more
+  // "video ends and just sits there frozen" bug.
+  const [playToken, setPlayToken] = useState(0);
 
   /*
   =====================================
@@ -62,15 +68,20 @@ const lastControlledMood = useRef("");
       customMessage = null,
       force = false
     ) => {
+      console.log("▶ PLAY", nextMood);
       if (busy.current && !force) return;
 
       busy.current = !loopStates.includes(nextMood);
 
       setMood(nextMood);
 
+      // Always increment, even for a repeated mood, so the video
+      // is guaranteed to remount and play from the start.
+      setPlayToken((t) => t + 1);
+
       setMessage(
         customMessage ||
-          getRandomMessage(nextMood)
+          getRandomMessage(nextMood, section)
       );
     },
     []
@@ -131,11 +142,10 @@ useEffect(() => {
 
       if (busy.current) return;
 
-      if (
-        mood !== "idle" &&
-        mood !== "standing"
-      )
-        return;
+    if (
+  !["idle", "standing", "lookingAround"].includes(mood)
+)
+  return;
 
       if (Math.random() < 0.35) {
         play(getRandomIdleBehaviour());
@@ -167,119 +177,93 @@ useEffect(() => {
   =====================================
   */
 
-  const handleVideoEnded = (finishedMood) => {
-if (controlled) {
+const handleVideoEnded = (finishedMood) => {
+  console.log("✅ ENDED", finishedMood);
+  // Animation has finished, allow the next one.
   busy.current = false;
 
-  if (loopStates.includes(finishedMood)) return;
+  // Controlled mode
+  if (controlled) {
+    if (loopStates.includes(finishedMood)) return;
 
-  const next = getRandomIdleBehaviour();
+    setTimeout(() => {
+      play(getRandomIdleBehaviour(), controlledMessage, true);
+    }, 50);
 
-  setTimeout(() => {
-    play(next, controlledMessage, true);
-  }, 50);
+    return;
+  }
 
-  return;
-}
-    // Sleep loops forever
-    if (finishedMood === "sleep") return;
+  // Sleep loops forever until clicked
+  if (finishedMood === "sleep") return;
 
-    /*
-    -------------------------
-    Wakeup sequence
-    -------------------------
-    sleep
-      ↓
-    wakeup
-      ↓
-    lookingAround
-      ↓
-    wave
-      ↓
-    idle
-    */
+  // Wakeup finished -> resume life
+  if (finishedMood === "wakeup") {
+    wakeupSequence.current = false;
 
-    if (finishedMood === "wakeup") {
-  wakeupSequence.current = false;
+    setTimeout(() => {
+      play(getRandomIdleBehaviour());
+    }, 50);
 
-  // Play a random behaviour only AFTER wakeup finishes
-  play(getRandomIdleBehaviour());
+    return;
+  }
 
-  return;
-}
-
-    // if (finishedMood === "lookingAround") {
-    //   if (wakeupSequence.current) {
-    //     play("wave");
-    //   } else {
-    //     play(getRandomIdleBehaviour());
-    //   }
-    //   return;
-    // }
-
-    // if (finishedMood === "wave") {
-    //   wakeupSequence.current = false;
-    //   play("idle");
-    //   return;
-    // }
-if (finishedMood === "lookingAround") {
-  play(getRandomIdleBehaviour());
-  return;
-}
-    /*
-    -------------------------
-    Walking
-    -------------------------
-    */
-
-    if (finishedMood === "walkingRight") {
+  // Walking finishes by looking around once
+  if (finishedMood === "walkingRight") {
+    setTimeout(() => {
       play("lookingAround");
-      return;
-    }
+    }, 50);
 
-    /*
-    -------------------------
-    Return to idle behaviours
-    -------------------------
-    */
+    return;
+  }
 
-    const returnToIdle = [
-      "thinking",
-      "happy",
-      "happyJumps",
-      "loveHappy",
-      "celebrate",
-      "angry",
-      "sad",
-      "shushing",
-      "roar",
-      "eating",
-      "pointingRight",
-      "camp",
-    ];
-
-    if (returnToIdle.includes(finishedMood)) {
+  // Looking around finishes by returning to idle behaviours
+  if (finishedMood === "lookingAround") {
+    setTimeout(() => {
       play(getRandomIdleBehaviour());
-      return;
-    }
+    }, 50);
 
-    /*
-    -------------------------
-    Looping moods
-    -------------------------
-    */
+    return;
+  }
 
-    if (
-      finishedMood === "idle" ||
-      finishedMood === "standing"
-    ) {
+  // One-shot animations
+  const returnToIdle = [
+    "thinking",
+    "happy",
+    "happyJumps",
+    "loveHappy",
+    "celebrate",
+    "angry",
+    "sad",
+    "shushing",
+    "roar",
+    "eating",
+    "pointingRight",
+  ];
+
+  if (returnToIdle.includes(finishedMood)) {
+    setTimeout(() => {
       play(getRandomIdleBehaviour());
-      return;
+    }, 50);
+
+    return;
+  }
+
+  // Loop moods can occasionally branch out
+  if (finishedMood === "idle" || finishedMood === "standing") {
+    if (Math.random() < 0.35) {
+      setTimeout(() => {
+        play(getRandomIdleBehaviour());
+      }, 50);
     }
 
+    return;
+  }
+
+  // Safety fallback
+  setTimeout(() => {
     play("idle");
-  };
-
+  }, 50);
+};
   /*
   =====================================
   CLICK
@@ -369,9 +353,9 @@ useEffect(() => {
 
       <DinoPlayer
         mood={mood}
+        playToken={playToken}
         onEnded={handleVideoEnded}
       />
     </div>
   );
 }
-

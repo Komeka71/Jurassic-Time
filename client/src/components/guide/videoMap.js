@@ -32,5 +32,5 @@ export const videos = {
 
   wakeup: "/videos/dino/wakeup.mov",
 
-  camp: "/videos/dino/camp.mov",
+  camp: "/videos/dino/eating.mov",
 };

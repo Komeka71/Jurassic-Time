@@ -1,6 +1,24 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import DailyMissions from "./pages/DailyMissions";
+
+
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+
+import CursorGlow from "./components/landing/CursorGlow";
+
+// Auth
+import ProtectedRoute from "./components/ProtectedRoute";
+import RequireOnboarding from "./components/RequireOnboarding";
+
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import VerifyOtp from "./pages/VerifyOtp";
+import Onboarding from "./pages/Onboarding";
+import HomeLogin from "./pages/HomeLogin";
+import ProfileLogin from "./pages/ProfileLogin";
+
+// Jurassic
+import LandingPage from "./components/LandingPage";
 import Home from "./pages/Home";
+import DailyMissions from "./pages/DailyMissions";
 import ExpeditionSelect from "./pages/ExpeditionSelect";
 import Quiz from "./pages/Quiz";
 import Map from "./pages/Map";
@@ -9,63 +27,84 @@ import DinoShop from "./pages/DinoShop";
 import Collection from "./pages/Collection";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
-import LandingPage from "./components/LandingPage";
-import CursorGlow from "./components/landing/CursorGlow";
 import ResearchHub from "./components/ResearchHub/ResearchHub";
 
+// Mini Games
+import DinoTrackDetective from "./games/DinoTrackDetective/DinoTrackDetective";
+import EraSorting from "./games/EraSorting/EraSorting";
+import FossilExcavation from "./games/FossilExcavation/FossilExcavation";
 
-function App() {
+function MainLayout() {
+  return (
+    <div className="app-shell">
+      <Outlet />
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <BrowserRouter>
-    <CursorGlow/>
+      <CursorGlow />
+
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Home />} />
-<Route
-    path="/daily"
-    element={<DailyMissions />}
-/>
-        <Route
-          path="/expedition"
-          element={<ExpeditionSelect />}
-        />
+        {/* Authentication */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
 
-        <Route
-          path="/quiz"
-          element={<Quiz />}
-        />
+        <Route element={<MainLayout />}>
 
-        <Route
-          path="/map"
-          element={<Map />}
-        />
+          {/* Landing */}
+          <Route path="/" element={<LandingPage />} />
 
-        <Route
-          path="/camp"
-          element={<Camp />}
-        />
+          {/* Login System */}
+          <Route path="/login-home" element={<HomeLogin />} />
 
-        <Route
-          path="/shop"
-          element={<DinoShop />}
-        />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/onboarding" element={<Onboarding />} />
 
-        <Route
-          path="/collection"
-          element={<Collection />}
-        />
-        <Route
-  path="/leaderboard"
-  element={<Leaderboard />}
-/>
-<Route
-  path="/profile"
-  element={<Profile />}
-/>
-<Route path="/research" element={<ResearchHub />} />
+            <Route element={<RequireOnboarding />}>
+              <Route
+                path="/login-profile"
+                element={<ProfileLogin />}
+              />
+            </Route>
+          </Route>
+
+          {/* Jurassic */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/daily" element={<DailyMissions />} />
+          <Route path="/expedition" element={<ExpeditionSelect />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/map" element={<Map />} />
+          <Route path="/camp" element={<Camp />} />
+          <Route path="/shop" element={<DinoShop />} />
+          <Route path="/collection" element={<Collection />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/research" element={<ResearchHub />} />
+
+          {/* Mini Games */}
+          <Route
+            path="/mini-games/dino-track-detective"
+            element={<DinoTrackDetective />}
+          />
+          <Route
+            path="/mini-games/era-sorting"
+            element={<EraSorting />}
+          />
+          <Route
+            path="/mini-games/fossil-excavation"
+            element={<FossilExcavation />}
+          />
+
+          <Route
+            path="*"
+            element={<h2>404 - Page Not Found</h2>}
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;

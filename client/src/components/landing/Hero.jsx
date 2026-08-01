@@ -1,6 +1,6 @@
 // import { motion } from "framer-motion";
 import { useState } from "react";
-import Atmosphere from "./Atmosphere";
+// import Atmosphere from "./Atmosphere";
 import AnatomyViewer from "../Hero/AnatomyViewer";
 import SpecimenSelector from "./SpecimenSelector";
 import ExplorerPanel from "../Hero/ExplorerPanel";
@@ -84,7 +84,7 @@ overflow-hidden
       <div className="absolute bottom-0 left-0 h-64 w-full bg-gradient-to-t from-[#050805] via-[#08110b]/70 to-transparent" />
 
       {/* Atmosphere */}
-      <Atmosphere />
+      {/* <Atmosphere /> */}
 
       {/* Hero Content */}
       {/* Hero Content */}
@@ -303,7 +303,7 @@ xl:scale-[1.2]
     "
   />
 
-  <DinoGuide />
+  <DinoGuide section="hero" />
 </div>
 {/* Scroll Indicator */}
 {/* <motion.div ...></motion.div> */}

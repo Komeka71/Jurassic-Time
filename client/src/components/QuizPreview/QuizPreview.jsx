@@ -302,9 +302,9 @@ lg:scale-[0.9]
 xl:scale-[1.2]
 2xl:scale-[1.05]
 
-z-30
+z-10001
 
-pointer-events-none
+pointer-events-auto
 "
 >
   <DinoGuide />
