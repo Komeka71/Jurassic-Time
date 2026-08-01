@@ -1,0 +1,45 @@
+.scene-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/*
+ * The photo itself is the intended final visual — not a gradient. Until
+ * the real file exists under /images/exhibits/, background-color stands
+ * in so the exhibit still reads as a dark jungle scene.
+ *
+ * Staged cross-fade: the outgoing exhibit's image starts dimming the
+ * instant it becomes inactive (no delay), while the incoming exhibit's
+ * image waits a beat before brightening — so the environment settles
+ * (fade out, then fade in) before the info panel's own entrance begins.
+ */
+.scene-layer__image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #0a1712;
+  opacity: 0.78;
+  transition: opacity 500ms ease;
+}
+
+.scene-layer--active .scene-layer__image {
+  opacity: 1;
+  transition-delay: 150ms;
+}
+
+/* Dark gradient layered on top purely for text legibility (info panel,
+   timeline rail) — not the final visual solution. The era's own color
+   grading sits beneath it, subtle and never replacing the artwork. */
+.scene-layer__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--era-background-overlay),
+    linear-gradient(
+      180deg,
+      rgba(4, 6, 11, 0.1) 0%,
+      rgba(4, 6, 11, 0.35) 65%,
+      rgba(4, 6, 11, 0.78) 100%
+    );
+}
