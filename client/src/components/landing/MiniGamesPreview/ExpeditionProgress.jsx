@@ -1,12 +1,19 @@
+import { motion } from "framer-motion";
 import { Check, Lock, Sparkles } from "lucide-react";
 
 const RANKS = ["Rookie", "Explorer", "Adventurer", "Paleo Master"];
 
+// Now a self-contained floating glass card (used as one of the 3 HUD
+// cards in index.jsx) instead of a column inside one shared bar.
 export default function ExpeditionProgress({ currentRank = "Explorer" }) {
   const currentIndex = Math.max(0, RANKS.indexOf(currentRank));
 
   return (
-    <div className="flex flex-col gap-4">
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-black/40 p-5 shadow-[0_0_30px_-15px_rgba(0,0,0,0.8)] backdrop-blur-md md:p-6"
+    >
       <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
         Expedition Progress
       </span>
@@ -61,6 +68,6 @@ export default function ExpeditionProgress({ currentRank = "Explorer" }) {
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 }

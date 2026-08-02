@@ -1,130 +1,84 @@
 import { motion } from "framer-motion";
 
 // Glowing expedition trail connecting the 3 mission islands.
-// Static dotted base + a bright dashed overlay whose dashoffset animates
-// infinitely to read as "light traveling" along the path, plus pulsing
-// glow nodes at each mission position.
-//
-// Renders two variants sharing the same visual language:
-//  - horizontal, for the lg:flex-row desktop layout
-//  - vertical, for the flex-col stacked layout on mobile/tablet
-// Position numbers (120 / 600 / 1080 along the main axis) are tuned to
-// roughly land under/beside the 3 circles — nudge if your gap/breakpoints
-// change.
-function PathGradientDefs({ id }) {
+// Deliberately built with plain divs instead of SVG — the SVG version
+// wasn't rendering reliably, and a row of divs is about as hard to
+// accidentally hide as markup gets. A 3-stop color sweep (emerald -> amber
+// -> orange) across evenly spaced dots, with a staggered opacity pulse
+// that reads as light chasing along the line, plus 3 bigger glowing
+// "node" dots roughly under each mission.
+const STOPS = ["#34d399", "#fbbf24", "#fb923c"];
+const DOT_COUNT = 22;
+
+function hexToRgb(hex) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function colorAt(t) {
+  const seg = t <= 0.5 ? 0 : 1;
+  const localT = t <= 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
+  const c1 = hexToRgb(STOPS[seg]);
+  const c2 = hexToRgb(STOPS[seg + 1]);
+  const r = lerp(c1[0], c2[0], localT);
+  const g = lerp(c1[1], c2[1], localT);
+  const b = lerp(c1[2], c2[2], localT);
+  return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+}
+
+function Trail({ direction }) {
+  const isRow = direction === "row";
+
   return (
-    <defs>
-      <linearGradient id={id} x1="0" x2="1">
-        <stop offset="0%" stopColor="#34d399" />
-        <stop offset="50%" stopColor="#fbbf24" />
-        <stop offset="100%" stopColor="#fb923c" />
-      </linearGradient>
-    </defs>
+    <div
+      className={`flex ${isRow ? "flex-row items-center" : "flex-col items-center"} h-full w-full justify-between`}
+    >
+      {[...Array(DOT_COUNT)].map((_, i) => {
+        const t = i / (DOT_COUNT - 1);
+        const color = colorAt(t);
+        const isNode = i === 0 || i === Math.floor((DOT_COUNT - 1) / 2) || i === DOT_COUNT - 1;
+
+        return (
+          <motion.span
+            key={i}
+            className="rounded-full"
+            style={{
+              backgroundColor: color,
+              width: isNode ? 10 : 5,
+              height: isNode ? 10 : 5,
+              boxShadow: isNode
+                ? `0 0 14px 3px ${color}`
+                : `0 0 6px 1px ${color}`,
+            }}
+            animate={{ opacity: [0.3, 1, 0.3] }}
+            transition={{
+              repeat: Infinity,
+              duration: 2,
+              delay: i * 0.08,
+              ease: "easeInOut",
+            }}
+          />
+        );
+      })}
+    </div>
   );
 }
-
-function GlowNodes({ nodes, axis }) {
-  return nodes.map((node, i) => (
-    <motion.circle
-      key={i}
-      cx={axis === "x" ? node.pos : 30}
-      cy={axis === "x" ? 30 : node.pos}
-      r={6}
-      fill={node.color}
-      animate={{ opacity: [0.5, 1, 0.5], r: [5, 7.5, 5] }}
-      transition={{
-        repeat: Infinity,
-        duration: 2.5,
-        delay: i * 0.4,
-        ease: "easeInOut",
-      }}
-    />
-  ));
-}
-
-const NODES = [
-  { pos: 120, color: "#34d399" },
-  { pos: 600, color: "#fbbf24" },
-  { pos: 1080, color: "#fb923c" },
-];
 
 export default function MissionPath() {
   return (
     <>
       {/* Desktop / horizontal */}
-      <div className="pointer-events-none absolute inset-x-0 top-28 z-0 hidden h-16 lg:block">
-        <svg
-          viewBox="0 0 1200 60"
-          preserveAspectRatio="none"
-          className="h-16 w-full overflow-visible"
-        >
-          <PathGradientDefs id="missionPathGradientH" />
-
-          <motion.path
-            d="M120,30 L1080,30"
-            fill="none"
-            stroke="url(#missionPathGradientH)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeDasharray="1 16"
-            initial={{ pathLength: 0, opacity: 0 }}
-            whileInView={{ pathLength: 1, opacity: 0.5 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-          />
-
-          <motion.path
-            d="M120,30 L1080,30"
-            fill="none"
-            stroke="url(#missionPathGradientH)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray="40 260"
-            opacity={0.85}
-            animate={{ strokeDashoffset: [0, -600] }}
-            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-          />
-
-          <GlowNodes nodes={NODES} axis="x" />
-        </svg>
+      <div className="pointer-events-none absolute left-[12%] right-[12%] top-20 z-0 hidden h-4 md:top-24 lg:block">
+        <Trail direction="row" />
       </div>
 
       {/* Mobile / tablet — vertical, running behind the stacked islands */}
-      <div className="pointer-events-none absolute inset-y-0 left-1/2 z-0 block w-16 -translate-x-1/2 lg:hidden">
-        <svg
-          viewBox="0 0 60 1200"
-          preserveAspectRatio="none"
-          className="h-full w-16 overflow-visible"
-        >
-          <PathGradientDefs id="missionPathGradientV" />
-
-          <motion.path
-            d="M30,120 L30,1080"
-            fill="none"
-            stroke="url(#missionPathGradientV)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeDasharray="1 16"
-            initial={{ pathLength: 0, opacity: 0 }}
-            whileInView={{ pathLength: 1, opacity: 0.5 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-          />
-
-          <motion.path
-            d="M30,120 L30,1080"
-            fill="none"
-            stroke="url(#missionPathGradientV)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray="40 260"
-            opacity={0.85}
-            animate={{ strokeDashoffset: [0, -600] }}
-            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-          />
-
-          <GlowNodes nodes={NODES} axis="y" />
-        </svg>
+      <div className="pointer-events-none absolute inset-y-10 left-1/2 z-0 block w-4 -translate-x-1/2 lg:hidden">
+        <Trail direction="column" />
       </div>
     </>
   );

@@ -7,7 +7,11 @@ import { Gift } from "lucide-react";
 // once you give me the exact path.
 export default function DailyBonusCard({ onClaim, claimed = false }) {
   return (
-    <div className="flex flex-col items-center gap-3 text-center md:items-start md:text-left">
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-col items-center gap-3 rounded-3xl border border-white/10 bg-black/40 p-5 text-center shadow-[0_0_30px_-15px_rgba(0,0,0,0.8)] backdrop-blur-md md:items-start md:p-6 md:text-left"
+    >
       <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
         Daily Bonus
       </span>
@@ -35,6 +39,6 @@ export default function DailyBonusCard({ onClaim, claimed = false }) {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

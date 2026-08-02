@@ -230,24 +230,24 @@ xl:h-[620px]
           </motion.video>
 
           {/* Circular Click Area */}
-          <button
-            onClick={() => navigate("/")}
-            aria-label="Explore Map"
-            className="
-              absolute
-              left-1/2
-              top-1/2
-              -translate-x-1/2
-              -translate-y-1/2
+         <button
+  onClick={() => navigate("/maps")}
+  aria-label="Explore Map"
+  className="
+    absolute
+    left-1/2
+    top-1/2
+    -translate-x-1/2
+    -translate-y-1/2
 
-              w-[62%]
-              h-[62%]
+    w-[62%]
+    h-[62%]
 
-              rounded-full
-              cursor-pointer
-              bg-transparent
-            "
-          />
+    rounded-full
+    cursor-pointer
+    bg-transparent
+  "
+/>
         </motion.div>
 </div>
   {/* Your existing Earth motion.div goes here unchanged */}
@@ -330,22 +330,23 @@ lg:h-[520px]
     >
       <source src="/videos/map/earth.mov" type="video/mp4" />
     </motion.video>
+<button
+  onClick={() => navigate("/maps")}
+  className="
+    absolute
+    left-1/2
+    top-1/2
+    -translate-x-1/2
+    -translate-y-1/2
 
-    <button
-      onClick={() => navigate("/")}
-      className="
-        absolute
-        left-1/2
-        top-1/2
-        -translate-x-1/2
-        -translate-y-1/2
+    w-[62%]
+    h-[62%]
 
-        w-[62%]
-        h-[62%]
-
-        rounded-full
-      "
-    />
+    rounded-full
+    cursor-pointer
+    bg-transparent
+  "
+/>
   </motion.div>
 
   {/* Dino */}

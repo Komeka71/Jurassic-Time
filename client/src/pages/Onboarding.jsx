@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import CompanionPicker from "../components/CompanionPicker";
+import "../styles/onboarding.css";
+
 
 const AGE_LABELS = {
   kid: { title: "Kid", sub: "Ages up to ~12" },
@@ -80,7 +82,7 @@ export default function Onboarding() {
     try {
       const { data } = await api.put("/users/onboarding", answers);
       setUser(data);
-      navigate("/profile");
+      navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong saving your answers.");
     } finally {
@@ -91,9 +93,13 @@ export default function Onboarding() {
   if (!options) return <p className="helper-text">Loading the briefing…</p>;
 
   return (
-    <>
-      <div className="onboarding-bg" aria-hidden="true" />
-      <div className="field-card" data-tag="Dig Site Briefing">
+   
+<>
+  <div className="onboarding-page">
+
+    <div className="onboarding-bg" aria-hidden="true" />
+
+    <div className="field-card" data-tag="Dig Site Briefing">
       <h2>Before you head in…</h2>
       <p className="helper-text">A few quick questions so we can point you to the right exhibits.</p>
 
@@ -185,7 +191,9 @@ export default function Onboarding() {
           {step === STEPS.length - 1 ? (submitting ? "Saving…" : "Enter the dig site") : "Continue"}
         </button>
       </div>
-    </div>
-    </>
+        </div>
+
+  </div>
+</>
   );
 }

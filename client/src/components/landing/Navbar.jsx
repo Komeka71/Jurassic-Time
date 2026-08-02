@@ -49,7 +49,7 @@ import {
 const navItems = [
   { title: "Explore", to: "/explore", icon: Compass },
   { title: "Timeline", to: "/timeline", icon: Clock3 },
-  { title: "Map", to: "/map", icon: Map },
+  { title: "Map", to: "/maps", icon: Map },
   { title: "Quiz", to: "/home", icon: Binoculars },
   { title: "Mini Games", to: "/games", icon: Gamepad2 },
 ];
