@@ -1,0 +1,85 @@
+.abort-button {
+  position: relative;
+  display: block;
+  margin: 26px auto 0;
+  padding: 20px 54px;
+  min-width: 300px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, rgba(48, 24, 24, 0.85), rgba(14, 8, 8, 0.92));
+  border: 1px solid rgba(255, 107, 107, 0.55);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 0 20px rgba(225, 75, 75, 0.3);
+  animation: abort-pulse 2s ease-in-out infinite;
+}
+
+.abort-button__ring {
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.abort-button__glow {
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle, rgba(225, 75, 75, 0.4), transparent 65%);
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+.abort-button__label {
+  position: relative;
+  z-index: 1;
+}
+
+.abort-button:hover,
+.abort-button:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(255, 107, 107, 0.9);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 48px rgba(225, 75, 75, 0.6);
+  animation: abort-pulse-strong 0.9s ease-in-out infinite;
+}
+
+.abort-button:hover .abort-button__glow,
+.abort-button:focus-visible .abort-button__glow {
+  opacity: 1;
+}
+
+.abort-button:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+@keyframes abort-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(225, 75, 75, 0.3); }
+  50% { box-shadow: 0 0 36px rgba(225, 75, 75, 0.55); }
+}
+
+@keyframes abort-pulse-strong {
+  0%, 100% { box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 40px rgba(225, 75, 75, 0.55); }
+  50% { box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 62px rgba(225, 75, 75, 0.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abort-button,
+  .abort-button:hover,
+  .abort-button:focus-visible {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .abort-button {
+    width: 100%;
+    min-width: 0;
+    padding: 18px 30px;
+  }
+}

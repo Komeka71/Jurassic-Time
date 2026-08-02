@@ -1,0 +1,59 @@
+.extraction-btn {
+  position: relative;
+  display: block;
+  margin: 32px auto 0;
+  padding: 14px 46px;
+  min-width: 240px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, rgba(30, 40, 43, 0.8), rgba(12, 17, 19, 0.9));
+  border: 1px solid rgba(111, 227, 240, 0.35);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.extraction-btn__glow {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(56, 198, 217, 0.35), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.extraction-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  border-color: rgba(111, 227, 240, 0.8);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 26px rgba(56, 198, 217, 0.35);
+  animation: extraction-pulse 1.8s ease-in-out infinite;
+}
+
+.extraction-btn:not(:disabled):hover .extraction-btn__glow {
+  opacity: 1;
+}
+
+@keyframes extraction-pulse {
+  0%, 100% { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 198, 217, 0.28); }
+  50% { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 34px rgba(56, 198, 217, 0.5); }
+}
+
+.extraction-btn:disabled {
+  color: var(--text-tertiary);
+  border-color: rgba(159, 214, 219, 0.12);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.extraction-btn__label {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .extraction-btn { width: 100%; min-width: 0; }
+}

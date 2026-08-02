@@ -1,0 +1,63 @@
+.glass-panel {
+  position: relative;
+  background: linear-gradient(180deg, rgba(19, 27, 30, 0.72) 0%, rgba(11, 16, 18, 0.82) 100%);
+  border: 1px solid rgba(111, 227, 240, 0.22);
+  border-radius: 6px;
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(56, 198, 217, 0.08);
+  overflow: hidden;
+}
+
+.glass-panel__content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Faint moving scan-line sheen across the glass */
+.glass-panel__scanline {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(111, 227, 240, 0.05) 0px,
+    rgba(111, 227, 240, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  animation: panel-flicker 6s ease-in-out infinite;
+}
+
+@keyframes panel-flicker {
+  0%, 92%, 100% { opacity: 0.45; }
+  93% { opacity: 0.15; }
+  94% { opacity: 0.5; }
+  96% { opacity: 0.2; }
+  97% { opacity: 0.45; }
+}
+
+/* Brushed-metal corner brackets, like a research display case */
+.glass-panel__corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(159, 214, 219, 0.5);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.glass-panel__corner--tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.glass-panel__corner--tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.glass-panel__corner--bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.glass-panel__corner--br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-panel__scanline { animation: none; opacity: 0.3; }
+}

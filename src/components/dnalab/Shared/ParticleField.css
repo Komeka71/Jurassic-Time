@@ -1,0 +1,31 @@
+.particle-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle-field__dot {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  background: var(--cyan-300);
+  opacity: 0;
+  box-shadow: 0 0 6px 1px var(--cyan-glow);
+  animation-name: particle-rise;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes particle-rise {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  50% { transform: translateY(-140px) translateX(6px); opacity: 0.5; }
+  90% { opacity: 0; }
+  100% { transform: translateY(-220px) translateX(-4px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-field__dot { animation: none; opacity: 0; }
+}

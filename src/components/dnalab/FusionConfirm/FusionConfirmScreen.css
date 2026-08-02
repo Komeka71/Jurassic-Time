@@ -1,0 +1,68 @@
+.fusion-confirm {
+  position: relative;
+  width: min(560px, 92vw);
+  padding: 44px 40px 46px;
+  text-align: center;
+  animation: fusion-confirm-in 0.7s ease both;
+}
+
+.fusion-confirm__eyebrow {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cyan-300);
+}
+
+.fusion-confirm__title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 30px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-shadow: 0 0 20px rgba(56, 198, 217, 0.42);
+}
+
+.fusion-confirm__warning {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 8px;
+  padding: 18px 20px;
+  border-top: 1px solid rgba(111, 227, 240, 0.22);
+  border-bottom: 1px solid rgba(111, 227, 240, 0.22);
+}
+
+.fusion-confirm__warning-label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cyan-400);
+}
+
+.fusion-confirm__warning p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+@keyframes fusion-confirm-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .fusion-confirm {
+    padding: 32px 22px 34px;
+  }
+}

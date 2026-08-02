@@ -1,0 +1,48 @@
+.bg-layer {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--lab-black);
+}
+
+.bg-layer__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Cinematic darkening so glass panels + text stay legible */
+.bg-layer__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 7, 8, 0.55) 0%, rgba(4, 7, 8, 0.65) 45%, rgba(2, 4, 5, 0.85) 100%);
+}
+
+.bg-layer__vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 220px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+}
+
+.bg-layer__content {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+}
+
+@media (max-width: 640px) {
+  .bg-layer__content {
+    padding: 28px 14px;
+  }
+}
