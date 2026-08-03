@@ -3,7 +3,7 @@
 
 
 import { motion } from "framer-motion";
-
+import { useGuide } from "../../context/GuideContext";
 import { useEffect, useState } from "react";
 
 import DinoGuide from "../guide/DinoGuide";
@@ -16,7 +16,7 @@ import useChalkWriter from "./useChalkWriter";
 
 export default function QuizPreview() {
   const chalk = useChalkWriter();
-
+const { setCurrentPage, setLastAction } = useGuide();
   const [showQuiz, setShowQuiz] = useState(false);
 
   const [selected, setSelected] = useState(null);
@@ -37,7 +37,10 @@ export default function QuizPreview() {
 
     return () => clearTimeout(timer);
   }, []);
-
+useEffect(() => {
+  setCurrentPage("quizPreview");
+  setLastAction("");
+}, [setCurrentPage, setLastAction]);
   // Reset state when next question starts
 useEffect(() => {
   if (!chalk.finished) {
@@ -53,8 +56,12 @@ const handleSelect = (index) => {
 
   const isCorrect = index === chalk.answer;
 
-  setCorrect(isCorrect);
-  setAnswered(true);
+setCorrect(isCorrect);
+setAnswered(true);
+
+setLastAction(
+  isCorrect ? "quizPerfect" : "quizComplete"
+);
 
   if (isCorrect) {
     setTeacherMessage("🎉 Excellent! That's correct!");
@@ -76,10 +83,12 @@ const handleSelect = (index) => {
 
         setTimeout(() => {
           setTeacherMessage(
-            "📚 Want to practice more and earn XP? Enter the PaleoVerse Academy!"
-          );
+  "📚 Want to practice more and earn XP? Enter the PaleoVerse Academy!"
+);
 
-          setShowAcademyButton(true);
+setLastAction("");
+
+setShowAcademyButton(true);
         }, 2500);
       }, 600);
 
@@ -87,8 +96,11 @@ const handleSelect = (index) => {
     }
 
     // NORMAL QUESTIONS
-    chalk.nextQuestion();
-    setTeacherMessage("📚 Read the question carefully!");
+chalk.nextQuestion();
+
+setTeacherMessage("📚 Read the question carefully!");
+
+setLastAction("");
   }, 2200);
 };
 
@@ -302,7 +314,7 @@ lg:scale-[0.9]
 xl:scale-[1.2]
 2xl:scale-[1.05]
 
-z-10001
+z-10
 
 pointer-events-auto
 "

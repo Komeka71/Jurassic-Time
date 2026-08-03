@@ -1,4 +1,3 @@
-
 const sectionMessages = {
   hero: {
     idle: [
@@ -16,63 +15,298 @@ const sectionMessages = {
       "Every fossil tells a story.",
     ],
 
+    thinking: [
+      "Which dinosaur should we study first?",
+      "So many incredible species...",
+      "Let's start our prehistoric journey!",
+    ],
+
     pointingRight: [
       "Check the information panel!",
       "Look at that dinosaur!",
       "Let's inspect this specimen.",
     ],
+  },
+
+  timeline: {
+    idle: [
+      "⏳ Travel through millions of years of history.",
+      "Every era tells a different story.",
+      "Let's explore the age of dinosaurs.",
+      "Time is our greatest discovery.",
+    ],
+
+    lookingAround: [
+      "Something important happened in this era...",
+      "These fossils look ancient.",
+      "History is waiting to be uncovered.",
+      "Let's see what changed through time.",
+    ],
 
     thinking: [
-      "Which dinosaur should we study first?",
-      "So many incredible species...",
+      "Triassic... Jurassic... or Cretaceous?",
+      "I wonder which dinosaur appeared first.",
+      "Time reveals amazing secrets.",
+    ],
+
+    pointingRight: [
+      "Choose an era!",
+      "Let's travel through time.",
+      "The next chapter is waiting.",
     ],
   },
+
+  quiz: {
+    idle: [
+      "📚 Read the question carefully.",
+      "Every question teaches something new.",
+      "Take your time before answering.",
+      "Trust your instincts!",
+    ],
+
+    lookingAround: [
+      "One option looks interesting...",
+      "Look closely before choosing.",
+      "The answer might surprise you.",
+    ],
+
+    thinking: [
+      "Hmm... let's think carefully.",
+      "Don't rush your answer.",
+      "Knowledge beats guessing.",
+    ],
+
+    pointingRight: [
+      "Pick your answer!",
+      "Choose wisely!",
+      "Let's see what you know.",
+    ],
+
+    happy: [
+      "Excellent answer!",
+      "You're learning fast!",
+      "Great work, explorer!",
+    ],
+
+    celebrate: [
+      "Perfect! 🎉",
+      "Outstanding!",
+      "You're becoming a paleontology expert!",
+    ],
+  },
+
+  map: {
+    idle: [
+      "🌍 Click the Earth to begin your expedition!",
+      "🗺️ Every glowing point hides a prehistoric story.",
+      "🦴 Explore fossil sites across the ancient world.",
+      "📍 Your adventure starts here.",
+      "🌎 The Earth is waiting to be explored.",
+    ],
+
+    lookingAround: [
+      "Hmm... I think I spotted a fossil site.",
+      "Those glowing locations look interesting.",
+      "Let's search for ancient discoveries.",
+      "Every continent has a story.",
+    ],
+
+    thinking: [
+      "Which continent should we explore first?",
+      "I wonder where T-Rex fossils were found...",
+      "Let's uncover Earth's ancient past.",
+      "There are so many fossil sites!",
+    ],
+
+    pointingRight: [
+      "🌍 Click the Earth!",
+      "🗺️ Your expedition begins here!",
+      "📍 Let's explore the map!",
+      "Adventure awaits!",
+    ],
+
+    happy: [
+      "Amazing! Let's begin exploring!",
+      "Another expedition starts!",
+      "You're becoming a real explorer!",
+      "Let's uncover fossils!",
+    ],
+
+    celebrate: [
+      "🎉 Another discovery awaits!",
+      "Excellent exploration!",
+      "Fantastic work!",
+      "The prehistoric world is full of surprises!",
+    ],
+  },
+
+  research: {
+    idle: [
+      "🔬 Welcome to the Research Archive.",
+      "Every fossil deserves careful study.",
+      "Science begins with curiosity.",
+      "Let's uncover prehistoric secrets.",
+    ],
+
+    lookingAround: [
+      "This fossil looks fascinating.",
+      "Let's inspect the evidence.",
+      "Every discovery matters.",
+      "I think there's something important here.",
+    ],
+
+    thinking: [
+      "What can this fossil tell us?",
+      "Let's analyze the evidence.",
+      "Interesting discovery...",
+    ],
+
+    pointingRight: [
+      "Open this discovery!",
+      "Let's inspect this fossil.",
+      "Read the AI analysis.",
+    ],
+
+    happy: [
+      "Great discovery!",
+      "Excellent observation!",
+      "Science wins again!",
+    ],
+
+    celebrate: [
+      "Another fossil verified!",
+      "Excellent research!",
+      "Amazing contribution!",
+    ],
+  },
+
   miniGames: {
-  idle: [
-    "🎮 Ready for today's expedition?",
-    "Which challenge will you conquer first?",
-    "Three games. Endless discoveries!",
-    "Let's sharpen your explorer skills!",
-    "Adventure starts here!",
-  ],
+    idle: [
+      "🎮 Ready for today's expedition?",
+      "Which challenge will you conquer first?",
+      "Three games. Endless discoveries!",
+      "Let's sharpen your explorer skills!",
+      "Adventure starts here!",
+    ],
 
-  lookingAround: [
-    "Hmm... I think I spotted footprints.",
-    "There's a fossil hidden nearby!",
-    "Something ancient is waiting to be discovered.",
-    "Look carefully... every clue matters.",
-  ],
+    lookingAround: [
+      "Hmm... I think I spotted footprints.",
+      "There's a fossil hidden nearby!",
+      "Something ancient is waiting to be discovered.",
+      "Look carefully... every clue matters.",
+    ],
 
-  thinking: [
-    "Which game should we play first?",
-    "Track... Sort... or Excavate?",
-    "Every great explorer starts with practice.",
-    "Hmm... that's an interesting challenge.",
-  ],
+    thinking: [
+      "Which game should we play first?",
+      "Track... Sort... or Excavate?",
+      "Every great explorer starts with practice.",
+      "Hmm... that's an interesting challenge.",
+    ],
 
-  pointingRight: [
-    "Try Dino Track Detective!",
-    "Era Sorting is over there!",
-    "Don't miss Fossil Excavation!",
-    "Choose your next adventure!",
-  ],
+    pointingRight: [
+      "Try Dino Track Detective!",
+      "Era Sorting is over there!",
+      "Don't miss Fossil Excavation!",
+      "Choose your next adventure!",
+    ],
 
-  happy: [
-    "Great job, explorer! 🦖",
-    "You're getting better every expedition!",
-    "Awesome work!",
-    "You're becoming a real paleontologist!",
-  ],
+    happy: [
+      "Great job, explorer! 🦖",
+      "You're getting better every expedition!",
+      "Awesome work!",
+      "You're becoming a real paleontologist!",
+    ],
 
-  celebrate: [
-    "Mission Complete! 🎉",
-    "Excellent exploration!",
-    "Another challenge conquered!",
-    "Fantastic work, explorer!",
-  ],
-},
+    celebrate: [
+      "Mission Complete! 🎉",
+      "Excellent exploration!",
+      "Another challenge conquered!",
+      "Fantastic work, explorer!",
+    ],
+  },
+
+  collection: {
+    idle: [
+      "Your collection keeps growing!",
+      "Every fossil has a place here.",
+      "Let's complete the encyclopedia.",
+      "Amazing discoveries await.",
+    ],
+
+    thinking: [
+      "Which dinosaur is still missing?",
+      "Your collection looks impressive.",
+    ],
+
+    pointingRight: [
+      "Check this specimen!",
+      "Look at your newest discovery!",
+    ],
+  },
+
+  shop: {
+    idle: [
+      "Welcome to the Dino Shop!",
+      "Spend your coins wisely!",
+      "New rewards are waiting!",
+      "Ready for an upgrade?",
+    ],
+
+    thinking: [
+      "Which companion should we unlock?",
+      "That item looks useful.",
+    ],
+
+    pointingRight: [
+      "Check today's rewards!",
+      "Take a look at this item!",
+    ],
+  },
+
+  leaderboard: {
+    idle: [
+      "Let's climb the rankings!",
+      "Every quiz earns more XP.",
+      "You're getting closer to the top.",
+    ],
+
+    thinking: [
+      "Who will be today's champion?",
+      "A few more points and you'll move up!",
+    ],
+
+    celebrate: [
+      "🏆 New personal best!",
+      "Amazing ranking!",
+    ],
+  },
+
+  profile: {
+    idle: [
+      "Welcome back, Explorer!",
+      "Your journey continues.",
+      "Let's review your achievements.",
+    ],
+
+    thinking: [
+      "You've come a long way.",
+      "Every expedition made you stronger.",
+    ],
+  },
+
+  camp: {
+    idle: [
+      "Welcome back to camp.",
+      "Time to prepare for another expedition.",
+      "Every explorer needs a rest.",
+    ],
+
+    thinking: [
+      "Where should we travel next?",
+      "Tomorrow brings another adventure.",
+    ],
+  },
 };
-
 export const messages = {
   idle: [
     "Hello Explorer! 👋",
@@ -217,6 +451,7 @@ wakeup: [
     "Time to rest by the fire.",
     "This camp feels cozy.",
   ],
+
 };
 
 export function getRandomMessage(mood, section = "default") {

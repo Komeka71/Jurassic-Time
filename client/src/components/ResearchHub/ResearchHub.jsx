@@ -1,5 +1,5 @@
 
-
+import Chatbot from "../chat/Chatbot";
 import ArchiveHero from "./Hero/ArchiveHero";
 import MapRoom from "./MapRoom/MapRoom";
 import SubmitJournal from "./SubmitJournal/SubmitJournal";
@@ -11,11 +11,17 @@ import FloatingNavigation from "./FloatingNavigation";
 // import Leaderboard from "./Leaderboard/Leaderboard";
 // import WeeklyChallenge from "./WeeklyChallenge/WeeklyChallenge";
 import DinoGuide from "../guide/DinoGuide";
+import { useGuide } from "../../context/GuideContext";
+import { useAuth } from "../../context/AuthContext";
+import { getPersonalization } from "../../utils/personalization";
 
 import { useEffect, useRef, useState } from "react";
 
 export default function ResearchHub() {
   const videoRef = useRef(null);
+  const { user } = useAuth();
+  const personalization = getPersonalization(user);
+  const { setCurrentPage, setLastAction } = useGuide();
 
 useEffect(() => {
   // Always start at the Hero
@@ -29,6 +35,15 @@ useEffect(() => {
     videoRef.current.playbackRate = 0.15;
   }
 }, []);
+
+// The shared guide context previously had no idea the user was on the
+// Research Hub at all (this page never called setCurrentPage), so the
+// chat guide would answer "what page is this?" using whatever page the
+// visitor had been on before. Keep it in sync here.
+useEffect(() => {
+  setCurrentPage("research");
+  setLastAction("researchVisited");
+}, [setCurrentPage, setLastAction]);
 const [guideMood, setGuideMood] = useState("wave");
 const heroRef = useRef(null);
 const mapRef = useRef(null);
@@ -187,7 +202,8 @@ setGuideMessage(section.message);
           */}
         </div>
       </div>
-  <div
+  {/* ================= FLOATING DINO ================= */}
+<div
   className="
     fixed
     bottom-2
@@ -199,10 +215,10 @@ setGuideMessage(section.message);
     z-[90]
 
     origin-bottom-right
-   scale-[0.9]
+    scale-[0.9]
 
-xl:scale-120
-2xl:scale-[1.05]
+    xl:scale-[1.2]
+    2xl:scale-[1.05]
   "
 >
   <DinoGuide
@@ -212,6 +228,23 @@ xl:scale-120
     message={guideMessage}
   />
 </div>
-    </section>
+
+{/* ================= AI CHATBOT ================= */}
+<div
+  className="
+    fixed
+    bottom-4
+    left-0
+
+    md:bottom-6
+    md:left-6
+
+    z-[95]
+  "
+>
+  <Chatbot personalization={personalization} page="research" userName={user?.username} />
+</div>
+
+</section>
   );
 }

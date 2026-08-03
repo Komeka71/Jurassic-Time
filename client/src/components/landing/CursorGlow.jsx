@@ -4,7 +4,7 @@
 // // export default function CursorGlow() {
 // //   const x = useMotionValue(window.innerWidth / 2);
 // //   const y = useMotionValue(window.innerHeight / 2);
-
+ 
 // //   const smoothX = useSpring(x, {
 // //     stiffness: 120,
 // //     damping: 18,

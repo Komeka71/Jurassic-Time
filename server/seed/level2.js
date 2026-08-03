@@ -1011,4 +1011,253 @@ module.exports = [
   coins: 25,
   level: 2,
 },
+{
+  text: "Which dinosaur is known for its three horns?",
+  options: [
+    "Triceratops",
+    "Velociraptor",
+    "Spinosaurus",
+    "Brachiosaurus"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "herbivores",
+
+  fact: "Triceratops used its three horns for protection and display.",
+
+  story: "🌿 As you enter Volcano Ridge, a peaceful giant lowers its horned head and watches you carefully.",
+
+  dinoMessage: "😊 Don't worry! Not every horned dinosaur wants to fight.",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "What did Tyrannosaurus Rex mainly eat?",
+  options: [
+    "Plants",
+    "Fish",
+    "Meat",
+    "Leaves"
+  ],
+  correctIndex: 2,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "carnivores",
+
+  fact: "T. rex was one of the largest meat-eating dinosaurs.",
+
+  story: "🦖 A giant footprint appears in the volcanic ash ahead.",
+
+  dinoMessage: "😨 Whatever made that footprint must be huge!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Which dinosaur had a very long neck?",
+  options: [
+    "Velociraptor",
+    "Brachiosaurus",
+    "Ankylosaurus",
+    "Carnotaurus"
+  ],
+  correctIndex: 1,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "herbivores",
+
+  fact: "Brachiosaurus used its long neck to eat leaves high in trees.",
+
+  story: "🌳 Smoke clears to reveal a towering dinosaur reaching the tallest trees.",
+
+  dinoMessage: "🤩 It's so tall!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Which dinosaur had armor covering its body?",
+  options: [
+    "Ankylosaurus",
+    "Spinosaurus",
+    "Gallimimus",
+    "Diplodocus"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "herbivores",
+
+  fact: "Ankylosaurus had thick armor and a heavy tail club.",
+
+  story: "🪨 A dinosaur calmly walks through falling rocks without getting hurt.",
+
+  dinoMessage: "😮 Its armor protects it from danger!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Which dinosaur is famous for its large sail?",
+  options: [
+    "Triceratops",
+    "Spinosaurus",
+    "Stegosaurus",
+    "Parasaurolophus"
+  ],
+  correctIndex: 1,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "carnivores",
+
+  fact: "Spinosaurus had a huge sail running along its back.",
+
+  story: "🌋 A massive shadow appears beside a steaming river.",
+
+  dinoMessage: "😲 Look at that giant sail!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Dinosaurs lived millions of years before...",
+  options: [
+    "Humans",
+    "Dogs",
+    "Birds",
+    "Fish"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "mixed",
+
+  fact: "Dinosaurs disappeared long before humans evolved.",
+
+  story: "🦴 Ancient footprints stretch across the volcanic valley.",
+
+  dinoMessage: "📜 We're walking through history!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Which dinosaur had plates along its back?",
+  options: [
+    "Stegosaurus",
+    "Velociraptor",
+    "Carnotaurus",
+    "Brachiosaurus"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "herbivores",
+
+  fact: "Stegosaurus had large plates running down its back.",
+
+  story: "🌄 Sunlight reflects from the plates of a peaceful dinosaur.",
+
+  dinoMessage: "✨ Those plates shine like shields!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Which dinosaur was famous for being very fast?",
+  options: [
+    "Velociraptor",
+    "Ankylosaurus",
+    "Triceratops",
+    "Stegosaurus"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "carnivores",
+
+  fact: "Velociraptors were agile and quick predators.",
+
+  story: "💨 A blur races across the volcanic rocks.",
+
+  dinoMessage: "🏃 It's too fast to follow!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "Which dinosaur had a club-shaped tail?",
+  options: [
+    "Ankylosaurus",
+    "Spinosaurus",
+    "Parasaurolophus",
+    "Gallimimus"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "herbivores",
+
+  fact: "Ankylosaurus used its tail as a powerful weapon.",
+
+  story: "🪵 Something heavy swings through the smoky air.",
+
+  dinoMessage: "💥 I'd stay away from that tail!",
+
+  xp: 10,
+  coins: 5,
+  level: 2,
+},
+
+{
+  text: "What caused the extinction of most dinosaurs?",
+  options: [
+    "A giant asteroid",
+    "Snow",
+    "Floods",
+    "Humans"
+  ],
+  correctIndex: 0,
+
+  category: "general",
+  difficulty: "easy",
+  topic: "mixed",
+
+  fact: "Scientists believe a massive asteroid impact led to the extinction of non-avian dinosaurs.",
+
+  story: "☄️ A bright light streaks across the prehistoric sky.",
+
+  dinoMessage: "😨 That doesn't look good...", 
+
+  xp: 15,
+  coins: 8,
+  level: 2,
+},
 ];

@@ -1,7 +1,6 @@
 
-
-
-import { useRef, useEffect } from "react";
+import { useGuide } from "../../context/GuideContext";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import DiscoveryCard from "./DiscoveryCard";
@@ -11,11 +10,28 @@ export default function MapPreview() {
   const earthRef = useRef(null);
   const bgRef = useRef(null);
   const navigate = useNavigate();
+const {
+  setCurrentPage,
+  setCurrentDinosaur,
+  setLastAction,
+} = useGuide();
+useEffect(() => {
+  if (earthRef.current) {
+    earthRef.current.playbackRate = 0.45;
+  }
 
-  useEffect(() => {
-    if (earthRef.current) earthRef.current.playbackRate = 0.45;
-    if (bgRef.current) bgRef.current.playbackRate = 0.35;
-  }, []);
+  if (bgRef.current) {
+    bgRef.current.playbackRate = 0.35;
+  }
+
+  setCurrentPage("mapPreview");
+  setCurrentDinosaur("earth");
+  setLastAction("");
+}, [
+  setCurrentPage,
+  setCurrentDinosaur,
+  setLastAction,
+]);
 
   return (
     <section
@@ -148,7 +164,7 @@ lg:py-10
     2xl:scale-[1.05]
   "
 >
-  <DinoGuide />
+  <DinoGuide section="map" />
 </div>
 <div
   className="
@@ -231,7 +247,10 @@ xl:h-[620px]
 
           {/* Circular Click Area */}
          <button
-  onClick={() => navigate("/maps")}
+onClick={() => {
+  setLastAction("mapVisited");
+  navigate("/maps");
+}}
   aria-label="Explore Map"
   className="
     absolute
@@ -362,7 +381,7 @@ lg:h-[520px]
     lg:scale-100
   "
 >
-  <DinoGuide />
+  <DinoGuide section="map" />
 </div>
 
   {/* Discovery Card */}

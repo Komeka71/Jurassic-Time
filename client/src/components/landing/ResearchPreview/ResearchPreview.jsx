@@ -7,8 +7,9 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import DinoGuide from "../../guide/DinoGuide";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ResearchTransition from "../../transitions/research/ResearchTransition";
+import { useGuide } from "../../../context/GuideContext";
 
 const features = [
   {
@@ -35,6 +36,14 @@ const features = [
 
 export default function ResearchPreview({ onEnter }) {
     const [showTransition, setShowTransition] = useState(false);
+    const {
+  setCurrentPage,
+  setLastAction,
+} = useGuide();
+useEffect(() => {
+  setCurrentPage("researchPreview");
+  setLastAction("");
+}, [setCurrentPage, setLastAction]);
   return (
     <section className="relative min-h-screen overflow-hidden">
       {/* ================= VIDEO ================= */}

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Microscope } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useGuide } from "../../../context/GuideContext";
 import axios from "axios";
-
 import { mapDiscovery } from "../../../utils/mapDiscovery";
 import DiscoveryCard from "./DiscoveryCard";
 import DiscoveryDrawer from "./DiscoveryDrawer";
@@ -19,7 +19,10 @@ const [loading, setLoading] =
   useEffect(() => {
   fetchDiscoveries();
 }, []);
-
+const {
+  setCurrentDinosaur,
+  setLastAction,
+} = useGuide();
 async function fetchDiscoveries() {
   try {
     const { data } = await axios.get(
@@ -203,7 +206,11 @@ Research Collection
       <DiscoveryCard
         discovery={discovery}
         index={index}
-        onClick={setSelectedDiscovery}
+        onClick={(discovery) => {
+  setSelectedDiscovery(discovery);
+  setLastAction("discoveryOpened");
+  setCurrentDinosaur(discovery.species);
+}}
       />
     </div>
   ))}

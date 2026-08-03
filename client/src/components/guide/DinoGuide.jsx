@@ -1,15 +1,17 @@
-
+import { getDinosaurMessage } from "./dinosaurMessages";
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
+import { getPageMessage } from "./pageMessages";
 import DinoPlayer from "./DinoPlayer";
 import SpeechBubble from "./SpeechBubble";
-
+import { useGuide } from "../../context/GuideContext";
 import {
   getRandomIdleBehaviour,
   getRandomClickReaction,
   loopStates,
 } from "./behaviourEngine";
-
+import { getActionReaction } from "./actionMessages";
 import { getRandomMessage } from "./messages";
 
 export default function DinoGuide({
@@ -35,7 +37,13 @@ export default function DinoGuide({
   // video key so it always remounts/reloads the clip -> no more
   // "video ends and just sits there frozen" bug.
   const [playToken, setPlayToken] = useState(0);
-
+const {
+  currentPage,
+  currentDinosaur,
+  lastAction,
+  guideHidden,
+  setGuideHidden,
+} = useGuide();
   /*
   =====================================
   REFS
@@ -56,6 +64,8 @@ export default function DinoGuide({
 
   const wakeupSequence = useRef(false);
 const lastControlledMood = useRef("");
+const previousDinosaur = useRef(currentDinosaur);
+const previousAction = useRef("");
   /*
   =====================================
   PLAY
@@ -83,9 +93,7 @@ const lastControlledMood = useRef("");
         customMessage ||
           getRandomMessage(nextMood, section)
       );
-    },
-    []
-  );
+    }, [section]);
 
   /*
   =====================================
@@ -100,7 +108,7 @@ useEffect(() => {
 
   hasWelcomed.current = true;
 
-  play("wave", "Welcome to PaleoVerse!");
+play("wave", getPageMessage(currentPage));
 }, [play, controlled]);
 
   /*
@@ -145,6 +153,7 @@ useEffect(() => {
     if (
   !["idle", "standing", "lookingAround"].includes(mood)
 )
+
   return;
 
       if (Math.random() < 0.35) {
@@ -154,6 +163,8 @@ useEffect(() => {
 
     return () => clearInterval(timer);
 }, [mood, play, controlled]);
+
+
   /*
   =====================================
   USER INTERACTION
@@ -327,17 +338,115 @@ useEffect(() => {
     setMessage(controlledMessage);
   }
 }, [controlled, controlledMood, controlledMessage, play]);
+
+useEffect(() => {
+  if (controlled) return;
+
+  if (!hasWelcomed.current) return;
+
+  if (busy.current) return;
+
+  play(
+    "thinking",
+    getPageMessage(currentPage),
+    true
+  );
+}, [currentPage, controlled, play]);
+useEffect(() => {
+  console.log("Guide Page:", currentPage);
+  console.log("Guide Dinosaur:", currentDinosaur);
+}, [currentPage, currentDinosaur]);
+
+
+
+useEffect(() => {
+  if (controlled) return;
+
+  if (!hasWelcomed.current) return;
+
+  if (previousDinosaur.current === currentDinosaur) return;
+
+  previousDinosaur.current = currentDinosaur;
+
+  if (busy.current) return;
+
+  play(
+    "happy",
+    getDinosaurMessage(currentDinosaur),
+    true
+  );
+}, [currentDinosaur, controlled, play]);
+
+useEffect(() => {
+  if (controlled) return;
+
+  if (!lastAction) return;
+
+  if (previousAction.current === lastAction) return;
+
+  previousAction.current = lastAction;
+
+  const reaction = getActionReaction(lastAction);
+
+  // Always update the speech bubble
+  setMessage(reaction.message);
+
+  // Only change animation if the dino is free
+  if (!busy.current) {
+    play(reaction.mood, reaction.message, true);
+  }
+}, [lastAction, controlled, play]);
  /*
   =====================================
   RENDER
   =====================================
   */
-
+if (guideHidden) return null;
   return (
     <div
-      className="relative inline-block cursor-pointer select-none"
+      className="relative inline-block cursor-pointer select-none group"
       onClick={handleClick}
-    >
+    ><motion.button
+  onClick={(e) => {
+  e.stopPropagation();
+  setGuideHidden(true);
+}}
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.9 }}
+  className="
+  absolute
+  -right-2
+  top-1
+
+  z-50
+
+  flex
+  h-8
+  w-8
+  items-center
+  justify-center
+
+  rounded-full
+
+  bg-[#111814]/90
+
+  border
+  border-[#446841]
+
+  text-[#d7f7cf]
+
+  opacity-0
+
+  transition-all
+
+  group-hover:opacity-100
+
+  hover:border-[#6be26a]
+  hover:bg-[#182419]
+  "
+>
+  <X size={15} />
+</motion.button>
       <div
         className="
           absolute

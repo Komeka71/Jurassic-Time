@@ -11,6 +11,11 @@ import InfoPanel from '../components/InfoPanel.jsx'
 import ExhibitPanel from '../components/ExhibitPanel.jsx'
 import { eras } from '../data/eraTimelines.js'
 import './EraTimeline.css'
+import { useGuide } from "../context/GuideContext";
+import DinoGuide from "../components/guide/DinoGuide";
+import Chatbot from "../components/chat/Chatbot";
+import { useAuth } from "../context/AuthContext";
+import { getPersonalization } from "../utils/personalization";
 
 /**
  * Reusable Era Timeline engine. Renders the scroll-snapped hero + exhibit
@@ -63,6 +68,9 @@ import './EraTimeline.css'
  * support (scrolling to and opening a specific exhibit on arrival).
  */
 function EraTimeline() {
+  const { user } = useAuth();
+  const personalization = getPersonalization(user);
+
   const { era: eraSlug } = useParams()
   const eraConfig = eras[eraSlug]
 
@@ -77,7 +85,12 @@ function EraTimeline() {
   const [exhibitDinosaur, setExhibitDinosaur] = useState(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
+const { setCurrentPage, setLastAction } = useGuide();
 
+useEffect(() => {
+  setCurrentPage("timeline");
+  setLastAction("");
+}, [setCurrentPage, setLastAction]);
   const dinosaurs = eraConfig?.dinosaurs ?? []
 
   useEffect(() => {
@@ -226,6 +239,29 @@ function EraTimeline() {
       </div>
 
       <ExhibitPanel dinosaur={exhibitDinosaur} onClose={() => setExhibitDinosaur(null)} />
+{/* Floating Dino */}
+<div
+  className="
+    fixed
+
+    left-6
+    bottom-8
+
+    z-[900]
+
+    hidden
+    xl:block
+
+    origin-bottom-left
+
+    scale-[0.9]
+    2xl:scale-100
+  "
+>
+  <DinoGuide section="timeline" />
+</div>
+
+<Chatbot personalization={personalization} page="timeline" userName={user?.username} />
 
       <div className="era-timeline__scroll" ref={scrollRef}>
         <section

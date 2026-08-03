@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useGuide } from "../../../../context/GuideContext";
+
 
 const tabs = [
   { id: "overview", label: "Overview" },
@@ -12,6 +14,8 @@ export default function DrawerTabs({
   activeTab,
   setActiveTab,
 }) {
+  const { setLastAction } = useGuide();
+
   return (
     <div
       className="
@@ -32,7 +36,19 @@ export default function DrawerTabs({
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+  setActiveTab(tab.id);
+
+  const actions = {
+    overview: "overviewViewed",
+    evidence: "evidenceViewed",
+    verification: "verificationViewed",
+    ai: "aiViewed",
+    discussion: "discussionViewed",
+  };
+
+  setLastAction(actions[tab.id]);
+}}
               className="
                 relative
                 flex-1

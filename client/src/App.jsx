@@ -1,6 +1,6 @@
-
+import CursorGlow from "./components/landing/CursorGlow";
 import Maps from "./pages/Maps";
-
+import GuideToggle from "./components/guide/GuideToggle";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 // Auth
@@ -54,6 +54,8 @@ function MainLayout() {
 export default function App() {
   return (
     <BrowserRouter>
+    <CursorGlow />
+    <GuideToggle />
       <Routes>
 
         {/* Authentication */}

@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useGuide } from "../context/GuideContext";
 import {
   MapContainer,
   TileLayer,
@@ -7,10 +8,13 @@ import {
   useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
+import DinoGuide from "../components/guide/DinoGuide";
+import Chatbot from "../components/chat/Chatbot";
 import { SITES } from "../data/sites";
 import { pinIcon } from "../components/PinIcon";
 import DinoPopup from "../components/DinoPopup";
+import { useAuth } from "../context/AuthContext";
+import { getPersonalization } from "../utils/personalization";
 
 import "./Maps.css";
 
@@ -25,25 +29,55 @@ function FlyTo({ lat, lng, zoom }) {
 }
 
 export default function Maps() {
+  const { user } = useAuth();
+  const personalization = getPersonalization(user);
+
   const [selectedSite, setSelectedSite] = useState(null);
   const [flyTo, setFlyTo] = useState(null);
   const [hintVisible, setHintVisible] = useState(true);
 
-  const handleMarkerClick = useCallback((site) => {
+const {
+  setCurrentPage,
+  setCurrentDinosaur,
+  setLastAction,
+} = useGuide();
+useEffect(() => {
+  setCurrentPage("map");
+  setCurrentDinosaur("earth");
+  setLastAction("");
+}, [
+  setCurrentPage,
+  setCurrentDinosaur,
+  setLastAction,
+]);
+const handleMarkerClick = useCallback(
+  (site) => {
     setSelectedSite(site);
+
     setFlyTo({
       lat: site.lat,
       lng: site.lng,
       zoom: 4,
     });
+
     setHintVisible(false);
-  }, []);
 
-  const handleClose = useCallback(() => {
-    setSelectedSite(null);
-    setFlyTo(null);
-  }, []);
+    setCurrentDinosaur(site.name);
 
+    setLastAction("mapLocationFound");
+  },
+  [
+    setCurrentDinosaur,
+    setLastAction,
+  ]
+);
+
+const handleClose = useCallback(() => {
+  setSelectedSite(null);
+  setFlyTo(null);
+
+  setCurrentDinosaur("earth");
+}, [setCurrentDinosaur]);
   return (
     <div className="maps-app">
       <header className="maps-hdr">
@@ -136,6 +170,31 @@ export default function Maps() {
           onClose={handleClose}
         />
       )}
+      {/* Floating Dino */}
+{/* Floating Dino */}
+<div
+  className="
+    fixed
+
+    bottom-6
+    left-6
+
+    z-[900]
+
+    hidden
+    xl:block
+
+    origin-bottom-left
+
+    scale-[0.9]
+    2xl:scale-100
+  "
+>
+  <DinoGuide section="map" />
+</div>
+
+<Chatbot personalization={personalization} page="map" userName={user?.username} />
+
     </div>
   );
 }

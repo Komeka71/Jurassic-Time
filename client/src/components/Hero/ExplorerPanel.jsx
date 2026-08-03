@@ -35,6 +35,7 @@ export default function ExplorerPanel({
   dinosaur,
   info,
   activePart,
+  heroContent,
 }) {
  const currentData = anatomyData[dinosaur];
 
@@ -46,13 +47,20 @@ const data =
   activePart && currentData
     ? currentData[activePart]
     : null;
+const welcomeTitle =
+  heroContent?.title || "Welcome Explorer";
 
-    console.log({
-  dinosaur,
-  activePart,
-  currentData,
-  data,
-});
+const welcomeSubtitle =
+  heroContent?.subtitle || "";
+
+const recommendation =
+  heroContent?.recommendation || "Dinosaurs";
+
+const age =
+  heroContent?.ageGroup || "Explorer";
+
+const companion =
+  heroContent?.companion || "Velociraptor";
   return (
     <aside
      className="
@@ -243,16 +251,65 @@ md:p-2">
                 </div>
               </motion.div>
             ) : (
-              <motion.div
+<motion.div
   key="overview"
   initial={{ opacity: 0 }}
   animate={{ opacity: 1 }}
   exit={{ opacity: 0 }}
   className="space-y-6"
 >
-  <p className="text-white/70 leading-7">
-    {info?.description}
-  </p>
+
+  <div>
+    <p className="text-[11px] uppercase tracking-[0.35em] text-[#8ea672]">
+      Personalized Expedition
+    </p>
+
+    <h2 className="mt-2 text-3xl font-bold text-[#f3f1e7]">
+      {welcomeTitle}
+    </h2>
+
+    <p className="mt-3 text-white/65 leading-7">
+      {welcomeSubtitle}
+    </p>
+  </div>
+
+  <div className="grid grid-cols-2 gap-3">
+
+    <div className="rounded-xl border border-[#59684c]/30 bg-[#141a15]/70 p-4">
+      <p className="text-[11px] uppercase tracking-[0.25em] text-[#8ea672]">
+        Today's Focus
+      </p>
+
+      <p className="mt-2 font-semibold text-[#f3f1e7]">
+        {recommendation}
+      </p>
+    </div>
+
+    <div className="rounded-xl border border-[#59684c]/30 bg-[#141a15]/70 p-4">
+      <p className="text-[11px] uppercase tracking-[0.25em] text-[#8ea672]">
+        Explorer
+      </p>
+
+      <p className="mt-2 font-semibold text-[#f3f1e7]">
+        {age}
+      </p>
+    </div>
+
+  </div>
+
+  <div className="rounded-xl border border-[#59684c]/30 bg-[#141a15]/70 p-5">
+    <p className="text-[11px] uppercase tracking-[0.3em] text-[#8ea672]">
+      YOUR GUIDE
+    </p>
+
+    <h3 className="mt-3 text-2xl font-bold text-[#f3f1e7]">
+      {companion}
+    </h3>
+
+    <p className="mt-3 text-white/60 leading-7">
+      Your guide has prepared today's expedition based on your interests.
+    </p>
+  </div>
 
   <div className="grid grid-cols-2 gap-3">
     {[
@@ -263,12 +320,7 @@ md:p-2">
     ].map(([label, value]) => (
       <div
         key={label}
-        className="
-          rounded-xl
-          border border-[#59684c]/30
-          bg-[#141a15]/70
-          p-4
-        "
+        className="rounded-xl border border-[#59684c]/30 bg-[#141a15]/70 p-4"
       >
         <p className="text-[11px] uppercase tracking-[0.25em] text-[#8ea672]">
           {label}
@@ -281,16 +333,6 @@ md:p-2">
     ))}
   </div>
 
-  <div className="rounded-xl border border-[#59684c]/30 bg-[#141a15]/70 p-4">
-    <p className="text-[11px] uppercase tracking-[0.3em] text-[#8ea672]">
-      Interactive Mode
-    </p>
-
-    <p className="mt-3 text-white/60 leading-7">
-      Hover over the dinosaur skeleton scanner to inspect individual body
-      parts and reveal detailed anatomical information.
-    </p>
-  </div>
 </motion.div>
             )}
           </AnimatePresence>

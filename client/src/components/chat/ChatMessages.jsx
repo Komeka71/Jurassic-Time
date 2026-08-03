@@ -6,6 +6,7 @@ export default function ChatMessages({
   messages,
   typing,
   suggestions,
+  showSuggestions,
   onSuggestionClick,
 }) {
   const bottomRef = useRef(null);
@@ -35,11 +36,11 @@ export default function ChatMessages({
 
       {typing && <TypingIndicator />}
 
-      {messages.length === 1 && (
+      {showSuggestions && !typing && suggestions?.length > 0 && (
         <SuggestionChips
-  suggestions={suggestions}
-  onSelect={onSuggestionClick}
-/>
+          suggestions={suggestions}
+          onSelect={onSuggestionClick}
+        />
       )}
 
       <div ref={bottomRef} />

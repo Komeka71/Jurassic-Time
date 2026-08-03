@@ -1,10 +1,3 @@
-const suggestions = [
-  "🦖 Tell me about T-Rex",
-  "🦴 Explain this skeleton",
-  "🌍 Why did dinosaurs go extinct?",
-  "🪶 Which dinosaurs had feathers?",
-];
-
 export default function SuggestionChips({
   suggestions,
   onSelect,

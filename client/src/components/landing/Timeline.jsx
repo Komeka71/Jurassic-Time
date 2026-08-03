@@ -1,11 +1,11 @@
 
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DinoGuide from "../guide/DinoGuide";
 import { useNavigate } from "react-router-dom";
-
+import { useGuide } from "../../context/GuideContext";
 
 const eras = [
   {
@@ -39,7 +39,11 @@ const eras = [
     video: "/videos/timeline/cretaceous.mp4",
   },
 ];
-
+const eraDinosaur = {
+  Triassic: "coelophysis",
+  Jurassic: "brachiosaurus",
+  Cretaceous: "trex",
+};
 export default function Timeline() {
   const [current, setCurrent] = useState(1);
   const [direction, setDirection] = useState(1);
@@ -58,7 +62,22 @@ const navigate = useNavigate();
     setDirection(-1);
     setCurrent((c) => (c - 1 + eras.length) % eras.length);
   };
+const {
+  setCurrentPage,
+  setLastAction,
+  setCurrentDinosaur,
+} = useGuide();
+useEffect(() => {
+  setCurrentPage("timeline");
+  setLastAction("timelineVisited");
+}, [setCurrentPage, setLastAction]);
+useEffect(() => {
+  setCurrentDinosaur(
+    eraDinosaur[eras[current].name]
+  );
 
+  setLastAction("specimenChanged");
+}, [current, setCurrentDinosaur, setLastAction]);
   return (
     <section
       id="timeline"

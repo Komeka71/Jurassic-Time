@@ -1,9 +1,19 @@
 const { askPaleo } = require("../services/gemini");
+
 async function chat(req, res) {
   try {
     const {
       message,
       currentDinosaur,
+      dinosaurLabel,
+
+      // New contextual fields
+      page,
+      purpose,
+      interests,
+      guide,
+      hero,
+      userName,
     } = req.body;
 
     if (!message) {
@@ -12,10 +22,16 @@ async function chat(req, res) {
       });
     }
 
-    const reply = await askPaleo(
-      message,
-      currentDinosaur
-    );
+    const reply = await askPaleo(message, {
+      currentDinosaur,
+      dinosaurLabel,
+      page,
+      purpose,
+      interests,
+      guide,
+      hero,
+      userName,
+    });
 
     res.json({
       success: true,
@@ -31,6 +47,7 @@ async function chat(req, res) {
     });
   }
 }
+
 module.exports = {
   chat,
 };

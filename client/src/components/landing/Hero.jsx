@@ -9,9 +9,54 @@ import DinoGuide from "../guide/DinoGuide";
 import Chatbot from "../chat/Chatbot";
 import dinosaurData from "../../data/dinosaurData";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+
+// import { getHeroContent } from "../../utils/getHeroContent";
+import { getPersonalization } from "../../utils/personalization";
+import { useGuide } from "../../context/GuideContext";
+// import { useGuide } from "../../context/GuideContext";
 
 export default function Hero() {
-  const [selectedDino, setSelectedDino] = useState("trex");
+ const { user } = useAuth();
+const {
+  setCurrentPage,
+  setCurrentDinosaur,
+  setLastAction,
+} = useGuide();
+const personalization = getPersonalization(user);
+// const preferences = user?.preferences || {};
+// const heroContent = getHeroContent(preferences);
+// const {
+//   ageGroup,
+//   purpose,
+//   interests,
+// } = preferences;
+// const getStartingDino = () => {
+//   switch (interests) {
+//     case "Carnivores":
+//       return "trex";
+
+//     case "Flying reptiles":
+//       return "pteranodon";
+
+//     case "Marine reptiles":
+//       return "mosasaurus";
+
+//     case "Fossils & geology":
+//       return "triceratops";
+
+//     case "Extinction science":
+//       return "brachiosaurus";
+
+//     default:
+//       return "trex";
+//   }
+// };
+
+
+const [selectedDino, setSelectedDino] = useState(
+  personalization.hero.dinosaur
+);
 const [hoveredPart, setHoveredPart] = useState(null);
 const [selectedPart, setSelectedPart] = useState(null);
   // const [selectedDinosaur, setSelectedDinosaur] = useState("T-Rex");
@@ -30,7 +75,10 @@ useEffect(() => {
     videoRef.current.playbackRate = 0.45; // 45% speed
   }
 }, []);
-console.log("Selected Part:", selectedPart);
+useEffect(() => {
+  setCurrentPage("hero");
+  setCurrentDinosaur(selectedDino);
+}, [selectedDino, setCurrentPage, setCurrentDinosaur]);
 
 return (
     <section
@@ -191,10 +239,13 @@ xl:translate-x-14
     xl:-translate-x-6
   "
 >
-        <SpecimenSelector
-          selected={selectedDino}
-          onSelect={setSelectedDino}
-        />
+      <SpecimenSelector
+  selected={selectedDino}
+  onSelect={(dino) => {
+    setSelectedDino(dino);
+    setLastAction("specimenChanged");
+  }}
+/>
       </div>
     </div>
 
@@ -228,13 +279,16 @@ justify-center
     }}
   >
 
-
-
-    <ExplorerPanel
-      dinosaur={selectedDino}
-      info={currentInfo}
-      activePart={selectedPart}
-    />
+<ExplorerPanel
+  dinosaur={selectedDino}
+  info={currentInfo}
+  activePart={selectedPart}
+  heroContent={{
+    ...personalization.hero,
+    username: user?.username,
+    companion: personalization.guide.companion,
+  }}
+/>
   </motion.div>
 </AnimatePresence>
     </div>
@@ -302,8 +356,10 @@ xl:scale-[1.2]
       -z-10
     "
   />
-
-  <DinoGuide section="hero" />
+<DinoGuide
+    section="hero"
+    config={personalization.guide}
+/>
 </div>
 {/* Scroll Indicator */}
 {/* <motion.div ...></motion.div> */}
@@ -337,7 +393,11 @@ items-center
           ↓
         </div>
       </motion.div> */}
-  <Chatbot currentDinosaur={dinoNames[selectedDino]} />
+<Chatbot
+  personalization={personalization}
+  page="hero"
+  userName={user?.username}
+/>
     </section>
   );
 }

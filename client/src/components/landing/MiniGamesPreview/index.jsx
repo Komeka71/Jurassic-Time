@@ -1,6 +1,9 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
+
+import { useGuide } from "../../../context/GuideContext";
+import DinoGuide from "../../guide/DinoGuide";
 
 import MissionCard from "./MissionCard";
 import MissionPath from "./MissionPath";
@@ -10,10 +13,6 @@ import DailyBonusCard from "./DailyBonusCard";
 import RewardsPanel from "./RewardsPanel";
 import { missions } from "./missionsData";
 
-// "Training Grounds — Choose Your Adventure" mini-games hub preview.
-// Redesigned as a cinematic mission-select screen (AAA-game feel) rather
-// than a dashboard section. Mascot / speech bubble intentionally left out
-// — added separately later.
 export default function MiniGamesPreview({
   currentRank = "Explorer",
   rewards = { gems: 120, coins: 2450, bones: 8, xp: 850 },
@@ -22,11 +21,19 @@ export default function MiniGamesPreview({
   const navigate = useNavigate();
   const sectionRef = useRef(null);
 
-  // Subtle parallax on the background layer as the section scrolls through.
+  const { setCurrentPage, setLastAction } = useGuide();
+
+useEffect(() => {
+  setCurrentPage("miniGamesPreview");
+  setLastAction("");
+}, [setCurrentPage, setLastAction]);
+
+  // Background parallax
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
+
   const bgY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
 
   return (
@@ -34,7 +41,7 @@ export default function MiniGamesPreview({
       ref={sectionRef}
       className="relative overflow-hidden bg-[#07120c]"
     >
-      {/* Atmospheric fade from the section above */}
+      {/* Atmospheric fade */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 z-10 h-28"
         style={{
@@ -43,8 +50,11 @@ export default function MiniGamesPreview({
         }}
       />
 
-      {/* Cinematic background: video + poster, parallax, single vignette + color grade */}
-      <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
+      {/* Background */}
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{ y: bgY }}
+      >
         <video
           src="/videos/minigames/minigamesbg.mp4"
           poster="/images/minigames/training-map-bg.png"
@@ -54,7 +64,7 @@ export default function MiniGamesPreview({
           playsInline
           className="h-full w-full scale-105 object-cover"
         />
-        {/* Vignette */}
+
         <div
           className="absolute inset-0"
           style={{
@@ -62,18 +72,74 @@ export default function MiniGamesPreview({
               "radial-gradient(ellipse at center, rgba(4,10,6,0.25) 30%, rgba(4,10,6,0.72) 78%, rgba(4,10,6,0.95) 100%)",
           }}
         />
-        {/* Overall dark wash so the scene reads darker throughout, not just at the edges */}
+
         <div className="absolute inset-0 bg-black/35" />
-        {/* Color grading — cool shadows, warm mid glow */}
+
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#07120c] mix-blend-multiply" />
+
         <div className="absolute inset-0 bg-gradient-to-t from-amber-500/5 via-transparent to-emerald-900/10" />
       </motion.div>
 
       <Ambient />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-14 md:py-20">
+
+        {/* Floating Dino */}
+{/* Floating Dino */}
+{/* <div
+  className="
+    hidden
+    xl:block
+
+    absolute
+
+right-[-140px]
+    bottom-60
+
+    2xl:right-4
+    2xl:bottom-52
+
+    z-30
+
+    origin-bottom-right
+
+    scale-[1.05]
+    2xl:scale-[0.95]
+  "
+>
+  <DinoGuide section="miniGames" />
+</div> */}
+{/* Floating Dino */}
+<div
+  className="
+    hidden
+    lg:block
+
+    absolute
+
+    right-[-35px]
+    bottom-[22rem]
+
+    xl:right-[-90px]
+    xl:bottom-60
+
+    2xl:right-[-40px]
+    2xl:bottom-56
+
+    z-30
+
+    origin-bottom-right
+
+    scale-[1.1]
+    lg:scale-[1.06]
+    xl:scale-[1.05]
+    2xl:scale-100
+  "
+>
+  <DinoGuide section="miniGames" />
+</div>
         {/* Header */}
-        <div className="mb-12 flex flex-col items-center gap-3 text-center md:mb-16">
+<div className="mb-12 flex flex-col items-center xl:items-start gap-3 text-center xl:text-left md:mb-16 xl:pr-[320px]">
           <motion.span
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -90,7 +156,10 @@ export default function MiniGamesPreview({
             transition={{ delay: 0.1 }}
             className="text-4xl font-extrabold uppercase tracking-wide md:text-6xl"
           >
-            <span className="block text-white">Choose Your</span>
+            <span className="block text-white">
+              Choose Your
+            </span>
+
             <span className="block bg-gradient-to-r from-emerald-300 via-amber-200 to-orange-300 bg-clip-text text-transparent">
               Adventure
             </span>
@@ -103,14 +172,16 @@ export default function MiniGamesPreview({
             transition={{ delay: 0.2 }}
             className="max-w-xl text-sm text-white/60 md:text-base"
           >
-            Travel through prehistoric worlds, solve mysteries, restore
-            history and uncover fossils before entering the PaleoVerse.
+            Travel through prehistoric worlds, solve mysteries,
+            restore history and uncover fossils before entering
+            the PaleoVerse.
           </motion.p>
         </div>
 
-        {/* Mission islands */}
+        {/* Missions */}
         <div className="relative flex flex-col items-center gap-20 py-4 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
           <MissionPath />
+
           {missions.map((mission, index) => (
             <MissionCard
               key={mission.id}
@@ -121,17 +192,12 @@ export default function MiniGamesPreview({
           ))}
         </div>
 
-        {/*
-          HUD: 3 separate floating glass cards.
-          mt-56/mt-60 here is deliberate, not decorative spacing — the
-          mission-card hover popover is position:absolute (so it doesn't
-          push layout while open), which means this margin is the only
-          thing keeping an open popover from overlapping these cards.
-          If you resize the popover in MissionCard.jsx, re-check this.
-        */}
+        {/* Bottom HUD */}
         <div className="mt-56 grid grid-cols-1 gap-4 md:mt-60 md:grid-cols-3 md:gap-5">
           <ExpeditionProgress currentRank={currentRank} />
+
           <DailyBonusCard onClaim={onClaimDailyBonus} />
+
           <RewardsPanel {...rewards} />
         </div>
       </div>

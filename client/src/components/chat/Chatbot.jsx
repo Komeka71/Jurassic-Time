@@ -1,5 +1,6 @@
 // components/chat/Chatbot.jsx
 import { useState, useEffect, useRef } from "react";
+import { useGuide } from "../../context/GuideContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircleMore } from "lucide-react";
 
@@ -7,142 +8,321 @@ import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
-export default function Chatbot({
-  currentDinosaur,
-}) {
-  const [open, setOpen] = useState(false);
-const [typing, setTyping] = useState(false);
-  const [messages, setMessages] = useState([
-  {
-    role: "assistant",
-    text:
-      "Hello Explorer! 👋 I'm Paleo, your AI museum guide. Ask me anything about dinosaurs, fossils, evolution or the specimen you're viewing.",
-  },
-]);
-const previousDinosaur = useRef(currentDinosaur);
-const suggestionMap = {
-  "T-Rex": [
+// ---------------------------------------------------------------------------
+// Dinosaur name helpers
+//
+// Different parts of the app set the "current dinosaur" using different
+// formats: lowercase slugs from the Hero/Timeline ("trex", "brachiosaurus"),
+// "earth" from the Map overview, or full species names from the Map sites
+// and Research Hub discoveries ("Tyrannosaurus Rex", "Spinosaurus", ...).
+// These helpers normalize all of that into one consistent, readable label so
+// the guide never gets confused about "what is this dino".
+// ---------------------------------------------------------------------------
+const DINO_DISPLAY_OVERRIDES = {
+  trex: "T-Rex",
+  triceratops: "Triceratops",
+  brachiosaurus: "Brachiosaurus",
+  pteranodon: "Pteranodon",
+  mosasaurus: "Mosasaurus",
+  coelophysis: "Coelophysis",
+};
+
+function normalizeDinoKey(raw) {
+  if (!raw) return "";
+  return String(raw)
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "");
+}
+
+function formatDinoName(raw) {
+  if (!raw) return "this dinosaur";
+
+  const key = normalizeDinoKey(raw);
+  if (DINO_DISPLAY_OVERRIDES[key]) return DINO_DISPLAY_OVERRIDES[key];
+
+  // Title-case each word, preserving whatever spacing was already there.
+  return String(raw)
+    .split(" ")
+    .map((word) =>
+      word.length ? word[0].toUpperCase() + word.slice(1) : word
+    )
+    .join(" ");
+}
+
+const CURATED_SUGGESTIONS = {
+  trex: [
     "🦖 How fast could it run?",
     "🦷 How strong was its bite?",
     "🥩 What did it eat?",
     "⚔️ Did it hunt alone?",
   ],
-
-  Triceratops: [
+  triceratops: [
     "🦕 Why did it have horns?",
     "🌿 What did it eat?",
     "🛡️ How did it defend itself?",
     "🦖 Could it defeat a T-Rex?",
   ],
-
-  Brachiosaurus: [
+  brachiosaurus: [
     "🌿 What did it eat?",
     "📏 How tall was it?",
     "🦒 Why was its neck so long?",
     "🥚 How big were its eggs?",
   ],
-
-  Pteranodon: [
+  pteranodon: [
     "🪽 Could it really fly?",
     "🐟 What did it eat?",
     "🌊 Did it live near oceans?",
     "🦖 Was it actually a dinosaur?",
   ],
-
-  Mosasaurus: [
+  mosasaurus: [
     "🌊 How fast could it swim?",
     "🦈 What did it hunt?",
     "📏 How large was it?",
     "🦎 Was it really a dinosaur?",
   ],
 };
-const exhibitGreetings = {
-  "T-Rex":
-    "🦖 Welcome to the Tyrannosaurus rex exhibit! This apex predator ruled the Late Cretaceous. Ask me anything about its speed, bite, or hunting habits.",
 
-  Triceratops:
+const CURATED_EXHIBIT_GREETINGS = {
+  trex: "🦖 Welcome to the Tyrannosaurus rex exhibit! This apex predator ruled the Late Cretaceous. Ask me anything about its speed, bite, or hunting habits.",
+  triceratops:
     "🦕 Welcome to the Triceratops exhibit! Discover how this giant herbivore used its horns and frill for defense and display.",
-
-  Brachiosaurus:
+  brachiosaurus:
     "🌿 Welcome to the Brachiosaurus exhibit! One of the tallest dinosaurs ever to walk the Earth. Ask me about its size, diet, or lifestyle.",
-
-  Pteranodon:
+  pteranodon:
     "🪽 Welcome to the Pteranodon exhibit! Although often mistaken for a dinosaur, it was actually a flying reptile. Ask me how it flew!",
-
-  Mosasaurus:
+  mosasaurus:
     "🌊 Welcome to the Mosasaurus exhibit! Dive into the oceans of the Late Cretaceous and learn about this giant marine reptile.",
 };
-const suggestions =
-  suggestionMap[currentDinosaur] ?? [
-    "🦖 Tell me about dinosaurs",
-    "🌍 Why did dinosaurs go extinct?",
-    "🦴 Explain this skeleton",
-    "🪶 Which dinosaurs had feathers?",
+
+const GENERIC_SUGGESTIONS = [
+  "🦖 Tell me about dinosaurs",
+  "🌍 Why did dinosaurs go extinct?",
+  "🦴 Explain this skeleton",
+  "🪶 Which dinosaurs had feathers?",
+];
+
+function getSuggestionsFor(rawDino) {
+  const key = normalizeDinoKey(rawDino);
+
+  if (!rawDino || key === "earth") return GENERIC_SUGGESTIONS;
+  if (CURATED_SUGGESTIONS[key]) return CURATED_SUGGESTIONS[key];
+
+  // Any dinosaur we don't have curated questions for (map sites, research
+  // discoveries, etc.) still gets relevant, correctly-named suggestions.
+  const name = formatDinoName(rawDino);
+  return [
+    `🦖 What did the ${name} eat?`,
+    `📏 How big was the ${name}?`,
+    `🦴 What makes the ${name} special?`,
+    `🌍 When did it live?`,
   ];
-useEffect(() => {
-  if (previousDinosaur.current === currentDinosaur) return;
+}
 
-  previousDinosaur.current = currentDinosaur;
+function getExhibitGreetingFor(rawDino) {
+  const key = normalizeDinoKey(rawDino);
+  if (CURATED_EXHIBIT_GREETINGS[key]) return CURATED_EXHIBIT_GREETINGS[key];
 
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "assistant",
-      text:
-        exhibitGreetings[currentDinosaur] ??
-        `👋 Welcome to the ${currentDinosaur} exhibit!`,
-    },
-  ]);
-}, [currentDinosaur]);
-const handleSend = async (text) => {
-  if (!text.trim()) return;
+  const name = formatDinoName(rawDino);
+  return `👋 Welcome to the ${name} exhibit! Ask me anything about it.`;
+}
 
-  // Show user's message immediately
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "user",
-      text,
-    },
-  ]);
+// Adds an assistant message, but silently skips it if it would be an exact
+// duplicate of the message already at the end of the conversation. This
+// keeps the guide from repeating itself if an effect fires more than once
+// for the same reason (e.g. React StrictMode's dev-only double effect run,
+// or a context value settling a moment after mount).
+function appendAssistantMessage(setMessages, text) {
+  if (!text) return;
 
-  setTyping(true);
+  setMessages((prev) => {
+    const last = prev[prev.length - 1];
+    if (last && last.role === "assistant" && last.text === text) {
+      return prev;
+    }
+    return [...prev, { role: "assistant", text }];
+  });
+}
 
-  try {
-    const res = await fetch("http://localhost:3000/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-  message: text,
-  currentDinosaur,
-}),
-    });
+export default function Chatbot({ personalization, page, userName }) {
+  const [open, setOpen] = useState(false);
+  const { currentPage, currentDinosaur, lastAction } = useGuide();
 
-    const data = await res.json();
+  // A page can pass its own identity explicitly so the guide's very first
+  // welcome message never has to guess from shared context before that
+  // context has caught up (see the mount-order race described in
+  // appendAssistantMessage below). That prop is only used to seed the
+  // INITIAL value, though — after mount, genuine changes to the shared
+  // GuideContext (e.g. scrolling from Hero into the Quiz/Map/Research
+  // preview sections) must still be picked up reactively.
+  const [effectivePage, setEffectivePage] = useState(page || currentPage);
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "assistant",
-        text: data.reply,
-      },
-    ]);
-  } catch (error) {
-    console.error(error);
+  useEffect(() => {
+    if (currentPage && currentPage !== effectivePage) {
+      setEffectivePage(currentPage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "assistant",
-        text: "Sorry, something went wrong. Please try again.",
-      },
-    ]);
-  } finally {
-    setTyping(false);
-  }
-};
+  const displayName = userName || "Explorer";
+
+  const [typing, setTyping] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  const getWelcomeMessage = () => {
+    switch (effectivePage) {
+      case "hero":
+      case "home":
+        return `👋 Welcome, ${displayName}! I'm Paleo, your AI expedition guide here in Paleora. Try hovering over the skeleton for bone facts, or ask me anything about it.`;
+
+      case "timeline":
+      case "timelinePreview":
+        return `⏳ Welcome to the Timeline, ${displayName}! Scroll through the eras to see who lived when — ask me what's special about any era or dinosaur you find.`;
+
+      case "quiz":
+      case "quizPreview":
+        return `🧠 Ready for the Quiz Arena, ${displayName}? I'll give hints without spoiling the answers — good luck!`;
+
+      case "map":
+      case "mapPreview":
+        return `🗺️ Welcome to the Map, ${displayName}! Click a glowing pin to explore a real fossil site — I can explain any discovery you find.`;
+
+      case "research":
+      case "researchPreview":
+        return `🔬 Welcome to the Research Hub, ${displayName}! Browse discoveries, submit a journal entry, or ask me a real paleontology question.`;
+
+      case "miniGames":
+      case "miniGamesPreview":
+        return `🎮 Ready to play, ${displayName}? I can explain the rules for any game — just ask.`;
+
+      default:
+        return `👋 Hello, ${displayName}! I'm Paleo, your AI dinosaur guide in Paleora.`;
+    }
+  };
+
+  const previousDinosaur = useRef(currentDinosaur);
+  const previousPage = useRef(null);
+  const previousAction = useRef("");
+
+  const suggestions = getSuggestionsFor(currentDinosaur);
+
+  // Greet whenever the exhibit's dinosaur changes.
+  useEffect(() => {
+    if (previousDinosaur.current === currentDinosaur || !currentDinosaur) {
+      return;
+    }
+    previousDinosaur.current = currentDinosaur;
+
+    // "earth" represents the map overview, not a specific exhibit.
+    if (normalizeDinoKey(currentDinosaur) === "earth") return;
+
+    appendAssistantMessage(setMessages, getExhibitGreetingFor(currentDinosaur));
+  }, [currentDinosaur]);
+
+  // Greet whenever the guide is looking at a new page/section.
+  useEffect(() => {
+    if (previousPage.current === effectivePage) return;
+    previousPage.current = effectivePage;
+
+    appendAssistantMessage(setMessages, getWelcomeMessage());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectivePage]);
+
+  const handleSend = async (text) => {
+    if (!text.trim()) return;
+
+    // Show user's message immediately
+    setMessages((prev) => [...prev, { role: "user", text }]);
+
+    setTyping(true);
+
+    try {
+      const res = await fetch("http://localhost:3000/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text,
+          currentDinosaur,
+          dinosaurLabel: formatDinoName(currentDinosaur),
+
+          page: effectivePage,
+          userName,
+
+          purpose:
+            personalization?.purpose || personalization?.preferences?.purpose,
+
+          interests:
+            personalization?.interests ||
+            personalization?.preferences?.interests,
+
+          guide: personalization?.guide?.companion,
+
+          hero: personalization?.hero?.dinosaur,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Chat request failed with status ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text:
+            data.reply ||
+            "Hmm, I didn't quite catch that. Could you try asking again?",
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: "Sorry, something went wrong. Please try again.",
+        },
+      ]);
+    } finally {
+      setTyping(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!lastAction) return;
+    if (previousAction.current === lastAction) return;
+    previousAction.current = lastAction;
+
+    const reactions = {
+      quizCompleted:
+        "🎉 Nice work! You finished a quiz. Ready for another challenge?",
+      discoveryOpened:
+        "🔍 That's a fascinating fossil! Ask me if you'd like more details.",
+      gameWon: "🏆 Great job! You're becoming a real paleontologist.",
+      gameLost: "💪 Don't worry! Every fossil hunter improves with practice.",
+      timelineVisited:
+        "⏳ Every era tells a different story. Feel free to ask about anything you discover.",
+      mapVisited:
+        "🗺️ You've entered the prehistoric world map. I can explain any location you explore.",
+      researchVisited:
+        "🔬 Welcome to the research archive! I'm here if you have questions.",
+      specimenChanged: `🦖 Excellent choice! Let's explore the ${formatDinoName(
+        currentDinosaur
+      )}.`,
+    };
+
+    const reactionText = reactions[lastAction];
+    if (!reactionText) return;
+
+    appendAssistantMessage(setMessages, reactionText);
+  }, [lastAction, currentDinosaur]);
+
+  const hasUserMessage = messages.some((msg) => msg.role === "user");
 
   return (
     <>
@@ -209,10 +389,10 @@ const handleSend = async (text) => {
               scale: 0.95,
             }}
             transition={{
-  type: "spring",
-  stiffness: 320,
-  damping: 28,
-}}
+              type: "spring",
+              stiffness: 320,
+              damping: 28,
+            }}
             className="
               fixed
               bottom-4
@@ -252,11 +432,12 @@ lg:rounded-[34px]
 
             <div className="flex-1 min-h-0">
               <ChatMessages
-  messages={messages}
-  typing={typing}
-  suggestions={suggestions}
-  onSuggestionClick={handleSend}
-/>
+                messages={messages}
+                typing={typing}
+                suggestions={suggestions}
+                showSuggestions={!hasUserMessage}
+                onSuggestionClick={handleSend}
+              />
             </div>
 
             <ChatInput onSend={handleSend} />
