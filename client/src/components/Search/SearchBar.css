@@ -1,0 +1,115 @@
+.search-bar {
+  position: relative;
+  width: 100%;
+}
+
+.search-bar__field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(8, 13, 26, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color var(--duration-fast) var(--ease-cinematic);
+}
+
+.search-bar__field:focus-within {
+  border-color: var(--era-primary-dim);
+}
+
+.search-bar__icon {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+}
+
+.search-bar__field:focus-within .search-bar__icon {
+  color: var(--era-primary);
+}
+
+.search-bar__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.search-bar__input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Autocomplete dropdown — floats above the page, doesn't affect layout */
+.search-bar__suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(8, 13, 26, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.search-bar__suggestion {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
+}
+
+.search-bar__suggestion--active,
+.search-bar__suggestion:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-primary);
+}
+
+.search-bar__suggestion-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.search-bar__suggestion-scientific {
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--color-text-tertiary);
+}
+
+.search-bar__suggestion-era {
+  margin-left: auto;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--era-primary);
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .search-bar__suggestion {
+    flex-wrap: wrap;
+  }
+
+  .search-bar__suggestion-era {
+    margin-left: 0;
+  }
+}
