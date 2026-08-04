@@ -78,7 +78,7 @@ function LandingPage() {
               animate="visible"
             >
               <p className="landing__eyebrow">A Museum Without Walls</p>
-              <h1 className="landing__title">Jurassic Museum</h1>
+              <h1 className="landing__title">Paleora Museum</h1>
               <p className="landing__subtitle">
                 Step across 186 million years of prehistoric life. Choose an
                 era to begin.

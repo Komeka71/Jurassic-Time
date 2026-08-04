@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <div className="field-card" data-tag="Camp HQ">
-      <h2>{user ? `Welcome back, ${user.username}` : "Welcome to Jurassic Time"}</h2>
+      <h2>{user ? `Welcome back, ${user.username}` : "Welcome to Paleora"}</h2>
       <p className="helper-text">
         {user
           ? "This is where the species feed, quizzes, and virtual tour will live."

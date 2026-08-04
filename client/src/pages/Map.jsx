@@ -149,7 +149,7 @@ export default function Map() {
             mb-2
           "
         >
-          🦖 Jurassic Island
+          🦖 Paleora Island
         </motion.h1>
 
         {/* SUBTITLE */}

@@ -108,7 +108,7 @@ export default function SubmitJournal() {
         >
           Record your field observations, attach supporting evidence,
           and submit your expedition record for archival review by the
-          PaleoVerse Museum.
+          Paleora Museum.
         </p>
       </motion.div>
 

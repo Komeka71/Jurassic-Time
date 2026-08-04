@@ -185,7 +185,7 @@ HOME ROUTE
 
 app.get("/", (req, res) => {
   res.send(
-    "🦖 Jurassic Time backend is running!"
+    "🦖 Paleora backend is running!"
   );
 });
 /*
@@ -240,7 +240,7 @@ mongoose
       );
 
       console.log(
-        "🦖 Jurassic Time API ready!"
+        "🦖 Paleora API ready!"
       );
     });
   })

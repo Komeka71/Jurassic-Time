@@ -57,7 +57,7 @@ aiVerification: {
 verificationTimeline: [
   {
     title: "Discovery Submitted",
-    description: "Field discovery registered in the PaleoVerse archive.",
+    description: "Field discovery registered in the Paleora archive.",
     status: "completed",
     icon: "CheckCircle2",
     color: "text-emerald-400",

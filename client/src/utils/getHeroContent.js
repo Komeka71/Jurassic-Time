@@ -29,7 +29,7 @@ export function getHeroContent(preferences = {}) {
       break;
 
     default:
-      title = "Welcome back to Jurassic Time.";
+      title = "Welcome back to Paleora.";
       subtitle =
         "Explore dinosaurs, fossils and prehistoric worlds at your own pace.";
   }

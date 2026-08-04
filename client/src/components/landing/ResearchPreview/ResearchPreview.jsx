@@ -30,7 +30,7 @@ const features = [
   {
     icon: Landmark,
     title: "Archive Collection",
-    desc: "Explore verified fossils preserved in PaleoVerse.",
+    desc: "Explore verified fossils preserved in Paleora.",
   },
 ];
 
@@ -135,7 +135,7 @@ useEffect(() => {
 
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#b38b4f66] bg-[#241913]/70 px-6 py-2 text-sm uppercase tracking-[0.28em] text-[#ddb878] backdrop-blur-md">
             <ScrollText size={16} />
-            PaleoVerse Research Archive
+            Paleora Research Archive
           </div>
 
           {/* Heading */}
@@ -151,7 +151,7 @@ useEffect(() => {
           <p className="mx-auto mt-8 max-w-3xl text-lg leading-9 text-[#e8d9be]">
             Explore verified discoveries, collaborate with researchers,
             upload fossil evidence, and preserve Earth's prehistoric
-            history inside the PaleoVerse Museum.
+            history inside the Paleora Museum.
           </p>
 
           {/* CTA */}

@@ -52,14 +52,14 @@ const verificationRef = useRef(null);
 const discoveriesRef = useRef(null);
 const networkRef = useRef(null);
 const [guideMessage, setGuideMessage] = useState(
-  "Welcome to the PaleoVerse Research Archive."
+  "Welcome to the Paleora Research Archive."
 );
 useEffect(() => {
 const sections = [
   {
     ref: heroRef,
     mood: "wave",
-    message: "Welcome to the PaleoVerse Research Archive.",
+    message: "Welcome to the Paleora Research Archive.",
   },
 
   {

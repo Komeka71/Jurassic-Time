@@ -226,7 +226,7 @@ setHealth(healthRes.data);
             text-[#c8b89d]
           "
         >
-          Monitor the health of the PaleoVerse research network, follow live
+          Monitor the health of the Paleora research network, follow live
           discoveries, and explore community contributions from scientists
           around the globe.
         </p>
@@ -441,7 +441,7 @@ setHealth(healthRes.data);
   </h3>
 
   <p className="mt-2 text-[#bfae93]">
-    Researchers leading discoveries across the PaleoVerse network.
+    Researchers leading discoveries across the Paleora network.
   </p>
 
   <div className="mt-8 divide-y divide-[#8d693822]">

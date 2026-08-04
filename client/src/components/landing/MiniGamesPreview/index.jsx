@@ -174,7 +174,7 @@ right-[-140px]
           >
             Travel through prehistoric worlds, solve mysteries,
             restore history and uncover fossils before entering
-            the PaleoVerse.
+            the Paleora.
           </motion.p>
         </div>
 

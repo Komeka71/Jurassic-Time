@@ -26,7 +26,7 @@ className="pointer-events-none w-full select-none brightness-105"      />
         <div className="text-center">
 
           <p className="text-[11px] uppercase tracking-[0.45em] text-[#8d6842]">
-            PaleoVerse Museum
+            Paleora Museum
           </p>
 
           <h1 className="mt-2 font-serif text-[34px] text-[#4f351d]">
@@ -239,7 +239,7 @@ Field Observations          </label>
     select-none
   "
 >
-  PALEOVERSE
+  PALEORA
 </div>
             <textarea
               value={journal.notes}

@@ -54,7 +54,7 @@ export default function ArchiveSuccessModal({
     </div>
 
     <p className="mt-6 text-center text-[#b89f7d]">
-      Please wait while PaleoVerse archives your discovery...
+      Please wait while Paleora archives your discovery...
     </p>
   </div>
 ) : (
@@ -74,7 +74,7 @@ export default function ArchiveSuccessModal({
 
             <p className="mt-3 text-center leading-7 text-[#c9b79d]">
               Your expedition has been successfully submitted to the
-              PaleoVerse Museum.
+              Paleora Museum.
             </p>
 
             <div className="mt-8 rounded-2xl border border-[#8d693833] bg-[#231913] p-6">

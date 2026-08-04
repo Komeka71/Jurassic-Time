@@ -77,8 +77,8 @@ export default function WaxSealButton({
 
         <p className="mt-2 max-w-xs text-center text-sm leading-6 text-[#d2b089]">
           {loading
-            ? "Submitting your discovery to the PaleoVerse Museum..."
-            : "Submit this discovery to the PaleoVerse Museum Archive for community review and verification."}
+            ? "Submitting your discovery to the Paleora Museum..."
+            : "Submit this discovery to the Paleora Museum Archive for community review and verification."}
         </p>
 
         {loading ? (

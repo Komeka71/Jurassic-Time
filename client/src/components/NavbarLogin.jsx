@@ -14,7 +14,7 @@ export default function Navbar() {
     <header className="navbar">
       <Link to="/" className="brand">
         <span className="eyebrow">Web Wonders 2026</span>
-        Jurassic Time
+        Paleora
       </Link>
       <nav>
         {user ? (
