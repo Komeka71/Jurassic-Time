@@ -1,0 +1,531 @@
+/* ============ Profile Page Global Layout ============ */
+.profile-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 40px 16px;
+  isolation: isolate;
+  box-sizing: border-box;
+
+  /* Centering Engine: Aligns cards perfectly in a column */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 36px; /* Spacing between the hero card and preferences card */
+}
+
+/* 1. FORCE THE BACKGROUND TO COVER 100% OF THE LAPTOP VIEWPORT */
+.profile-page::after {
+  content: "";
+  position: fixed; /* Locks it to the screen boundaries */
+  inset: 0; /* Stretches 100% top, bottom, left, and right */
+  background-image: url("/images/forest-bg.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2; /* Behind everything, including the dark overlay */
+  pointer-events: none;
+}
+
+/* 2. DARK CINEMATIC OVERLAY */
+.profile-page::before {
+  content: "";
+  position: fixed; /* Locks to screen boundaries */
+  inset: 0;
+  background: linear-gradient(
+    rgba(8, 18, 10, 0.25),
+    rgba(8, 18, 10, 0.45)
+  );
+  z-index: -1; /* Sits directly in front of the background image */
+  pointer-events: none;
+}
+
+
+/* ============ Card 1: Profile Hero Card ============ */
+.profile-hero {
+  --hero-accent: #6fcf6a;       /* bright glow green */
+  --hero-accent-deep: #2f5c2f;  /* deep pine green */
+
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Aligns maximum width */
+  box-sizing: border-box;
+  border-radius: 16px;
+  
+  background: rgba(18, 24, 20, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(111, 207, 106, 0.25);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), inset 0 0 60px rgba(111, 207, 106, 0.06);
+  
+  /* REDUCED PADDING: Cleans up the unnecessary vertical space */
+  padding: 32px 32px 24px 32px; 
+  overflow: hidden; /* Prevents the background illustration from overflowing */
+}
+
+.profile-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 15px; /* Fits inside the 1px parent border */
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at top, rgba(111,207,106,.12), transparent 55%),
+    linear-gradient(
+      rgba(8,18,10,.15),
+      rgba(8,18,10,.45)
+    );
+}
+
+.profile-hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center,
+      rgba(111,207,106,.08),
+      transparent 60%),
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,.15),
+      rgba(0,0,0,.55)
+    );
+}
+
+/* ============ Illustrated Scene Adjustments ============ */
+.profile-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  
+  /* LIMIT HEIGHT: Restricts the background graphic to only the top header area */
+  height: 240px; 
+  object-fit: cover;
+  pointer-events: none;
+  
+  /* Fades the illustration out smoothly at the bottom so it doesn't clash with stats */
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+}
+
+.profile-hero-content {
+  position: relative;
+  z-index: 2;
+  color: #eaf3e8;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.profile-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #eaf3e8;
+  text-shadow: 0 0 18px rgba(111, 207, 106, 0.3);
+}
+
+.profile-hero-sub {
+  color: #a9bfa6 !important;
+  font-size: 0.85rem;
+}
+
+
+/* ---- Photo / Avatar Pulse Ring ---- */
+.profile-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  position: relative;
+}
+
+.profile-photo--amber {
+  border: 2px solid var(--hero-accent);
+  box-shadow: 0 0 0 4px rgba(111, 207, 106, 0.14), 0 0 24px rgba(111, 207, 106, 0.4);
+  background: radial-gradient(circle, #142216, #0a120b);
+  color: #eaf3e8;
+  animation: hero-pulse 3s ease-in-out infinite;
+}
+
+@keyframes hero-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(111, 207, 106, 0.14), 0 0 24px rgba(111, 207, 106, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(111, 207, 106, 0.2), 0 0 38px rgba(111, 207, 106, 0.6);
+  }
+}
+
+.verified-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #6fcf6a;
+  color: #0c2318;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #0c2318;
+}
+
+
+/* ============ Added: Navbar Layout Styling ============ */
+.profile-navigation {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.nav-subtitle {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #6fcf6a;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.nav-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #eaf3e8;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #a9bfa6;
+  text-decoration: none;
+  transition: color 0.2s;
+  padding-bottom: 4px;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-link.active {
+  color: #6fcf6a;
+  border-bottom: 2px solid #6fcf6a;
+}
+
+
+/* ============ Modified: Matte White Vertical Stat Boxes ============ */
+.profile-hero .profile-stat-grid {
+  display: flex;
+  flex-direction: column; 
+  gap: 12px;
+  margin-top: 24px;
+  margin-bottom: 28px;
+}
+
+.profile-stat-box {
+  /* Matte White Finish */
+  background: rgba(255, 255, 255, 0.92); 
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 14px 20px;
+  
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* Soft shadow for depth */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Subtle hover effect for feedback */
+.profile-stat-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  background: #ffffff;
+}
+
+/* Deep Forest Green value text (replaces the glowing neon green) */
+.profile-stat-box .value {
+  color: #142d1f !important; 
+  text-shadow: none !important; /* Removes the glowing effect which looks blurry on light backgrounds */
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Darker Slate Green label text */
+.profile-stat-box .label {
+  color: #4a5d51 !important; 
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+
+/* ---- Badges Section ---- */
+.profile-badges-title {
+  color: #eaf3e8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+}
+
+.badge-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.profile-badge-pill {
+  background: rgba(111, 207, 106, 0.12);
+  border: 1px solid rgba(111, 207, 106, 0.4);
+  color: #cdeecb;
+  box-shadow: 0 0 10px rgba(111, 207, 106, 0.2);
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: default;
+}
+
+
+/* ---- Floating particles ---- */
+.profile-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.profile-particle {
+  position: absolute;
+  top: 100%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hero-accent, #6fcf6a);
+  opacity: 0.5;
+  filter: blur(0.5px);
+  animation-name: particle-float;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-340px) translateX(12px);
+    opacity: 0;
+  }
+}
+
+
+/* ---- Drifting DNA helix ---- */
+.profile-dna {
+  position: absolute;
+  right: -10px;
+  top: 0;
+  height: 100%;
+  width: 130px;
+  opacity: 0.16;
+  animation: dna-drift 12s linear infinite;
+}
+
+@keyframes dna-drift {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-120px);
+  }
+}
+
+
+/* ============ Card 2: Preferences Card (Solid White) ============ */
+.profile-preferences-card {
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+  background: #ffffff; /* Contrast plain-white layout card */
+  color: #17251c; /* Deep prehistoric dark green text */
+  border-radius: 16px;
+  padding: 40px 32px 32px 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  border-top: 4px solid #2f5c2f;
+}
+
+.profile-preferences-card h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0c2318;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.profile-preferences-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  color: #2d3f33;
+}
+
+.profile-preferences-card strong {
+  color: #0c2318;
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+
+/* ---- Buttons inside Preferences ---- */
+.profile-preferences-card button.ghost {
+  background: transparent;
+  border: 1px solid #a2b0a6;
+  color: #2d3f33;
+  padding: 10px 24px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.profile-preferences-card button.ghost:hover {
+  background: #f0f5f1;
+  border-color: #2f5c2f;
+  color: #0c2318;
+}
+
+.profile-preferences-card button.primary {
+  background: #2f5c2f;
+  border: none;
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.profile-preferences-card button.primary:hover:not(:disabled) {
+  background: #1c3b1c;
+}
+
+.profile-preferences-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ---- Edit Mode Form Fields ---- */
+.profile-preferences-card .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.profile-preferences-card label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #0c2318;
+}
+
+.profile-preferences-card input,
+.profile-preferences-card select {
+  background: #f7faf8;
+  border: 1px solid #cfdad2;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  color: #17251c;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.profile-preferences-card input:focus,
+.profile-preferences-card select:focus {
+  border-color: #2f5c2f;
+}
+
+
+/* ============ Responsive Styles ============ */
+@media (max-width: 600px) {
+  .profile-page {
+    padding: 24px 12px;
+    gap: 28px;
+  }
+
+  .profile-hero,
+  .profile-preferences-card {
+    padding: 32px 18px 24px 18px;
+  }
+
+  .profile-name {
+    font-size: 1.4rem;
+  }
+
+  .profile-dna {
+    width: 70px;
+    opacity: 0.1;
+  }
+
+  .profile-hero .profile-stat-grid {
+    gap: 8px;
+  }
+
+  .profile-stat-box {
+    padding: 10px 4px;
+  }
+
+  .profile-stat-box .value {
+    font-size: 1.25rem;
+  }
+
+  .profile-stat-box .label {
+    font-size: 0.55rem;
+    letter-spacing: 0.04em;
+  }
+}

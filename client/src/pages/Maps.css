@@ -1,0 +1,398 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* =========================
+   MAP PAGE ONLY
+   ========================= */
+
+.maps-app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
+  background: #080c10;
+}
+
+.maps-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+.maps-hdr {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 20px;
+
+  background: rgba(8, 12, 16, 0.85);
+  backdrop-filter: blur(12px);
+
+  border-bottom: 1px solid rgba(196, 163, 90, 0.2);
+}
+
+.maps-hdr-title {
+  font-family: "Cinzel", serif;
+  font-size: 17px;
+  color: #c4a35a;
+  letter-spacing: 0.1em;
+}
+
+.maps-hdr-sub {
+  font-size: 11px;
+  color: #6b7280;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.maps-hdr-badge {
+  margin-left: auto;
+  font-size: 12px;
+  color: #c4a35a;
+
+  background: rgba(196, 163, 90, 0.12);
+  border: 1px solid rgba(196, 163, 90, 0.3);
+
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* =========================
+   HINT
+   ========================= */
+
+.maps-hint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 900;
+
+  background: rgba(8, 12, 16, 0.8);
+  backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(196, 163, 90, 0.25);
+  border-radius: 30px;
+
+  padding: 8px 20px;
+
+  font-size: 13px;
+  color: #9ca3af;
+
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.maps-hint.hidden {
+  opacity: 0;
+}
+
+/* =========================
+   MAP PIN
+   ========================= */
+
+.pin-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.pin-dot {
+  position: absolute;
+  inset: 8px;
+
+  border-radius: 50%;
+  background: #c4a35a;
+
+  box-shadow: 0 0 10px #c4a35a;
+
+  transition: 0.2s;
+}
+
+.pin-ring {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+  border: 2px solid #c4a35a;
+
+  opacity: 0;
+
+  animation: ping 2.5s ease-out infinite;
+}
+
+.pin-ring:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.pin-wrap:hover .pin-dot {
+  background: #38bfa1;
+  box-shadow: 0 0 14px #38bfa1;
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* =========================
+   POPUP
+   ========================= */
+
+.maps-popup-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 2000;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding-bottom: 24px;
+
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.maps-popup-card {
+  width: min(560px, calc(100vw - 32px));
+
+  background: rgba(10, 16, 24, 0.96);
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(196, 163, 90, 0.35);
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 24px 64px rgba(0,0,0,.7),
+    0 0 0 1px rgba(196,163,90,.1);
+
+  animation: slideUp .4s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(120%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.pop-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+
+  z-index: 10;
+
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.08);
+
+  color: #9CA3AF;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pop-site {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.pop-site-label {
+  font-size: 10px;
+  color: #6B7280;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.pop-site-name {
+  font-family: "Cinzel", serif;
+  color: #E8D5A3;
+  font-size: 18px;
+}
+
+.pop-site-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6B7280;
+}
+
+/* =========================
+   DINO TABS
+   ========================= */
+
+.dino-tabs {
+  display: flex;
+  overflow-x: auto;
+
+  padding: 12px 20px 0;
+
+  border-bottom: 1px solid rgba(255,255,255,.06);
+
+  scrollbar-width: none;
+}
+
+.dino-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.dtab {
+  flex-shrink: 0;
+
+  padding: 8px 14px;
+
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+
+  color: #6B7280;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.dtab.active {
+  color: #C4A35A;
+  border-bottom-color: #C4A35A;
+}
+
+/* =========================
+   DETAILS
+   ========================= */
+
+.dino-panels {
+  padding: 16px 20px 20px;
+}
+
+.dino-head {
+  display: flex;
+  gap: 14px;
+
+  align-items: flex-start;
+
+  margin-bottom: 12px;
+}
+
+.dino-emo {
+  font-size: 44px;
+}
+
+.dino-nm {
+  font-family: "Cinzel", serif;
+  color: #C4A35A;
+  font-size: 17px;
+}
+
+.dino-per {
+  margin-top: 3px;
+  font-size: 11px;
+  color: #38BFA1;
+}
+
+.dino-desc {
+  margin-bottom: 14px;
+
+  color: #D1D5DB;
+  line-height: 1.7;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+
+.stat {
+  padding: 10px 12px;
+
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+}
+
+.stat-l {
+  font-size: 10px;
+  color: #6B7280;
+  text-transform: uppercase;
+}
+
+.stat-v {
+  margin-top: 3px;
+  color: #E8D5A3;
+  font-weight: 600;
+}
+
+/* =========================
+   LEAFLET
+   ========================= */
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+.leaflet-control-zoom {
+  margin-top: 70px !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(10,16,24,.9) !important;
+  color: #C4A35A !important;
+  border-color: rgba(196,163,90,.3) !important;
+}
+
+.leaflet-tooltip.custom-tooltip {
+  background: rgba(10,16,24,.95) !important;
+  border: 1px solid rgba(196,163,90,.3) !important;
+  color: #E8D5A3 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5) !important;
+}
+
+.leaflet-tooltip-top.custom-tooltip::before {
+  border-top-color: rgba(196,163,90,.3) !important;
+}

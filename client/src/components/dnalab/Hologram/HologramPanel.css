@@ -1,0 +1,79 @@
+.hologram-panel {
+  position: relative;
+  width: min(560px, 92vw);
+  padding: 40px 36px 34px;
+  text-align: center;
+  animation: hologram-flicker-in 1.4s ease both;
+}
+
+.hologram-panel__eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cyan-300);
+}
+
+.hologram-panel__title {
+  margin: 0 0 22px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-shadow: 0 0 18px rgba(56, 198, 217, 0.4);
+}
+
+.hologram-panel__greeting {
+  margin: 0 0 22px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.hologram-panel__objective {
+  margin: 0 0 22px;
+  padding: 16px 18px;
+  border-top: 1px solid rgba(111, 227, 240, 0.2);
+  border-bottom: 1px solid rgba(111, 227, 240, 0.2);
+}
+
+.hologram-panel__objective-label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan-400);
+}
+
+.hologram-panel__objective p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.hologram-panel__footnote {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+}
+
+@keyframes hologram-flicker-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  40% { opacity: 0.6; }
+  55% { opacity: 0.3; }
+  70% { opacity: 0.9; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .hologram-panel {
+    padding: 30px 22px 26px;
+  }
+}

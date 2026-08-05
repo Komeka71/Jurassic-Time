@@ -1,0 +1,317 @@
+/* ===========================
+   HYBRID LAB PREVIEW
+=========================== */
+
+.hybrid-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Cyan Glow */
+
+.hybrid-preview::before {
+  content: "";
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  right: -220px;
+  top: -180px;
+  border-radius: 50%;
+  background: rgba(0, 225, 255, 0.12);
+  filter: blur(180px);
+  animation: glowPulse 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hybrid-preview::after {
+  content: "";
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  left: -120px;
+  bottom: -120px;
+  border-radius: 50%;
+  background: rgba(20, 255, 180, 0.08);
+  filter: blur(160px);
+  animation: glowPulse 12s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* ===========================
+   Glass Card
+=========================== */
+
+.lab-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 34px;
+  border: 1px solid rgba(126, 217, 255, .18);
+
+  background: rgba(255,255,255,.05);
+
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 0 60px rgba(0,225,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.04);
+
+  transition: .45s;
+}
+
+.lab-card:hover{
+  transform: translateY(-8px);
+  box-shadow:
+    0 25px 60px rgba(0,225,255,.20),
+    0 0 80px rgba(0,225,255,.18);
+}
+
+/* ===========================
+   Door
+=========================== */
+
+.lab-door{
+
+  transition:
+    transform .6s,
+    filter .6s;
+
+}
+
+.lab-card:hover .lab-door{
+
+  transform: scale(1.04);
+
+  filter:
+    drop-shadow(0 0 35px rgba(0,255,255,.35));
+
+}
+
+/* ===========================
+   Scanner Line
+=========================== */
+
+.scanner-line{
+
+  position:absolute;
+
+  left:0;
+
+  width:100%;
+
+  height:2px;
+
+  background:#8fe8ff;
+
+  box-shadow:
+
+  0 0 12px #8fe8ff,
+
+  0 0 30px #00e5ff;
+
+  animation:scanner 5s linear infinite;
+
+}
+
+/* ===========================
+   Glass Reflection
+=========================== */
+
+.glass-shine{
+
+  position:absolute;
+
+  top:-50%;
+
+  left:-60%;
+
+  width:40%;
+
+  height:200%;
+
+  transform:rotate(25deg);
+
+  background:
+
+  linear-gradient(
+
+  transparent,
+
+  rgba(255,255,255,.12),
+
+  transparent
+
+  );
+
+  animation:shine 6s infinite;
+
+}
+
+/* ===========================
+   Floating Particles
+=========================== */
+
+.particle{
+
+  position:absolute;
+
+  border-radius:50%;
+
+  background:#7ed9ff;
+
+  opacity:.25;
+
+  animation:floatParticle linear infinite;
+
+}
+
+.p1{
+
+  width:6px;
+
+  height:6px;
+
+  left:15%;
+
+  animation-duration:10s;
+
+}
+
+.p2{
+
+  width:10px;
+
+  height:10px;
+
+  left:70%;
+
+  animation-duration:14s;
+
+}
+
+.p3{
+
+  width:5px;
+
+  height:5px;
+
+  left:45%;
+
+  animation-duration:12s;
+
+}
+
+.p4{
+
+  width:8px;
+
+  height:8px;
+
+  left:90%;
+
+  animation-duration:18s;
+
+}
+
+/* ===========================
+   Animations
+=========================== */
+
+@keyframes glowPulse{
+
+  0%,100%{
+
+    transform:scale(1);
+
+    opacity:.6;
+
+  }
+
+  50%{
+
+    transform:scale(1.15);
+
+    opacity:1;
+
+  }
+
+}
+
+@keyframes scanner{
+
+  0%{
+
+    top:0;
+
+    opacity:0;
+
+  }
+
+  8%{
+
+    opacity:1;
+
+  }
+
+  50%{
+
+    opacity:1;
+
+  }
+
+  100%{
+
+    top:100%;
+
+    opacity:0;
+
+  }
+
+}
+
+@keyframes shine{
+
+  0%{
+
+    left:-60%;
+
+  }
+
+  100%{
+
+    left:140%;
+
+  }
+
+}
+
+@keyframes floatParticle{
+
+  0%{
+
+    transform:translateY(120px);
+
+    opacity:0;
+
+  }
+
+  15%{
+
+    opacity:.4;
+
+  }
+
+  80%{
+
+    opacity:.3;
+
+  }
+
+  100%{
+
+    transform:translateY(-700px);
+
+    opacity:0;
+
+  }
+
+}

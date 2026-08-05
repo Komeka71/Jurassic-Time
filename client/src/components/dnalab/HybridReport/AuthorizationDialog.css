@@ -1,0 +1,104 @@
+.authorization-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(4, 7, 8, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: authorization-overlay-in 0.5s ease both;
+}
+
+.authorization-dialog {
+  width: min(480px, 100%);
+  padding: 40px 36px 38px;
+  text-align: center;
+  border-color: rgba(216, 182, 102, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(216, 182, 102, 0.12);
+  animation: authorization-dialog-in 0.5s ease 0.1s both;
+}
+
+.authorization-dialog__title {
+  margin: 0 0 16px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+}
+
+.authorization-dialog__question {
+  margin: 0 0 30px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.authorization-dialog__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.authorization-dialog__btn {
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, rgba(30, 40, 43, 0.85), rgba(12, 17, 19, 0.92));
+  border: 1px solid rgba(111, 227, 240, 0.4);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.authorization-dialog__btn:hover,
+.authorization-dialog__btn:focus-visible {
+  transform: translateY(-2px);
+}
+
+.authorization-dialog__btn--yes:hover,
+.authorization-dialog__btn--yes:focus-visible {
+  border-color: rgba(255, 107, 107, 0.75);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4), 0 0 22px rgba(225, 75, 75, 0.45);
+}
+
+.authorization-dialog__btn--no:hover,
+.authorization-dialog__btn--no:focus-visible {
+  border-color: rgba(111, 227, 240, 0.85);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4), 0 0 22px rgba(56, 198, 217, 0.4);
+}
+
+@keyframes authorization-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes authorization-dialog-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authorization-overlay,
+  .authorization-dialog {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .authorization-dialog {
+    padding: 30px 22px 28px;
+  }
+}

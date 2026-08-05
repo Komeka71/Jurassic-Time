@@ -1,0 +1,72 @@
+@import '@fontsource/rajdhani/500.css';
+@import '@fontsource/rajdhani/600.css';
+@import '@fontsource/rajdhani/700.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+:root {
+  
+  --font-display: 'Rajdhani', 'Segoe UI', sans-serif;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --lab-black: #06090a;
+  --lab-steel-900: #0e1416;
+  --lab-steel-800: #182023;
+
+  --cyan-100: #d6f4f7;
+  --cyan-300: #8fe7f0;
+  --cyan-400: #6fe3f0;
+  --cyan-500: #38c6d9;
+  --cyan-glow: rgba(56, 198, 217, 0.35);
+
+  --text-primary: #eaf6f7;
+  --text-secondary: #a9c2c6;
+  --text-tertiary: #6f8a8e;
+
+  --page-max-width: 1180px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  --gold-300: #e9d29a;
+  --gold-400: #d8b666;
+  --gold-500: #b9944a;
+  --gold-glow: rgba(216, 182, 102, 0.25);
+
+  color-scheme: dark;
+}
+
+/* * {
+  box-sizing: border-box;
+} */
+
+/* html, body, #root {
+  height: 100%;
+} */
+/* 
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--lab-black);
+  -webkit-font-smoothing: antialiased;
+} */
+
+button {
+  font-family: inherit;
+}
+
+/* img {
+  max-width: 100%;
+  display: block;
+} */
+
+::selection {
+  background: rgba(56, 198, 217, 0.35);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan-400);
+  outline-offset: 2px;
+}
