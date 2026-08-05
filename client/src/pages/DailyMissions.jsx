@@ -5,28 +5,50 @@ import StatCard from "../components/StatCard";
 import DinoAssistant from "../components/DinoAssistant";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 import SideMenu from "../components/SideMenu";
-import { getPlayerProgress } from "../utils/playerProgress";
+import { getUserProgress } from "../utils/userProgress";
+// import { getPlayerProgress } from "../utils/playerProgress";
 const BASE_URL = "http://localhost:3000/api";
 
 export default function DailyMissions() {
+  const { user } = useAuth();
   const [daily, setDaily] = useState(null);
   const [loading, setLoading] = useState(true);
 const [menuOpen, setMenuOpen] = useState(false);
 
-const player = getPlayerProgress();
+const [player, setPlayer] = useState({
+  level: 1,
+  xp: 0,
+  coins: 0,
+});
+useEffect(() => {
+  if (!user) return;
+
+  async function loadPlayer() {
+    const progress = await getUserProgress(user.username);
+    setPlayer(progress);
+  }
+
+  loadPlayer();
+}, [user]);
   const [mood, setMood] = useState("idle");
   const [message, setMessage] = useState(
     "Ready for today's missions!"
   );
 
-  useEffect(() => {
+useEffect(() => {
+  if (user) {
     loadMissions();
-  }, []);
-
+  }
+}, [user]);
   async function loadMissions() {
     try {
-      const res = await fetch(`${BASE_URL}/daily/shreya`);
+if (!user) return;
+
+const res = await fetch(
+  `${BASE_URL}/daily/${user.username}`
+);
       const data = await res.json();
 
       setDaily(data);
@@ -40,7 +62,7 @@ const player = getPlayerProgress();
   async function claimReward(title) {
     try {
       const res = await fetch(
-        `${BASE_URL}/daily/shreya/claim`,
+        `${BASE_URL}/daily/${user.username}/claim`,
         {
           method: "PATCH",
           headers: {
@@ -69,6 +91,8 @@ const player = getPlayerProgress();
         }, 3000);
 
         loadMissions();
+        const progress = await getUserProgress(user.username);
+setPlayer(progress);
       } else {
         setMood("angry");
 
@@ -388,21 +412,20 @@ const player = getPlayerProgress();
         <StatCard
           icon="⭐"
           title="Total XP"
-         value={daily.player.xp}
-          color="text-yellow-300"
+value={player.xp}          color="text-yellow-300"
         />
 
         <StatCard
           icon="🪙"
           title="Coins"
-          value={daily.player.coins}
+value={player.coins}
           color="text-yellow-300"
         />
 
         <StatCard
   icon="🏆"
   title="Level"
-  value={daily.player.level}
+value={player.level}
   color="text-green-400"
 />
       </section>

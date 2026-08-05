@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import MapNode from "../components/map/MapNode";
 import MapPath from "../components/map/MapPath";
 import DinoGuide from "../components/DinoGuide";
 
-import { getUnlockedLevel } from "../utils/playerProgress";
+// import { getUnlockedLevel } from "../utils/playerProgress";
 
 const levels = [
   {
@@ -33,16 +34,50 @@ const levels = [
 export default function Map() {
   const navigate = useNavigate();
 
-  const unlockedLevel = getUnlockedLevel();
+// const navigate = useNavigate();
 
-  const openLevel = (level) => {
-    navigate("/expedition", {
-      state: {
-        level: level.id,
-        title: level.title,
-      },
-    });
-  };
+const [unlockedLevel, setUnlockedLevel] = useState(1);
+
+useEffect(() => {
+  async function loadPlayerLevel() {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/dashboard",
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        setUnlockedLevel(1);
+        return;
+      }
+
+      const data = await response.json();
+
+      setUnlockedLevel(data.stats?.level || 1);
+    } catch {
+      setUnlockedLevel(1);
+    }
+  }
+
+  loadPlayerLevel();
+}, []);
+const openLevel = (level) => {
+  if (level.id > unlockedLevel) {
+    alert(
+      `🔒 Reach Level ${level.id} to unlock this expedition!`
+    );
+    return;
+  }
+
+  navigate("/expedition", {
+    state: {
+      level: level.id,
+      title: level.title,
+    },
+  });
+};
 
   return (
     <div className="relative min-h-screen overflow-hidden text-white">

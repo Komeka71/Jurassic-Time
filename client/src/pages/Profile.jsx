@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
+import { useAuth } from "../context/AuthContext";
 import {
   Award,
   CheckCircle2,
@@ -18,9 +18,9 @@ const isSafari =
   /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 const ext = isSafari ? "mov" : "webm";
-const USERNAME = "Shreya";
 
 export default function Profile() {
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [profileData, setProfileData] = useState(null);
@@ -34,10 +34,14 @@ export default function Profile() {
       try {
         setLoading(true);
         setError("");
+if (!user) {
+  setLoading(false);
+  return;
+}
 
-        const response = await fetch(
-          `/api/user/${encodeURIComponent(USERNAME)}`
-        );
+const response = await fetch(
+  `/api/user/${encodeURIComponent(user.username)}`
+);
 
         if (!response.ok) {
           throw new Error(
@@ -61,8 +65,7 @@ export default function Profile() {
     };
 
     fetchProfile();
-  }, []);
-
+}, [user]);
   if (loading) {
     return <ProfileLoading />;
   }
@@ -81,10 +84,8 @@ export default function Profile() {
   const stats = profileData.stats || {};
 
   const history = profileData.history || [];
-
-  const username =
-    stats.username || USERNAME;
-
+const username =
+  stats.username || user?.username || "Explorer";
   const xp = stats.xp || 0;
 
   const coins = stats.coins || 0;

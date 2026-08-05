@@ -11,7 +11,7 @@ import {
   motion,
   useReducedMotion,
 } from "framer-motion";
-
+import { useAuth } from "../context/AuthContext";
 import {
   Menu,
   Search,
@@ -36,7 +36,7 @@ API CONFIG
 
 const API_URL = "http://localhost:3000";
 
-const USERNAME = "Shreya";
+// const
 
 /*
 ========================================
@@ -71,7 +71,7 @@ DEFAULT PLAYER
 */
 
 const defaultPlayer = {
-  username: USERNAME,
+  username: "",
 
   level: 1,
 
@@ -133,6 +133,7 @@ COLLECTION PAGE
 */
 
 export default function Collection() {
+  const { user } = useAuth();
   /*
   ========================================
   ACCESSIBILITY
@@ -311,9 +312,14 @@ export default function Collection() {
       showErrorReaction = true,
     } = {}) => {
       try {
-        const response = await fetch(
-          `${API_URL}/api/user/${USERNAME}`
-        );
+        if (!user) {
+  setCollectionLoading(false);
+  return null;
+}
+
+const response = await fetch(
+  `${API_URL}/api/user/${user.username}`
+);
 
         if (!response.ok) {
           throw new Error(
@@ -359,7 +365,7 @@ export default function Collection() {
         setCollectionLoading(false);
       }
     },
-    [reactDino]
+    [reactDino, user]
   );
 
   /*
@@ -389,6 +395,7 @@ export default function Collection() {
     }
 
     const syncUnlockedDinosaurs = async () => {
+      if (!user) return;
       const unlockedDinosaurs = dinosaurs.filter(
         (dinosaur) =>
           (player.level || 1) >=
@@ -410,7 +417,7 @@ export default function Collection() {
       try {
         for (const dinosaur of missingDinosaurs) {
           const response = await fetch(
-            `${API_URL}/api/collection/${USERNAME}/discover`,
+            `${API_URL}/api/collection/${user.username}/discover`,
             {
               method: "POST",
               headers: {
@@ -463,12 +470,13 @@ export default function Collection() {
 
     syncUnlockedDinosaurs();
   }, [
-    collectionLoading,
-    player.level,
-    player.discoveredDinosaurs,
-    fetchPlayer,
-    reactDino,
-  ]);
+  collectionLoading,
+  player.level,
+  player.discoveredDinosaurs,
+  fetchPlayer,
+  reactDino,
+  user,
+]);
 
   /*
   ========================================
@@ -518,7 +526,7 @@ export default function Collection() {
         handleVisibilityChange
       );
     };
-  }, [fetchPlayer]);
+  }, [fetchPlayer, user]);
 
   /*
   ========================================
