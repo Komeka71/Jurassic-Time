@@ -678,11 +678,15 @@ const handleChestOpen = async () => {
   // ============================
   // Save quiz to MongoDB
   // ============================
-  const saved = await submitQuizToBackend();
+let saved = true;
+
+if (!isGuest) {
+  saved = await submitQuizToBackend();
 
   console.log("Quiz saved:", saved);
 
   if (!saved) return;
+}
 
   // ============================
   // Update player locally
