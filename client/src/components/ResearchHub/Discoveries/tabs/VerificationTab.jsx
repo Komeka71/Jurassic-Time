@@ -19,7 +19,7 @@ export default function VerificationTab({ discovery }) {
     {
       title: "Discovery Submitted",
       icon: CheckCircle2,
-      description: "Field discovery registered in the PaleoVerse archive.",
+      description: "Field discovery registered in the Paleora archive.",
       color: "text-emerald-400",
       status: "completed",
     },

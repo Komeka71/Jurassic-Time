@@ -18,6 +18,8 @@ import ResearchPreview from "../components/landing/ResearchPreview/ResearchPrevi
 import MiniGamesPreview from "../components/landing/MiniGamesPreview";
 import { useNavigate } from "react-router-dom";
 
+import HybridLabPreview from "../components/home/HybridLabPreview";
+
 export default function LandingPage() {
   const navigate = useNavigate();
 const { user } = useAuth();
@@ -56,6 +58,13 @@ const sectionOrder = personalization.homepage.order;
         />
       );
 
+  //     case "hybridLab":
+  // return (
+  //   <HybridLabPreview
+  //     key="hybridLab"
+  //   />
+  // );
+
     case "games":
       return <MiniGamesPreview key="games" />;
 
@@ -63,7 +72,7 @@ const sectionOrder = personalization.homepage.order;
       return null;
   }
 })}
-
+<HybridLabPreview/>
 {/* <Explore /> */}
       {/* <DailyChallenge />
       <Games />

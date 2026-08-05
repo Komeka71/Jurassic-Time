@@ -30,7 +30,7 @@ export const verificationStages = [
   {
     id: 4,
     title: "Museum Archive",
-    subtitle: "Official PaleoVerse Record",
+    subtitle: "Official Paleora Record",
     icon: Landmark,
     status: "locked",
   },

@@ -88,7 +88,7 @@ export default function FossilExcavation() {
     <div className="fx-root">
       <div className="fx-grain" aria-hidden="true" />
       <div className="topbar">
-        <span className="topbar-mark">JURASSIC TIME — MUSEUM WITHOUT WALLS</span>
+        <span className="topbar-mark">PALEORA — MUSEUM WITHOUT WALLS</span>
       </div>
 
       {screen === "sites" && (

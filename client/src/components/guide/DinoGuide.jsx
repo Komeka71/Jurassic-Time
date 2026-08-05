@@ -29,7 +29,7 @@ export default function DinoGuide({
   const [mood, setMood] = useState("idle");
 
   const [message, setMessage] = useState(
-    "Welcome to PaleoVerse!"
+    "Welcome to Paleora!"
   );
 
   // NEW: bumps by 1 every time play() runs, even if the mood picked

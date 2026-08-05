@@ -7,7 +7,7 @@ export default function ExpeditionTimeline({ levels = [] }) {
     <div>
       <div className="jt-section-heading">
         <span className="jt-section-title">Expedition Progress</span>
-        <span className="jt-section-sub">Your journey through Jurassic Time</span>
+        <span className="jt-section-sub">Your journey through Paleora</span>
       </div>
       <div className="jt-card" style={{ padding: 20 }}>
         <div className="jt-timeline">

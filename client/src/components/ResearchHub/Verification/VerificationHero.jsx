@@ -67,7 +67,7 @@ export default function VerificationHero() {
           text-[#d4c2a5]
         "
       >
-        Every fossil submitted to PaleoVerse undergoes a rigorous scientific
+        Every fossil submitted to Paleora undergoes a rigorous scientific
         verification process before becoming part of the permanent Museum
         Archive.
       </p>

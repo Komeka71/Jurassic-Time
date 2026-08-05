@@ -94,7 +94,7 @@ export default function Home() {
           "
         >
 
-          Jurassic Time
+          Paleora
 
         </motion.h1>
 

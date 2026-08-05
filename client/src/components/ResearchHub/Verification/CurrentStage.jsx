@@ -92,7 +92,7 @@ console.log(discovery);
             </h2>
 
             <p className="mt-4 max-w-2xl text-lg leading-8 text-[#ccb998]">
-              PaleoVerse AI is validating fossil evidence, identifying species,
+              Paleora AI is validating fossil evidence, identifying species,
               checking metadata integrity, and searching for duplicate archive
               records.
             </p>
@@ -219,7 +219,7 @@ animate={{
     </h4>
 
     <p className="mt-4 text-[15px] leading-8 text-[#bfa988]">
-      PaleoVerse AI is continuously validating fossil evidence,
+      Paleora AI is continuously validating fossil evidence,
       metadata integrity, species identification, and duplicate
       archive records. The verification status updates
       automatically as each stage is completed.

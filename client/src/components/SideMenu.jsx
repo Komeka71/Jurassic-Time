@@ -566,7 +566,7 @@ export default function SideMenu({
                           text-white
                         "
                       >
-                        🦖 Jurassic Time
+                        🦖 Paleora
                       </h2>
 
 
@@ -1030,7 +1030,7 @@ export default function SideMenu({
                         text-white/25
                       "
                     >
-                      Jurassic Time Explorer
+                      Paleora Explorer
                     </p>
 
                   </div>

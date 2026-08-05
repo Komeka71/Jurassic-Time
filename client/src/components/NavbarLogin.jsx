@@ -13,8 +13,8 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <Link to="/" className="brand">
-        <span className="eyebrow">Web Wonders 2026</span>
-        Jurassic Time
+        {/* <span className="eyebrow">Web Wonders 2026</span> */}
+        Paleora
       </Link>
       <nav>
         {user ? (

@@ -23,7 +23,7 @@ function TimelineNavbar() {
 
   return (
     <nav className="timeline-navbar" aria-label="Primary">
-      <span className="timeline-navbar__brand">Jurassic Museum</span>
+      <span className="timeline-navbar__brand">Paleora Museum</span>
       <ul className="timeline-navbar__list">
         {NAV_ITEMS.map((item) => (
           <li key={item}>

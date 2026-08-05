@@ -21,7 +21,7 @@ export default function WelcomeBanner() {
       style={{ borderColor: "var(--gold)", display: "flex", alignItems: "center", justifyContent: "space-between" }}
     >
       <div>
-        <h3 style={{ marginBottom: 4 }}>🦖 Welcome to Jurassic Time, {welcomeName}!</h3>
+        <h3 style={{ marginBottom: 4 }}>🦖 Welcome to Paleora, {welcomeName}!</h3>
         <p className="helper-text" style={{ margin: 0 }}>
           Your account is verified. Let's find you a guide.
         </p>
