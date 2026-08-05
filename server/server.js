@@ -61,7 +61,12 @@ app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use("/api/daily", dailyMissionRoutes);
 app.use(
   "/api/leaderboard",
@@ -185,7 +190,7 @@ HOME ROUTE
 
 app.get("/", (req, res) => {
   res.send(
-    "🦖 Jurassic Time backend is running!"
+    "🦖 Paleora backend is running!"
   );
 });
 /*
@@ -240,7 +245,7 @@ mongoose
       );
 
       console.log(
-        "🦖 Jurassic Time API ready!"
+        "🦖 Paleora API ready!"
       );
     });
   })

@@ -115,7 +115,7 @@ export default function MapRoom() {
             "
           >
             Each glowing marker represents a discovery preserved within the
-            PaleoVerse Research Archive. Browse the world's most significant
+            Paleora Research Archive. Browse the world's most significant
             excavation sites and uncover the fossils that continue to shape our
             understanding of prehistoric life.
           </p>

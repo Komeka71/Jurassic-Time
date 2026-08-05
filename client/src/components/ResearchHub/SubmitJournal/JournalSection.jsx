@@ -1,11 +1,17 @@
 import { useState } from "react";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import api from "../../../api/axios";
+import { useAuth } from "../../../context/AuthContext";
 import ExplorerDesk from "./ExplorerDesk";
 import EvidenceTray from "./EvidenceTray";
 import ArchiveSuccessModal from "./ArchiveSuccessModal";
 
 
 export default function JournalSection() {
+const { user } = useAuth();
+const navigate = useNavigate();
+const location = useLocation();
+
 const [journal, setJournal] = useState({
   fossilName: "",
   location: "",
@@ -40,6 +46,13 @@ const progress = (() => {
   })();
 const handleSubmit = async () => {
   if (progress < 100) return;
+
+  // Submissions are tied to a real researcher account now — send guests
+  // to log in first, then bring them right back here.
+  if (!user) {
+    navigate("/login", { state: { from: location } });
+    return;
+  }
 
   try {
     setLoading(true);
@@ -100,8 +113,8 @@ await new Promise((r) => setTimeout(r, 800));
 setSubmitStage("Generating Archive ID...");
 await new Promise((r) => setTimeout(r, 800));
 
-const { data } = await axios.post(
-  "http://localhost:3000/api/discoveries",
+const { data } = await api.post(
+  "/discoveries",
   formData,
   {
     headers: {
@@ -134,6 +147,11 @@ setShowSuccess(true);
 
   } catch (err) {
     console.error(err);
+
+    if (err.response?.status === 401) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
 
     alert("Submission failed.");
   } finally {

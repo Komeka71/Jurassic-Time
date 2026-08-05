@@ -1,2 +1,5 @@
-server/.git_backup/
 node_modules
+dist
+.env
+.DS_Store
+server/.git_backup/

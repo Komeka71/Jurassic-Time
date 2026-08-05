@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -139,7 +139,10 @@ export default function ExpeditionSelect() {
   const navigate = useNavigate();
   const location = useLocation();
 const [menuOpen, setMenuOpen] = useState(false);
-  const level = location.state?.level || 1;
+const [unlockedLevel, setUnlockedLevel] = useState(1);
+  const requestedLevel = location.state?.level || 1;
+
+const level = Math.min(requestedLevel, unlockedLevel);
 
   const levelTitle =
     location.state?.title || "Forest Expedition";
@@ -152,7 +155,30 @@ const [topic, setTopic] = useState("mixed");
 
   const [questionCount, setQuestionCount] =
     useState(10);
+useEffect(() => {
+  async function loadPlayerLevel() {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/dashboard",
+        {
+          credentials: "include",
+        }
+      );
 
+      if (!response.ok) return;
+
+      const data = await response.json();
+
+      if (data?.stats?.level) {
+        setUnlockedLevel(data.stats.level);
+      }
+    } catch (err) {
+      console.log("Guest mode");
+    }
+  }
+
+  loadPlayerLevel();
+}, []);
   const topics = [
   "carnivores",
   "herbivores",
@@ -580,6 +606,11 @@ const [topic, setTopic] = useState("mixed");
                 scale: 0.97,
               }}
              onClick={() => {
+  if (level > unlockedLevel) {
+    alert(`🔒 Reach Level ${level} to unlock this expedition!`);
+    return;
+  }
+
   const difficultyMap = {
     1: "easy",
     2: "easy",
@@ -593,7 +624,7 @@ const [topic, setTopic] = useState("mixed");
       level,
       levelTitle,
       difficulty: difficultyMap[level],
-      topic: "mixed",
+      topic,
       questionCount,
     },
   });

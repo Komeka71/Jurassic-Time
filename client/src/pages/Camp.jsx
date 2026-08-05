@@ -20,7 +20,10 @@ import SideMenu from "../components/SideMenu";
 CAMP ACTIONS
 ========================================
 */
+const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+const ext = isSafari ? "mov" : "webm";
 const mainActions = [
   {
     id: "merchant",
@@ -208,9 +211,13 @@ export default function Camp() {
         "
       >
         <source
-          src="/videos/camp/camp.mp4"
-          type="video/mp4"
-        />
+  src={`/videos/dino/${mood}.${ext}`}
+  type={
+    isSafari
+      ? 'video/mp4; codecs="hvc1"'
+      : "video/webm"
+  }
+/>
       </video>
 
       {/* BACKGROUND OVERLAYS */}

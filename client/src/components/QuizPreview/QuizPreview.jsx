@@ -83,7 +83,7 @@ setLastAction(
 
         setTimeout(() => {
           setTeacherMessage(
-  "📚 Want to practice more and earn XP? Enter the PaleoVerse Academy!"
+  "📚 Want to practice more and earn XP? Enter the Paleora Academy!"
 );
 
 setLastAction("");

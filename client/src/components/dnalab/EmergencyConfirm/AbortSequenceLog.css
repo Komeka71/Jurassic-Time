@@ -1,0 +1,36 @@
+.abort-sequence-log {
+  margin: 26px auto 0;
+  max-width: 380px;
+  min-height: 132px;
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(10, 6, 6, 0.45);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.abort-sequence-log__line {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+  animation: abort-line-in 0.35s ease both;
+}
+
+.abort-sequence-log__line:last-child {
+  margin-bottom: 0;
+}
+
+.abort-sequence-log__line--danger {
+  color: var(--danger-300);
+  font-weight: 600;
+}
+
+@keyframes abort-line-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abort-sequence-log__line { animation: none; }
+}

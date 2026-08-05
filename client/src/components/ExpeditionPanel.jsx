@@ -98,7 +98,7 @@ export default function ExpeditionPanel({
           <div className="flex justify-between items-center">
 
             <h2 className="title-font text-3xl">
-              🦖 Jurassic Time
+              🦖 Paleora
             </h2>
 
             <button
@@ -253,7 +253,7 @@ export default function ExpeditionPanel({
             </div>
 
             <p className="text-center text-xs text-gray-500 mt-5">
-              Jurassic Time • Version 1.0
+              Paleora • Version 1.0
             </p>
 
           </div>

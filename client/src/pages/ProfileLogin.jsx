@@ -186,8 +186,8 @@ export default function Profile() {
       {/* 1. Centered Header Navigation Panel */}
       <header className="profile-navigation">
         <div>
-          <span className="nav-subtitle">Web Wonders 2026</span>
-          <h1 className="nav-title">Jurassic Time</h1>
+          {/* <span className="nav-subtitle">Web Wonders 2026</span> */}
+          <h1 className="nav-title">Paleora</h1>
         </div>
         <nav className="nav-links">
           <a href="#" className="nav-link active">Profile</a>

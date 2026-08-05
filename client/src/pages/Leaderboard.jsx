@@ -4,7 +4,8 @@ import {
   useEffect,
 } from "react";
 import { motion } from "framer-motion";
-
+import { getUserProgress } from "../utils/userProgress";
+import { useAuth } from "../context/AuthContext";
 import {
   Menu,
   Search,
@@ -20,10 +21,10 @@ import LeaderboardRow from "../leaderboard/LeaderboardRow";
 
 // import leaderboardData from "../data/leaderboardData";
 
-import {
-  getPlayerProgress,
-  getPlayerRank,
-} from "../utils/playerProgress";
+// import {
+//   getPlayerProgress,
+//   getPlayerRank,
+// } from "../utils/playerProgress";
 
 /*
 ========================================
@@ -36,7 +37,13 @@ const leaderboardFilters = [
   "Weekly",
   "Streak",
 ];
-
+function getRankTitle(xp) {
+  if (xp >= 5000) return "Legend";
+  if (xp >= 3000) return "Master";
+  if (xp >= 1500) return "Explorer";
+  if (xp >= 500) return "Ranger";
+  return "Beginner";
+}
 /*
 ========================================
 LEADERBOARD
@@ -49,7 +56,13 @@ export default function Leaderboard() {
   STATE
   ========================================
   */
+const { user } = useAuth();
 
+const [player, setPlayer] = useState({
+  level: 1,
+  xp: 0,
+  coins: 0,
+});
   const [menuOpen, setMenuOpen] =
     useState(false);
 
@@ -64,8 +77,8 @@ const [leaderboardData, setLeaderboardData] =
   const loadLeaderboard = async () => {
     try {
       const response = await fetch(
-        "/api/leaderboard"
-      );
+  "http://localhost:3000/api/leaderboard"
+);
 
       const data = await response.json();
 
@@ -73,7 +86,7 @@ const [leaderboardData, setLeaderboardData] =
   id: player.username,
   name: player.username,
   avatar: "🦖",
-  title: getPlayerRank(player.xp || 0),
+title: getRankTitle(player.xp || 0),
   xp: player.xp || 0,
   streak: player.dailyStreak || 0,
   discoveries:
@@ -92,13 +105,21 @@ const [leaderboardData, setLeaderboardData] =
 
   loadLeaderboard();
 }, []);
+useEffect(() => {
+  async function loadPlayer() {
+    const progress = await getUserProgress();
+    setPlayer(progress);
+  }
+
+  loadPlayer();
+}, []);
   /*
   ========================================
   CURRENT PLAYER
   ========================================
   */
 
-  const player = getPlayerProgress();
+
 
   /*
   ========================================
@@ -106,12 +127,15 @@ const [leaderboardData, setLeaderboardData] =
   ========================================
   */
 
- const currentPlayer = useMemo(() => {
-  return leaderboardData.find(
-    (p) => p.name === "Shreya"
-  );
-}, [leaderboardData]);
+const currentPlayer = useMemo(() => {
+  if (!user) return null;
 
+  return (
+    leaderboardData.find(
+      (p) => p.name === user.username
+    ) || null
+  );
+}, [leaderboardData, user]);
   /*
   ========================================
   SORT LEADERBOARD
@@ -429,19 +453,15 @@ const currentPlayerRank =
       >
         {/* HERO */}
 
-        <LeaderboardHero
+       <LeaderboardHero
   playerRank={currentPlayerRank}
-  playerXp={currentPlayer?.xp || 0}
+  playerXp={player.xp}
   playerStreak={currentPlayer?.streak || 0}
   totalExplorers={rankedPlayers.length}
 />
-
         {/* PODIUM */}
 
-        <>
-  {console.log("Ranked:", rankedPlayers)}
-  <Podium players={rankedPlayers} />
-</>
+      <Podium players={rankedPlayers} />
 
         {/* LEADERBOARD SECTION */}
 

@@ -1,5 +1,6 @@
 const Discovery = require("../models/Discovery");
 const Comment = require("../models/Comment");
+
 /*
 ========================================
 CREATE DISCOVERY
@@ -28,6 +29,7 @@ const archiveId = `PV-${new Date().getFullYear()}-${String(
 ).padStart(4, "0")}`;
 
     const discovery = await Discovery.create({
+      user: req.user?._id || null,
       archiveId,
       fossilName: req.body.fossilName,
       location: req.body.location,
@@ -57,7 +59,7 @@ aiVerification: {
 verificationTimeline: [
   {
     title: "Discovery Submitted",
-    description: "Field discovery registered in the PaleoVerse archive.",
+    description: "Field discovery registered in the Paleora archive.",
     status: "completed",
     icon: "CheckCircle2",
     color: "text-emerald-400",

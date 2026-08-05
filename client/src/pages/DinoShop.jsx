@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import CartAnimation from "../shop/CartAnimation";
 import CartDrawer from "../shop/CartDrawer";
 import ShopDino from "../pages/ShopDino";
-
+import { useAuth } from "../context/AuthContext";
 import { Coins, Menu } from "lucide-react";
 
 import SideMenu from "../components/SideMenu";
@@ -24,8 +24,7 @@ API CONFIG
 
 const API_URL = "http://localhost:3000";
 
-const USERNAME = "Shreya";
-
+// const USERNAME = user?.username;
 
 /*
 ========================================
@@ -46,9 +45,8 @@ const categories = [
 DEFAULT PLAYER
 ========================================
 */
-
 const defaultPlayer = {
-  username: USERNAME,
+  username: "",
 
   coins: 0,
 
@@ -58,7 +56,6 @@ const defaultPlayer = {
 
   equippedItems: {},
 };
-
 
 /*
 ========================================
@@ -73,7 +70,8 @@ export default function DinoShop() {
   STATE
   ========================================
   */
-
+ const { user } = useAuth();
+const USERNAME = user?.username;
   const [menuOpen, setMenuOpen] =
     useState(false);
 
@@ -189,10 +187,14 @@ export default function DinoShop() {
         setLoadingPlayer(true);
 
 
-        const response = await fetch(
-          `${API_URL}/api/user/${USERNAME}`
-        );
+if (!user) {
+  setLoadingPlayer(false);
+  return;
+}
 
+const response = await fetch(
+  `${API_URL}/api/user/${user.username}`
+);
 
         if (!response.ok) {
 
@@ -275,9 +277,7 @@ export default function DinoShop() {
       ignore = true;
 
     };
-
-  }, []);
-
+}, [user]);
 
   /*
   ========================================
@@ -352,7 +352,14 @@ export default function DinoShop() {
   */
 
   const buyItem = async (item) => {
+if (!user) {
+  reactDino(
+    "confused",
+    "🔒 Login to save purchases and use your coins."
+  );
 
+  return;
+}
     if (
       purchaseInProgress ||
       loadingPlayer
@@ -420,9 +427,8 @@ export default function DinoShop() {
       BUY THROUGH BACKEND
       ========================================
       */
-
-      const response = await fetch(
-        `${API_URL}/api/user/${USERNAME}/shop/buy`,
+const response = await fetch(
+  `${API_URL}/api/user/${user.username}/shop/buy`,
         {
           method: "POST",
 
@@ -560,7 +566,14 @@ export default function DinoShop() {
   */
 
   const equipItem = async (item) => {
+if (!user) {
+  reactDino(
+    "confused",
+    "🔒 Login to equip purchased items."
+  );
 
+  return;
+}
     if (
       !item ||
       equipInProgress ||
@@ -615,9 +628,8 @@ export default function DinoShop() {
       EQUIP THROUGH BACKEND
       ========================================
       */
-
-      const response = await fetch(
-        `${API_URL}/api/user/${USERNAME}/shop/equip`,
+const response = await fetch(
+  `${API_URL}/api/user/${user.username}/shop/equip`,
         {
           method: "PATCH",
 

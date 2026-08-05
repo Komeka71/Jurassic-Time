@@ -244,7 +244,7 @@ useEffect(() => {
           Discoveries begin with curiosity and become history through
           evidence, community discussion, and scientific verification.
           Explore the world's prehistoric record preserved by the
-          PaleoVerse research community.
+          Paleora research community.
         </motion.p>
 
         {/* Stats */}

@@ -1,7 +1,7 @@
 const sectionMessages = {
   hero: {
     idle: [
-      "Welcome to PaleoVerse! 🦖",
+      "Welcome to Paleora! 🦖",
       "Hover over a dinosaur to begin.",
       "Click on a glowing bone!",
       "Choose a specimen to explore.",

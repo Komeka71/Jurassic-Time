@@ -1,0 +1,10 @@
+.glitch-text {
+  display: inline-block;
+  transition: color 0.08s linear;
+}
+
+.glitch-text--active {
+  transform: translateX(1px);
+  color: var(--cyan-300);
+  text-shadow: 0 0 6px rgba(56, 198, 217, 0.6);
+}

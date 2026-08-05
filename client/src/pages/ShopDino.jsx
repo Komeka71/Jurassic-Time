@@ -1,45 +1,48 @@
 import { AnimatePresence, motion } from "framer-motion";
+const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+const ext = isSafari ? "mov" : "webm";
 const shopMoods = {
   idle: {
-    video: "/videos/dino/shop-idle.webm",
+    video: `/videos/dino/shop-idle.${ext}`,
     message: "👀 Psst... I found something strange in the fossil vault.",
   },
 
   shop: {
-    video: "/videos/dino/shop-dino.mov",
+    video: `/videos/dino/shop-dino.${ext}`,
     message:
       "🦖 Welcome to my shop! I definitely priced everything scientifically.",
   },
 
   excited: {
-    video: "/videos/dino/happyJumps.mov",
+    video: `/videos/dino/happyJumps.${ext}`,
     message: "✨ OOOH! Good choice, Explorer! Dino approved!",
   },
 
   happy: {
-    video: "/videos/dino/loveHappy.mov",
+    video: `/videos/dino/loveHappy.${ext}`,
     message: "💚 Hehe! Your expedition gear is getting better!",
   },
 
   celebrate: {
-    video: "/videos/dino/celebrate.mov",
+    video: `/videos/dino/celebrate.${ext}`,
     message:
       "🎉 PURCHASE COMPLETE! The fossil economy survives another day!",
   },
 
   angry: {
-    video: "/videos/dino/angry.mov",
+    video: `/videos/dino/angry.${ext}`,
     message: "😤 HEY! You don't have enough fossil coins!",
   },
 
   thinking: {
-    video: "/videos/dino/thinking.mov",
+    video: `/videos/dino/thinking.${ext}`,
     message: "🤔 Hmm... an interesting prehistoric financial decision.",
   },
 
   sad: {
-    video: "/videos/dino/sad.mov",
+    video: `/videos/dino/sad.${ext}`,
     message: "🥺 You closed it? I thought we were going shopping...",
   },
 };

@@ -43,7 +43,7 @@ const progress =
 
         <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[#ccb998]">
           Every submission is independently reviewed by verified researchers
-          before entering the PaleoVerse Museum Archive.
+          before entering the Paleora Museum Archive.
         </p>
       </motion.div>
 

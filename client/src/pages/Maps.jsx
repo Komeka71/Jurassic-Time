@@ -84,7 +84,7 @@ const handleClose = useCallback(() => {
         <span style={{ fontSize: "24px" }}>🦕</span>
 
         <div>
-          <div className="maps-hdr-title">DINOVERSE</div>
+          <div className="maps-hdr-title">PALEORA</div>
           <div className="maps-hdr-sub">
             Fossil Site Explorer
           </div>

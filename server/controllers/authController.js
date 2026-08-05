@@ -56,7 +56,7 @@ const signup = async (req, res, next) => {
 
     await sendEmail({
       to: user.email,
-      subject: "Your Jurassic Time verification code",
+      subject: "Your Paleora verification code",
       html: otpEmailTemplate(otp, user.username),
     });
 
@@ -114,7 +114,7 @@ const verifyOtp = async (req, res, next) => {
 
     await sendEmail({
       to: user.email,
-      subject: "Welcome to Jurassic Time 🦖",
+      subject: "Welcome to Paleora 🦖",
       html: welcomeEmailTemplate(user.username),
     });
 
@@ -157,7 +157,7 @@ const resendOtp = async (req, res, next) => {
 
     await sendEmail({
       to: user.email,
-      subject: "Your new Jurassic Time verification code",
+      subject: "Your new Paleora verification code",
       html: otpEmailTemplate(otp, user.username),
     });
 

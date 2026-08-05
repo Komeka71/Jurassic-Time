@@ -1,6 +1,6 @@
 const pageMessages = {
   hero: [
-    "👋 Welcome to PaleoVerse!",
+    "👋 Welcome to Paleora!",
     "🦖 Your prehistoric adventure begins here.",
     "🌿 Ready to explore millions of years of history?",
     "⭐ Discover dinosaurs like never before!",
@@ -28,7 +28,7 @@ const pageMessages = {
   ],
 
   research: [
-    "🔬 Welcome to the PaleoVerse Research Archive.",
+    "🔬 Welcome to the Paleora Research Archive.",
     "🦴 Every fossil tells a prehistoric story.",
     "📜 Browse discoveries from explorers around the world.",
     "🧪 Science begins with curiosity.",

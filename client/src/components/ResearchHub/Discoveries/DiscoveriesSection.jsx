@@ -169,7 +169,7 @@ Research Collection
               text-[#d7c5aa]
             "
           >
-            Authentic fossil discoveries preserved inside the PaleoVerse Museum Archive.
+            Authentic fossil discoveries preserved inside the Paleora Museum Archive.
           </p>
 
           {/* Divider */}

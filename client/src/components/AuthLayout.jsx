@@ -23,7 +23,7 @@ export default function AuthLayout({ eyebrow, children }) {
           <div className="auth-image-overlay" />
 
           <div className="auth-logo">
-            <span className="auth-logo__icon">🦖</span> Jurassic Time
+            <span className="auth-logo__icon">🦖</span> Paleora
           </div>
 
           <div className="auth-headline">

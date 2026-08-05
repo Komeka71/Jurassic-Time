@@ -17,7 +17,7 @@ const {
 } = require("../controllers/discoveryController");
 
 const upload = require("../middleware/uploadDiscovery");
-
+const { protect } = require("../middleware/authMiddleware");
 /*
 ========================================
 ARCHIVE STATS
@@ -78,6 +78,7 @@ CREATE DISCOVERY
 */
 router.post(
   "/",
+  protect,
   upload.array("evidence", 10),
   createDiscovery
 );

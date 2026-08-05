@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import AnimatedBackground from "../components/background/AnimatedBackground";
 import TopBar from "../components/TopBar";
@@ -11,24 +11,32 @@ import ExpeditionComplete from "../components/ExpeditionComplete";
 import TreasureChest from "../components/TreasureChest";
 import SideMenu from "../components/SideMenu";
 import { useAudio } from "../context/AudioContext";
+import { useAuth } from "../context/AuthContext";
 import { getQuestions } from "../api/quizApi";
+import { getUserProgress } from "../utils/userProgress";
+// import {
+//   getPlayerProgress,
+//   savePlayerProgress,
+//   updateDailyStreak,
+//   getPlayerRank,
+//   completeLevel,
+// } from "../utils/playerProgress";
 
-import {
-  getPlayerProgress,
-  savePlayerProgress,
-  updateDailyStreak,
-  getPlayerRank,
-  completeLevel,
-} from "../utils/playerProgress";
-
-const USERNAME = "Shreya";
 const API_URL = "http://localhost:3000";
 
 export default function Quiz() {
   const location = useLocation();
+  const navigate = useNavigate();
 const {
   playEffect,
 } = useAudio();
+
+  // Logged-in explorer's real username, or "Guest" while browsing without
+  // an account. Guests can still play — their run just isn't tied to a
+  // persistent saved profile.
+  const { user } = useAuth();
+  const USERNAME = user?.username || "Guest";
+  const isGuest = !user;
   const {
     level = 1,
     difficulty = "easy",
@@ -66,9 +74,29 @@ const {
   ========================================
   */
 
-  const [player, setPlayer] = useState(() => {
-    return getPlayerProgress();
-  });
+const [player, setPlayer] = useState({
+  coins: 0,
+  xp: 0,
+  level: 1,
+  dailyStreak: 0,
+  questionStreak: 0,
+  bestQuestionStreak: 0,
+});
+
+useEffect(() => {
+  async function loadPlayer() {
+    const progress = await getUserProgress();
+
+    setPlayer((prev) => ({
+      ...prev,
+      coins: progress.coins,
+      xp: progress.xp,
+      level: progress.level,
+    }));
+  }
+
+  loadPlayer();
+}, []);
 
   const coins = player.coins;
 
@@ -79,7 +107,13 @@ const {
   const questionStreak =
     player.questionStreak;
 
-  const rank = getPlayerRank(xp);
+const rank = (() => {
+  if (xp >= 5000) return "Legend";
+  if (xp >= 3000) return "Master";
+  if (xp >= 1500) return "Explorer";
+  if (xp >= 500) return "Ranger";
+  return "Beginner";
+})();
 
   /*
   ========================================
@@ -143,7 +177,7 @@ const {
 
   const [chestOpened, setChestOpened] =
     useState(false);
-
+const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   /*
   ========================================
   QUIZ START TIME
@@ -158,9 +192,11 @@ const {
   ========================================
   */
 
-  useEffect(() => {
-    savePlayerProgress(player);
-  }, [player]);
+//  useEffect(() => {
+//   if (!user) {
+//     savePlayerProgress(player);
+//   }
+// }, [player, user]);
 
   /*
   ========================================
@@ -277,7 +313,14 @@ console.log("First question:", data[0]);
     }
 
     setSubmitted(true);
-
+if (
+  isGuest &&
+  currentIndex >= 1 &&
+  !sessionStorage.getItem("guestLoginPromptShown")
+) {
+  setShowLoginPrompt(true);
+  sessionStorage.setItem("guestLoginPromptShown", "true");
+}
     const isCorrect =
       selectedAnswer === currentQuestion.answer;
 
@@ -308,9 +351,9 @@ console.log("First question:", data[0]);
     ========================================
     */
 
-    setPlayer((prev) => {
-      return updateDailyStreak(prev);
-    });
+    // setPlayer((prev) => {
+    //   return updateDailyStreak(prev);
+    // });
 
     /*
     ========================================
@@ -420,36 +463,28 @@ playEffect("wrong");
         )
       );
 
-      const response = await fetch(
-        `${API_URL}/api/quiz/submit`,
-        {
-          method: "POST",
+const response = await fetch(
+  `${API_URL}/api/quiz/submit`,
+  {
+    method: "POST",
 
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
+    credentials: "include",
 
-          body: JSON.stringify({
-            username: USERNAME,
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-            topic,
-
-            difficulty,
-
-            answers,
-
-            score: accuracy,
-
-            totalQuestions:
-              questions.length,
-
-            correctAnswers,
-
-            timeTaken,
-          }),
-        }
-      );
+    body: JSON.stringify({
+      topic,
+      difficulty,
+      answers,
+      score: accuracy,
+      totalQuestions: questions.length,
+      correctAnswers,
+      timeTaken,
+    }),
+  }
+);
 
       const data = await response.json();
 
@@ -611,8 +646,6 @@ playEffect("wrong");
 // ========================================
 // */
 
-// await fetch(`${API_URL}/api/daily/shreya/progress`, {
-//   method: "PATCH",
 
 //   headers: {
 //     "Content-Type": "application/json",
@@ -663,16 +696,19 @@ const handleChestOpen = async () => {
   // ============================
   // Save quiz to MongoDB
   // ============================
-  const saved = await submitQuizToBackend();
+let saved = true;
+
+if (!isGuest) {
+  saved = await submitQuizToBackend();
 
   console.log("Quiz saved:", saved);
 
   if (!saved) return;
+}
 
   // ============================
   // Update player locally
   // ============================
-  setPlayer((prev) => completeLevel(prev, level));
 
   setTimeout(() => {
     setMood("loveHappy");
@@ -690,25 +726,29 @@ const handleChestOpen = async () => {
   // Update Daily Missions
   // (Don't block the UI)
   // ============================
+ if (!isGuest) {
   try {
-    const res = await fetch(`${API_URL}/api/daily/shreya/progress`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        expeditions: 1,
-        questions: questions.length,
-        xp: correctAnswers * 20,
-      }),
-    });
+    const res = await fetch(
+      `${API_URL}/api/daily/${USERNAME}/progress`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          expeditions: 1,
+          questions: questions.length,
+          xp: correctAnswers * 20,
+        }),
+      }
+    );
 
     const data = await res.json();
-
     console.log("Daily Mission Updated:", data);
   } catch (err) {
     console.error("Daily Mission Update Failed:", err);
   }
+}
 };
 
 console.log("expedition complete");
@@ -734,6 +774,133 @@ console.log("expedition complete");
 
   return (
     <AnimatedBackground level={level}>
+{showLoginPrompt && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md">
+
+    <div
+      className="
+        relative
+        w-[92%]
+        max-w-lg
+        rounded-[32px]
+        overflow-hidden
+        border border-green-400/30
+        bg-gradient-to-b
+        from-[#133523]
+        to-[#09120D]
+        shadow-[0_25px_80px_rgba(0,0,0,.6)]
+      "
+    >
+      {/* Glow */}
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-green-500/20 blur-[120px]" />
+
+      <div className="relative z-10 p-8">
+
+        {/* Dino Emoji */}
+        <div className="flex justify-center mb-5">
+          <div
+            className="
+              w-24
+              h-24
+              rounded-full
+              bg-green-500/10
+              border
+              border-green-400/30
+              flex
+              items-center
+              justify-center
+              text-5xl
+            "
+          >
+            🦖
+          </div>
+        </div>
+
+        <h2 className="text-3xl font-black text-center text-yellow-300">
+          Save Your Progress
+        </h2>
+
+        <p className="mt-3 text-center text-gray-300 leading-7">
+          You're doing great!
+          <br />
+          Create a free account so your adventure is never lost.
+        </p>
+
+        <div className="mt-7 rounded-2xl bg-black/20 border border-white/10 p-5">
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+
+            <div>⭐ XP & Levels</div>
+            <div>🪙 Coins</div>
+
+            <div>🦕 Collection</div>
+            <div>🏆 Leaderboard</div>
+
+            <div>🎯 Daily Missions</div>
+            <div>☁️ Cloud Save</div>
+
+          </div>
+
+        </div>
+
+        <div className="mt-8 space-y-3">
+
+          <button
+            onClick={() => navigate("/signup")}
+            className="
+              w-full
+              rounded-2xl
+              bg-gradient-to-r
+              from-green-500
+              to-emerald-400
+              py-4
+              text-lg
+              font-bold
+              text-black
+              hover:scale-[1.02]
+              transition
+            "
+          >
+            Create Free Account
+          </button>
+
+          <button
+            onClick={() => navigate("/login")}
+            className="
+              w-full
+              rounded-2xl
+              border
+              border-green-400/30
+              py-4
+              font-semibold
+              hover:bg-white/5
+              transition
+            "
+          >
+            I already have an account
+          </button>
+
+          <button
+            onClick={() => setShowLoginPrompt(false)}
+            className="
+              w-full
+              py-2
+              text-gray-400
+              hover:text-white
+              transition
+            "
+          >
+            Continue as Guest →
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
       <div className="min-h-screen text-white">
 
         {/* TOP BAR */}
@@ -865,6 +1032,7 @@ console.log("expedition complete");
         accuracy={accuracy}
         bestStreak={player.bestQuestionStreak}
         level={level}
+        isGuest={isGuest}
       />
     </div>
   ) : (
