@@ -1,5 +1,8 @@
 const express = require("express");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/avatars/" });
 
+const profileController = require("../controllers/profile.controller");
 const {
   getOnboardingOptions,
   completeOnboarding,
@@ -18,5 +21,12 @@ router.get("/onboarding-options", getOnboardingOptions);
 router.put("/onboarding", protect, completeOnboarding);
 router.get("/profile", protect, getProfile);
 router.put("/profile", protect, updateProfile);
+router.get("/dashboard", protect, profileController.getDashboard);
 
+// router.post(
+//   "/avatar",
+//   protect,
+//   upload.single("avatar"),
+//   profileController.uploadAvatar
+// );
 module.exports = router;

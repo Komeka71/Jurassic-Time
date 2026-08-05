@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { unlockNextLevel } from "../utils/progress";
 // import { useNavigate } from "react-router-dom";
 //import { unlockNextLevel } from "../utils/progress";
@@ -12,11 +12,17 @@ export default function ExpeditionComplete({
   accuracy,
   bestStreak,
   level,
+  isGuest = false,
 }) {
     // const navigate = useNavigate();
+    const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+const ext = isSafari ? "mov" : "webm";
     const width = window.innerWidth;
 const height = window.innerHeight;
 const navigate = useNavigate();
+const location = useLocation();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -100,17 +106,21 @@ justify-center
   You did it! 🎉
 </div>
     <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      className="w-64 h-64 object-contain"
-    >
-      <source
-        src="/videos/dino/loveHappy.mov"
-        type="video/mp4"
-      />
-    </video>
+  autoPlay
+  loop
+  muted
+  playsInline
+  className="w-64 h-64 object-contain"
+>
+  <source
+    src={`/videos/dino/loveHappy.${ext}`}
+    type={
+      isSafari
+        ? 'video/mp4; codecs="hvc1"'
+        : "video/webm"
+    }
+  />
+</video>
   </motion.div>
 
   {/* Reward Cards */}
@@ -255,7 +265,58 @@ text-center
         "
       >
         Continue Adventure →
-      </motion.button> */}<button
+      </motion.button> */}
+
+      {isGuest && (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85 }}
+          className="
+            mt-8
+            rounded-2xl
+            border
+            border-green-500/25
+            bg-green-500/10
+            px-5
+            py-4
+            text-sm
+            text-green-100
+            flex
+            flex-col
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+            gap-3
+          "
+        >
+          <span>
+            You're playing as a guest — log in to save this progress to your profile.
+          </span>
+
+          <button
+            onClick={() =>
+              navigate("/login", { state: { from: location } })
+            }
+            className="
+              shrink-0
+              rounded-xl
+              bg-green-500
+              px-4
+              py-2
+              text-xs
+              font-bold
+              text-black
+              hover:bg-green-400
+              transition
+            "
+          >
+            Log In
+          </button>
+        </motion.div>
+      )}
+
+<button
   onClick={() => {
     unlockNextLevel(level);
 

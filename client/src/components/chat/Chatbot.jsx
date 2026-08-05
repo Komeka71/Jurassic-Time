@@ -173,7 +173,7 @@ export default function Chatbot({ personalization, page, userName }) {
     switch (effectivePage) {
       case "hero":
       case "home":
-        return `👋 Welcome, ${displayName}! I'm Paleo, your AI expedition guide here in Paleora. Try hovering over the skeleton for bone facts, or ask me anything about it.`;
+        return `👋 Welcome to the Paleora homepage, ${displayName}! I'm Paleo, your AI expedition guide. Try hovering over the skeleton for bone facts, or ask me anything about it.`;
 
       case "timeline":
       case "timelinePreview":

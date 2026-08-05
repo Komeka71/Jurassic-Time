@@ -1,0 +1,107 @@
+/*
+ * On desktop/tablet the hybrid is pulled out of normal flex flow and
+ * centered absolutely behind the side panels — large and cinematic,
+ * sized primarily by height, capped by width so it stays in the
+ * ~50-60vw range the panels frame it within. On narrow viewports it
+ * drops back into normal document flow (see media query) so it never
+ * overlaps the stacked panels.
+ */
+.hybrid-focal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hybrid-focal__glow {
+  position: absolute;
+  width: min(60vw, 760px);
+  height: min(60vw, 760px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 198, 217, 0.22), rgba(56, 198, 217, 0.05) 55%, transparent 75%);
+  filter: blur(6px);
+  animation: hybrid-glow-pulse 6s ease-in-out infinite;
+}
+
+.hybrid-focal__image {
+  position: relative;
+  z-index: 1;
+  height: min(80vh, 820px);
+  width: auto;
+  max-width: 58vw;
+  object-fit: contain;
+  animation: hybrid-breathe 6.5s ease-in-out infinite;
+}
+
+@keyframes hybrid-glow-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes hybrid-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.012); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hybrid-focal__glow,
+  .hybrid-focal__image {
+    animation: none;
+  }
+}
+
+/* Tablet: scale proportionally, still layered behind the panels. */
+@media (max-width: 1200px) {
+  .hybrid-focal__image {
+    height: min(72vh, 640px);
+    max-width: 62vw;
+  }
+
+  .hybrid-focal__glow {
+    width: min(64vw, 640px);
+    height: min(64vw, 640px);
+  }
+}
+
+/*
+ * Mobile/tablet-portrait: panels stack vertically (see
+ * HybridReportScreen.css), so the hybrid drops back into normal flow
+ * — still the primary focus, but no longer overlapping panel content.
+ */
+@media (max-width: 980px) {
+  .hybrid-focal {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    min-height: 280px;
+    pointer-events: auto;
+  }
+
+  .hybrid-focal__image {
+    height: min(52vh, 420px);
+    max-width: 82vw;
+  }
+
+  .hybrid-focal__glow {
+    width: min(78vw, 460px);
+    height: min(78vw, 460px);
+  }
+}
+
+@media (max-width: 480px) {
+  .hybrid-focal {
+    min-height: 220px;
+  }
+
+  .hybrid-focal__image {
+    height: min(42vh, 320px);
+    max-width: 86vw;
+  }
+}

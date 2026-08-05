@@ -154,7 +154,20 @@ const UserStatsSchema = new mongoose.Schema(
     SOUND PREFERENCES
     ========================================
     */
-
+expeditionLevels: {
+  type: [
+    {
+      number: Number,
+      name: String,
+      status: {
+        type: String,
+        enum: ["completed", "current", "locked"],
+        default: "locked",
+      },
+    },
+  ],
+  default: [],
+},
     soundPreferences: {
       music: {
         type: Boolean,

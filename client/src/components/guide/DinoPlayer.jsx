@@ -41,7 +41,7 @@ const fireEndedOnce = useCallback(() => {
   };
 
   // SAFARI FIX #2:
-  // Some .mov exports (especially screen recordings) have variable
+  // Some .mv exports (especially screen recordings) have variable
   // frame-rate metadata that confuses Safari's own end-of-video
   // detection - the video visually stops, but Safari never actually
   // fires the "ended" event, so our code never hears about it and the

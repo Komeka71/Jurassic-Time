@@ -1,31 +1,36 @@
+const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+const ext = isSafari ? "mov" : "webm";
+
 const videos = {
-  wave: "/videos/dino/wave.mov",
+  wave: `/videos/dino/wave.${ext}`,
 
-  idle: "/videos/dino/idle.mov",
-  standing: "/videos/dino/standing.mov",
+  idle: `/videos/dino/idle.${ext}`,
+  standing: `/videos/dino/standing.${ext}`,
 
-  happy: "/videos/dino/loveHappy.mov",
-  angry: "/videos/dino/angry.mov",
-  celebrate: "/videos/dino/celebrate.mov",
+  happy: `/videos/dino/loveHappy.${ext}`,
+  angry: `/videos/dino/angry.${ext}`,
+  celebrate: `/videos/dino/celebrate.${ext}`,
 
-  thinking: "/videos/dino/thinking.mov",
-  sad: "/videos/dino/sad.mov",
-  shushing: "/videos/dino/shushing.mov",
-  lookingAround: "/videos/dino/lookingAround.mov",
+  thinking: `/videos/dino/thinking.${ext}`,
+  sad: `/videos/dino/sad.${ext}`,
+  shushing: `/videos/dino/shushing.${ext}`,
+  lookingAround: `/videos/dino/lookingAround.${ext}`,
 
-  walkingRight: "/videos/dino/walkingRight.mov",
-  pointingRight: "/videos/dino/pointingRight.mov",
+  walkingRight: `/videos/dino/walkingRight.${ext}`,
+  pointingRight: `/videos/dino/pointingRight.${ext}`,
 
-  roar: "/videos/dino/angry.mov",
+  roar: `/videos/dino/angry.${ext}`,
 
-  sleep: "/videos/dino/sleep.mov",
-  wakeup: "/videos/dino/wakeup.mov",
+  sleep: `/videos/dino/sleep.${ext}`,
+  wakeup: `/videos/dino/wakeup.${ext}`,
 
-  happyJumps: "/videos/dino/happyJumps.mov",
+  happyJumps: `/videos/dino/happyJumps.${ext}`,
 
-  eating: "/videos/dino/eating.mov",
+  eating: `/videos/dino/eating.${ext}`,
 
-  loveHappy: "/videos/dino/loveHappy.mov",
+  loveHappy: `/videos/dino/loveHappy.${ext}`,
 };
 
 const loopingMoods = [
