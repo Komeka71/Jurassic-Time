@@ -23,7 +23,11 @@ const discoverySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
+user: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
     location: {
       type: String,
       required: true,

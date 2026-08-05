@@ -24,12 +24,12 @@ import {
   Music,
   Volume2,
   ChevronLeft,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 
 import { useAudio } from "../context/AudioContext";
-
-
-const USERNAME = "Shreya";
+import { useAuth } from "../context/AuthContext";
 
 
 const themes = {
@@ -246,6 +246,31 @@ export default function SideMenu({
     toggleEffects,
   } = useAudio();
 
+  // Guest vs logged-in explorer. `authLoading` is true only during the
+  // very first "am I already logged in?" check on app load.
+  const { user, loading: authLoading, logout } = useAuth();
+
+  const handleLogout = async () => {
+    setSettingsOpen(false);
+    onClose();
+
+    try {
+      await logout();
+    } catch (error) {
+      console.error("LOGOUT ERROR:", error);
+    }
+
+    navigate("/");
+  };
+
+  const handleLogin = () => {
+    setSettingsOpen(false);
+    onClose();
+
+    // Remember where the explorer was so Login can send them back here.
+    navigate("/login", { state: { from: location } });
+  };
+
 
   const theme =
     themes[level] || themes[1];
@@ -272,11 +297,14 @@ export default function SideMenu({
     preferences
   ) => {
 
+    // Guests don't have a saved profile to persist sound prefs to.
+    if (!user) return;
+
     try {
 
       const response = await fetch(
         `/api/user/${encodeURIComponent(
-  USERNAME
+  user.username
 )}/sound`,
         {
           method: "PATCH",
@@ -599,6 +627,120 @@ export default function SideMenu({
                       <X size={21} />
                     </motion.button>
 
+                  </div>
+
+
+                  {/* ========================================
+                      EXPLORER IDENTITY / LOGIN-LOGOUT
+                  ======================================== */}
+
+                  <div
+                    className={`
+                      mx-4
+                      mt-4
+
+                      flex
+                      items-center
+                      gap-3
+
+                      rounded-2xl
+
+                      border
+                      ${theme.border}
+
+                      bg-white/[0.04]
+
+                      px-4
+                      py-3.5
+                    `}
+                  >
+                    <div
+                      className={`
+                        w-11
+                        h-11
+
+                        shrink-0
+
+                        rounded-xl
+
+                        flex
+                        items-center
+                        justify-center
+
+                        ${theme.icon}
+                      `}
+                    >
+                      <UserRound size={20} />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold text-[15px] text-white">
+                        {authLoading
+                          ? "Checking…"
+                          : user
+                          ? user.username
+                          : "Guest Explorer"}
+                      </p>
+
+                      <p
+                        className={`
+                          text-xs
+                          ${theme.subtitle}
+                        `}
+                      >
+                        {authLoading
+                          ? "One moment"
+                          : user
+                          ? "Logged in"
+                          : "Not logged in"}
+                      </p>
+                    </div>
+
+                    {!authLoading && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={user ? handleLogout : handleLogin}
+                        className={`
+                          shrink-0
+
+                          flex
+                          items-center
+                          gap-1.5
+
+                          rounded-xl
+
+                          border
+                          ${theme.border}
+
+                          px-3
+                          py-2
+
+                          text-xs
+                          font-semibold
+
+                          ${
+                            user
+                              ? "text-red-200 hover:bg-red-500/10"
+                              : "text-white hover:bg-white/10"
+                          }
+
+                          transition
+                        `}
+                      >
+                        {user ? (
+                          <>
+                            <LogOut size={14} />
+                            Log Out
+                          </>
+                        ) : (
+                          <>
+                            <LogIn size={14} />
+                            Log In
+                          </>
+                        )}
+                      </motion.button>
+                    )}
                   </div>
 
 

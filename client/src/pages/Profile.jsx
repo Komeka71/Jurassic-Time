@@ -14,7 +14,10 @@ import {
 } from "lucide-react";
 
 import SideMenu from "../components/SideMenu";
+const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+const ext = isSafari ? "mov" : "webm";
 const USERNAME = "Shreya";
 
 export default function Profile() {
@@ -582,12 +585,12 @@ export default function Profile() {
                 "
               />
 
-              <motion.video
-                src="/videos/dino/idle.mov"
-                autoPlay
-                loop
-                muted
-                playsInline
+             <motion.video
+  src={`/videos/dino/idle.${ext}`}
+  autoPlay
+  loop
+  muted
+  playsInline
                 animate={{
                   y: [0, -10, 0],
                 }}

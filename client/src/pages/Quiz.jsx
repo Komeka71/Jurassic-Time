@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import AnimatedBackground from "../components/background/AnimatedBackground";
 import TopBar from "../components/TopBar";
@@ -11,6 +11,7 @@ import ExpeditionComplete from "../components/ExpeditionComplete";
 import TreasureChest from "../components/TreasureChest";
 import SideMenu from "../components/SideMenu";
 import { useAudio } from "../context/AudioContext";
+import { useAuth } from "../context/AuthContext";
 import { getQuestions } from "../api/quizApi";
 
 import {
@@ -21,14 +22,21 @@ import {
   completeLevel,
 } from "../utils/playerProgress";
 
-const USERNAME = "Shreya";
 const API_URL = "http://localhost:3000";
 
 export default function Quiz() {
   const location = useLocation();
+  const navigate = useNavigate();
 const {
   playEffect,
 } = useAudio();
+
+  // Logged-in explorer's real username, or "Guest" while browsing without
+  // an account. Guests can still play — their run just isn't tied to a
+  // persistent saved profile.
+  const { user } = useAuth();
+  const USERNAME = user?.username || "Guest";
+  const isGuest = !user;
   const {
     level = 1,
     difficulty = "easy",
@@ -66,9 +74,20 @@ const {
   ========================================
   */
 
-  const [player, setPlayer] = useState(() => {
-    return getPlayerProgress();
-  });
+const [player, setPlayer] = useState(() => {
+  if (user) {
+    return {
+      coins: 0,
+      xp: 0,
+      level: 1,
+      dailyStreak: 0,
+      questionStreak: 0,
+      bestQuestionStreak: 0,
+    };
+  }
+
+  return getPlayerProgress();
+});
 
   const coins = player.coins;
 
@@ -143,7 +162,7 @@ const {
 
   const [chestOpened, setChestOpened] =
     useState(false);
-
+const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   /*
   ========================================
   QUIZ START TIME
@@ -158,9 +177,11 @@ const {
   ========================================
   */
 
-  useEffect(() => {
+ useEffect(() => {
+  if (!user) {
     savePlayerProgress(player);
-  }, [player]);
+  }
+}, [player, user]);
 
   /*
   ========================================
@@ -277,7 +298,10 @@ console.log("First question:", data[0]);
     }
 
     setSubmitted(true);
-
+// Guests are prompted after answering 2 questions
+if (isGuest && currentIndex >= 1) {
+  setShowLoginPrompt(true);
+}
     const isCorrect =
       selectedAnswer === currentQuestion.answer;
 
@@ -431,23 +455,14 @@ playEffect("wrong");
           },
 
           body: JSON.stringify({
-            username: USERNAME,
-
-            topic,
-
-            difficulty,
-
-            answers,
-
-            score: accuracy,
-
-            totalQuestions:
-              questions.length,
-
-            correctAnswers,
-
-            timeTaken,
-          }),
+    topic,
+    difficulty,
+    answers,
+    score: accuracy,
+    totalQuestions: questions.length,
+    correctAnswers,
+    timeTaken,
+}),
         }
       );
 
@@ -734,6 +749,55 @@ console.log("expedition complete");
 
   return (
     <AnimatedBackground level={level}>
+      {showLoginPrompt && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="w-[90%] max-w-md rounded-3xl border border-yellow-500 bg-[#10281C] p-8 text-center shadow-2xl">
+
+      <div className="text-6xl mb-4">🦖</div>
+
+      <h2 className="text-3xl font-bold text-yellow-300 mb-3">
+        Save Your Jurassic Adventure!
+      </h2>
+
+      <p className="text-gray-200 mb-6">
+        Create an account to permanently save your:
+      </p>
+
+      <div className="text-left text-green-300 mb-8 space-y-2">
+        <div>✅ XP & Levels</div>
+        <div>✅ Coins</div>
+        <div>✅ Dinosaur Collection</div>
+        <div>✅ Daily Missions</div>
+        <div>✅ Leaderboard Rank</div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+
+        <button
+          onClick={() => navigate("/login")}
+          className="rounded-xl bg-green-600 py-3 font-bold hover:bg-green-700 transition"
+        >
+          Login
+        </button>
+
+        <button
+          onClick={() => navigate("/signup")}
+          className="rounded-xl bg-blue-600 py-3 font-bold hover:bg-blue-700 transition"
+        >
+          Sign Up
+        </button>
+
+        <button
+          onClick={() => setShowLoginPrompt(false)}
+          className="rounded-xl border border-gray-500 py-3 hover:bg-white/10 transition"
+        >
+          Continue as Guest
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
       <div className="min-h-screen text-white">
 
         {/* TOP BAR */}
@@ -865,6 +929,7 @@ console.log("expedition complete");
         accuracy={accuracy}
         bestStreak={player.bestQuestionStreak}
         level={level}
+        isGuest={isGuest}
       />
     </div>
   ) : (

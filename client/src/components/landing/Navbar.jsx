@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, NavLink } from "react-router-dom";
 // import { Bell, CircleUserRound, Menu } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { Bone } from "lucide-react";
 
 import { Search } from "lucide-react";
@@ -18,6 +20,7 @@ import {
   Binoculars,
   Gamepad2,
   ChevronRight,
+  FlaskConical,
 } from "lucide-react";
 // const navItems = [
 //   {
@@ -47,15 +50,18 @@ import {
 //   },
 // ];
 const navItems = [
-  { title: "Explore", to: "/explore", icon: Compass },
   { title: "Timeline", to: "/timeline", icon: Clock3 },
   { title: "Map", to: "/maps", icon: Map },
+  { title: "Museum", to: "/museum", icon: Compass },
   { title: "Quiz", to: "/home", icon: Binoculars },
+  { title: "Hybrid Lab", to: "/dna-lab", icon: FlaskConical },
   { title: "Mini Games", to: "/games", icon: Gamepad2 },
 ];
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 const [search, setSearch] = useState("");
+const navigate = useNavigate();
+const { user, logout } = useAuth();
   return (
     <motion.header
       initial={{ y: -60, opacity: 0 }}
@@ -208,7 +214,7 @@ const [search, setSearch] = useState("");
         `
       }
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <Icon
           size={20}
           className="text-[#9fc97f] transition-transform duration-300 group-hover:scale-110"
@@ -256,21 +262,126 @@ const [search, setSearch] = useState("");
 >
   <div className="rounded-3xl border border-green-500/10 bg-[#101512] p-6">
     <div className="flex items-center gap-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
-        <CircleUserRound
-          size={26}
-          className="text-[#9fc97f]"
-        />
-      </div>
+      <div
+  className="
+    flex
+    h-11
+    w-11
+    items-center
+    justify-center
+    rounded-full
+    bg-green-500/15
+    text-[18px]
+tracking-wide
+    font-bold
+    text-green-300
+  "
+>
+  {user?.username?.charAt(0).toUpperCase() || "G"}
+</div>
 
       <div>
-        <p className="font-semibold text-white">
-          Guest Explorer
-        </p>
+   <div className="flex-1">
+  <p className="font-semibold text-white text-lg">
+    {user ? user.username : "Guest Explorer"}
+  </p>
 
-        <p className="text-sm text-white/55">
-          Sign in to save your progress.
-        </p>
+  <p className="mt-1 text-sm text-white/45 truncate">
+    {user ? user.email : "Sign in to save your progress."}
+  </p>
+</div>
+<div className="my-5 h-px bg-white/10" />
+<div className="mt-5 space-y-2">
+  {user ? (
+    <>
+      <button
+        onClick={() => {
+          setMenuOpen(false);
+          navigate("/login-profile");
+        }}
+        className="
+          flex w-full items-center justify-between
+          rounded-xl border border-green-500/20
+          bg-green-500/10
+          px-4 h-12
+px-4
+          text-green-300
+          transition
+          hover:bg-green-500/20
+          hover:translate-x-1
+duration-300
+        "
+      >
+        <span>My Profile</span>
+        <ChevronRight size={18} />
+      </button>
+
+      <button
+        onClick={async () => {
+          await logout();
+          setMenuOpen(false);
+        }}
+        className="
+          flex w-full items-center justify-between
+          rounded-xl border border-red-500/20
+          bg-red-500/10
+          px-4 py-3
+          text-red-300
+          transition
+          hover:bg-red-500/20
+          hover:translate-x-1
+duration-300
+        "
+      >
+        <span>Logout</span>
+        <ChevronRight
+    size={17}
+    className="opacity-70 group-hover:translate-x-1 transition"
+/>
+      </button>
+    </>
+  ) : (
+    <>
+      <button
+        onClick={() => {
+          setMenuOpen(false);
+          navigate("/login");
+        }}
+        className="
+          flex w-full items-center justify-between
+          rounded-xl border border-green-500/20
+          bg-green-500/10
+          px-4 py-3
+          text-green-300
+          transition
+          hover:bg-green-500/20
+        "
+      >
+        <span>Login</span>
+        <ChevronRight size={18} />
+      </button>
+
+      <button
+        onClick={() => {
+          setMenuOpen(false);
+          navigate("/signup");
+        }}
+        className="
+          flex w-full items-center justify-between
+          rounded-xl border border-white/10
+          bg-white/5
+          px-4 py-3
+          text-white
+          transition
+          hover:bg-white/10
+        "
+      >
+        <span>Create Account</span>
+        <ChevronRight size={18} />
+      </button>
+    </>
+  )}
+</div>
       </div>
     </div>
   </div>
@@ -348,8 +459,8 @@ hover:bg-green-500/10
 
           {/* Desktop Navigation */}
           {/* Desktop Search */}
-<div className="hidden xl:flex flex-1 items-center justify-center gap-8 px-8">
-  <nav className="flex items-center gap-2">
+<div className="hidden xl:flex flex-1 items-center justify-between gap-8 px-8">
+   <nav className="flex items-center gap-3">
   {navItems.map((item) => (
     <NavLink
       key={item.title}
@@ -375,7 +486,7 @@ hover:bg-green-500/10
     </NavLink>
   ))}
 </nav>
-  <div className="relative w-full max-w-xl">
+ <div className="relative w-full max-w-md">
     <Search
       size={18}
       className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8ea672]"
@@ -435,6 +546,13 @@ hover:bg-green-500/10
             </button>
 
             <button
+  onClick={() => {
+    if (user) {
+      navigate("/login-profile");
+    } else {
+      navigate("/login");
+    }
+  }}
               className="
                 group
                 flex

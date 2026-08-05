@@ -1,0 +1,87 @@
+.authorize-button {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 30px auto 0;
+  padding: 20px 54px;
+  min-width: 300px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, rgba(32, 44, 48, 0.85), rgba(10, 15, 17, 0.92));
+  border: 1px solid rgba(111, 227, 240, 0.5);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 0 20px rgba(56, 198, 217, 0.25);
+  animation: authorize-pulse 2.6s ease-in-out infinite;
+}
+
+.authorize-button__ring {
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(111, 227, 240, 0.3);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.authorize-button__glow {
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle, rgba(56, 198, 217, 0.35), transparent 65%);
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+.authorize-button__label {
+  position: relative;
+  z-index: 1;
+}
+
+.authorize-button:hover,
+.authorize-button:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(111, 227, 240, 0.9);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 48px rgba(56, 198, 217, 0.55);
+  animation: authorize-pulse-strong 1.1s ease-in-out infinite;
+}
+
+.authorize-button:hover .authorize-button__glow,
+.authorize-button:focus-visible .authorize-button__glow {
+  opacity: 1;
+}
+
+.authorize-button:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(56, 198, 217, 0.5);
+}
+
+@keyframes authorize-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(56, 198, 217, 0.25); }
+  50% { box-shadow: 0 0 34px rgba(56, 198, 217, 0.45); }
+}
+
+@keyframes authorize-pulse-strong {
+  0%, 100% { box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 40px rgba(56, 198, 217, 0.5); }
+  50% { box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 60px rgba(56, 198, 217, 0.75); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authorize-button,
+  .authorize-button:hover,
+  .authorize-button:focus-visible {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .authorize-button {
+    width: 100%;
+    min-width: 0;
+    padding: 18px 30px;
+  }
+}

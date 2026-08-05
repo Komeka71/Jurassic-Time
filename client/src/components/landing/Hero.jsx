@@ -62,6 +62,7 @@ const [selectedPart, setSelectedPart] = useState(null);
   // const [selectedDinosaur, setSelectedDinosaur] = useState("T-Rex");
 const guideRef = useRef(null);
 const videoRef = useRef(null);
+const heroSectionRef = useRef(null);
 const currentInfo = dinosaurData[selectedDino];
 const dinoNames = {
   trex: "T-Rex",
@@ -80,9 +81,34 @@ useEffect(() => {
   setCurrentDinosaur(selectedDino);
 }, [selectedDino, setCurrentPage, setCurrentDinosaur]);
 
+// The Timeline/Map/Quiz/Research/Mini Games preview sections that follow
+// Hero on this same scrolling page each set currentPage to their own name
+// once, on mount, and never reset it. So once a visitor has scrolled past
+// one of them, currentPage stays stuck on that section's name even after
+// scrolling back up here — the chat guide would keep thinking the visitor
+// was still looking at, say, Mini Games. Watching this section's own
+// visibility re-claims "hero" whenever it's genuinely back in view.
+useEffect(() => {
+  const el = heroSectionRef.current;
+  if (!el) return undefined;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        setCurrentPage("hero");
+      }
+    },
+    { threshold: 0.5 }
+  );
+
+  observer.observe(el);
+  return () => observer.disconnect();
+}, [setCurrentPage]);
+
 return (
     <section
       id="hero"
+      ref={heroSectionRef}
     className="
 relative
 min-h-screen

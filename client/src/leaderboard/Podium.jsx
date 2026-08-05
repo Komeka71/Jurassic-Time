@@ -741,7 +741,10 @@ function PodiumPlayer({
     </motion.div>
   );
 }
+const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+const ext = isSafari ? "mov" : "webm";
 /*
 ========================================
 PODIUM
@@ -1032,12 +1035,12 @@ if (players.length < 3) {
             pointer-events-none
           "
         >
-          <motion.video
-            src="/videos/dino/celebrate.mov"
-            autoPlay
-            muted
-            loop
-            playsInline
+        <motion.video
+  src={`/videos/dino/celebrate.${ext}`}
+  autoPlay
+  muted
+  loop
+  playsInline
             animate={{
               y: [0, -6, 0],
             }}

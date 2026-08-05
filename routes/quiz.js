@@ -3,42 +3,76 @@ const router = express.Router();
 
 const QuizAttempt = require("../models/QuizAttempt");
 const UserStats = require("../models/UserStats");
-
+const { protect } = require("../middleware/authMiddleware");
+const {
+  getLevelFromXP,
+  buildExpeditionLevels,
+} = require("../utils/playerProgress");
 // Submit Quiz
-router.post("/submit", async (req, res) => {
-    try {
-        const { username, score, totalQuestions, timeTaken } = req.body;
+router.post("/submit", protect, async (req, res) => {
+        try {
+const {
+  score,
+  totalQuestions,
+  timeTaken,
+  topic,
+  difficulty,
+} = req.body;
 
+const username = req.user?.username;
+// Guest users should not save progress
+// if (!username) {
+//   return res.status(200).json({
+//     guest: true,
+//     message: "Guest mode - progress not saved.",
+//   });
+// }
         // Save quiz attempt
-        const attempt = await QuizAttempt.create({
-            username,
-            score,
-            totalQuestions,
-            timeTaken
-        });
+       const xpEarned = score * 10;
+const coinsEarned = score * 5;
 
+const attempt = await QuizAttempt.create({
+    username,
+    score,
+    totalQuestions,
+    timeTaken,
+    topic,
+    difficulty,
+    xpEarned,
+    coinsEarned,
+});
         // Find user stats
-        let stats = await UserStats.findOne({ username });
+        // XP & Coins earned for this quiz
+// const xpEarned = score * 10;
+// const coinsEarned = score * 5;
 
-        if (!stats) {
-            // First quiz by this user
-            stats = await UserStats.create({
-                username,
-                quizzesPlayed: 1,
-                totalScore: score,
-                highestScore: score
-            });
-        } else {
-            // Update existing stats
-            stats.quizzesPlayed += 1;
-            stats.totalScore += score;
+// Find or create user stats
+let stats = await UserStats.findOne({ username });
 
-            if (score > stats.highestScore) {
-                stats.highestScore = score;
-            }
+if (!stats) {
+  stats = new UserStats({
+    username,
+  });
+}
 
-            await stats.save();
-        }
+// Update quiz stats
+stats.quizzesPlayed += 1;
+
+if (score > stats.highestScore) {
+  stats.highestScore = score;
+}
+
+// Update progression
+stats.xp += xpEarned;
+stats.coins += coinsEarned;
+
+// Calculate level from XP
+stats.level = getLevelFromXP(stats.xp);
+
+// Update expedition unlocks
+stats.expeditionLevels = buildExpeditionLevels(stats.level);
+
+await stats.save();
 
         res.json({
             message: "Quiz submitted successfully!",

@@ -10,6 +10,8 @@ export default function MapPreview() {
   const earthRef = useRef(null);
   const bgRef = useRef(null);
   const navigate = useNavigate();
+  const isSafari =
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 const {
   setCurrentPage,
   setCurrentDinosaur,
@@ -226,25 +228,32 @@ xl:h-[620px]
   <div className="absolute w-[88%] h-[88%] rounded-full border border-cyan-300/5" />
 </div>
           {/* Earth Video */}
-          <motion.video
-            ref={earthRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="cursor-pointer"
-           whileHover={{
-  scale: 1.04,
-  y: -8,
-  filter:
-    "drop-shadow(0px 0px 45px rgba(56,189,248,.7))",
-}}
-            transition={{ duration: 0.35 }}
-            className="w-full h-full object-contain pointer-events-none select-none"
-          >
-            <source src="/videos/map/earth.mov" type="video/mp4" />
-          </motion.video>
-
+         <motion.video
+  ref={earthRef}
+  autoPlay
+  muted
+  loop
+  playsInline
+  whileHover={{
+    scale: 1.04,
+    y: -8,
+    filter: "drop-shadow(0px 0px 45px rgba(56,189,248,.7))",
+  }}
+  transition={{ duration: 0.35 }}
+  className="w-full h-full object-contain pointer-events-none select-none"
+>
+{isSafari ? (
+    <source
+      src="/videos/map/earth.mov"
+      type='video/mp4; codecs="hvc1"'
+    />
+  ) : (
+    <source
+      src="/videos/map/earth.webm"
+      type="video/webm"
+    />
+  )}
+</motion.video>
           {/* Circular Click Area */}
          <button
 onClick={() => {
@@ -347,7 +356,17 @@ lg:h-[520px]
       }}
       className="w-full h-full object-contain pointer-events-none"
     >
-      <source src="/videos/map/earth.mov" type="video/mp4" />
+{isSafari ? (
+    <source
+      src="/videos/map/earth.mov"
+      type='video/mp4; codecs="hvc1"'
+    />
+  ) : (
+    <source
+      src="/videos/map/earth.webm"
+      type="video/webm"
+    />
+  )}
     </motion.video>
 <button
   onClick={() => navigate("/maps")}
