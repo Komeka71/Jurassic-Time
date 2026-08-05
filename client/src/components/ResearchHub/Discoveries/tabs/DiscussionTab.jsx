@@ -7,8 +7,11 @@ import {
   Send,
   UserCircle2,
 } from "lucide-react";
+import { useAuth } from "../../../../context/AuthContext";
 
 export default function DiscussionTab({ discovery }) {
+const { user } = useAuth();
+
   const [comments, setComments] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -34,13 +37,18 @@ export default function DiscussionTab({ discovery }) {
   }
 
   async function handleComment() {
-    if (!message.trim()) return;
+    if (!user) {
+  alert("Please login to comment.");
+  return;
+}
+
+if (!message.trim()) return;
 
     try {
       await axios.post(
         `http://localhost:3000/api/discoveries/${discovery._id}/comments`,
         {
-          author: "Shreya",
+          author: user?.username || "Guest",
           message,
         }
       );
