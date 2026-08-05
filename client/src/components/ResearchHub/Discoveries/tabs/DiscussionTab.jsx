@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../../../../api/axios";
 import {
   Heart,
   MessageCircle,
@@ -8,10 +9,12 @@ import {
   UserCircle2,
 } from "lucide-react";
 import { useAuth } from "../../../../context/AuthContext";
+import toast from "react-hot-toast";
+
 
 export default function DiscussionTab({ discovery }) {
 const { user } = useAuth();
-
+const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -23,38 +26,42 @@ const { user } = useAuth();
   }, [discovery?._id]);
 
   async function fetchComments() {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/discoveries/${discovery._id}/comments`
-      );
+  try {
+    const { data } = await api.get(
+      `/discoveries/${discovery._id}/comments`
+    );
 
-      setComments(data.comments);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    setComments(data.comments);
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to load comments.");
+  } finally {
+    setLoading(false);
   }
-
-  async function handleComment() {
-    if (!user) {
-  alert("Please login to comment.");
-  return;
 }
 
+  async function handleComment() {
+if (!user) {
+  toast.error("Please login to join the discussion.");
+  setTimeout(() => navigate("/login"), 800);
+  return;
+}
 if (!message.trim()) return;
 
     try {
-      await axios.post(
-        `http://localhost:3000/api/discoveries/${discovery._id}/comments`,
-        {
-          author: user?.username || "Guest",
-          message,
-        }
-      );
+     await api.post(
+  `/discoveries/${discovery._id}/comments`,
+  {
+    author: user.username,
+    message,
+  }
+);
 
-      setMessage("");
-      fetchComments();
+setMessage("");
+
+await fetchComments();
+
+toast.success("Comment posted successfully!");
     } catch (err) {
       console.error(err);
     }
@@ -84,25 +91,32 @@ if (!message.trim()) return;
       {/* Add Comment */}
 
       <div className="rounded-3xl border border-[#8b6a3d]/20 bg-[#1b140f] p-6">
-        <textarea
-          rows={4}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Share your observations..."
-          className="
-            w-full
-            resize-none
-            rounded-2xl
-            border
-            border-[#8b6a3d]/20
-            bg-[#140f0b]
-            p-4
-            text-[#f5e4c4]
-            placeholder:text-[#8f7b5d]
-            focus:border-[#ddb878]
-            focus:outline-none
-          "
-        />
+       <textarea
+  rows={4}
+  value={message}
+  disabled={!user}
+  onChange={(e) => setMessage(e.target.value)}
+  placeholder={
+    user
+      ? "Share your observations..."
+      : "Login to join the discussion..."
+  }
+  className="
+    w-full
+    resize-none
+    rounded-2xl
+    border
+    border-[#8b6a3d]/20
+    bg-[#140f0b]
+    p-4
+    text-[#f5e4c4]
+    placeholder:text-[#8f7b5d]
+    disabled:opacity-60
+    disabled:cursor-not-allowed
+    focus:border-[#ddb878]
+    focus:outline-none
+  "
+/>
 
         <div className="mt-4 flex justify-end">
           <button
@@ -122,7 +136,7 @@ if (!message.trim()) return;
             "
           >
             <Send size={18} />
-            Post Comment
+            {user ? "Post Comment" : "Login to Comment"}
           </button>
         </div>
       </div>

@@ -122,14 +122,29 @@ useEffect(() => {
       </div>
 
       {/* ================= CONTENT ================= */}
-
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-6">
+<div
+  className="
+    relative
+    z-10
+    flex
+    min-h-screen
+    items-center
+    justify-center
+    px-6
+    py-20
+  "
+>
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-6xl text-center"
+    className="
+  mx-auto
+  w-full
+  max-w-5xl
+  text-center
+"
         >
           {/* Badge */}
 
@@ -148,11 +163,21 @@ useEffect(() => {
 
           {/* Description */}
 
-          <p className="mx-auto mt-8 max-w-3xl text-lg leading-9 text-[#e8d9be]">
-            Explore verified discoveries, collaborate with researchers,
-            upload fossil evidence, and preserve Earth's prehistoric
-            history inside the Paleora Museum.
-          </p>
+    <p
+  className="
+    mx-auto
+    mt-8
+    max-w-3xl
+    text-center
+    text-lg
+    leading-9
+    text-[#e8d9be]
+  "
+>
+  Explore verified discoveries, collaborate with researchers,
+  upload fossil evidence, and preserve Earth's prehistoric
+  history inside the Paleora Museum.
+</p>
 
           {/* CTA */}
 
@@ -219,8 +244,18 @@ onClick={() => setShowTransition(true)}            className="
   </div>
 </div>
           {/* ================= MUSEUM PLAQUES ================= */}
-
-          <div className="mt-10 grid grid-cols-2 gap-5 lg:grid-cols-4">
+<div
+  className="
+    mx-auto
+    mt-14
+    grid
+    max-w-6xl
+    grid-cols-1
+    gap-6
+    md:grid-cols-2
+    lg:grid-cols-4
+  "
+>
             {features.map((item) => {
               const Icon = item.icon;
 

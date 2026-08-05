@@ -11,26 +11,38 @@ import {
 
 import StatusBadge from "./StatusBadge";
 import { useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
+
 export default function DiscoveryCard({
   discovery,
   onClick,
   index = 0,
 }) {
   const [votes, setVotes] = useState(discovery.upvotes);
+const { user } = useAuth();
 const handleLike = async (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  console.log("LIKE CLICKED");
+  if (!user) {
+    alert("Please login to like discoveries.");
+    return;
+  }
 
   try {
     const { data } = await axios.post(
-      `http://localhost:3000/api/discoveries/${discovery._id}/like`
+      `http://localhost:3000/api/discoveries/${discovery._id}/like`,
+      {},
+      {
+        withCredentials: true,
+      }
     );
 
     setVotes(data.upvotes);
   } catch (err) {
-    console.error(err);
+    alert(
+      err.response?.data?.message || "Unable to like discovery."
+    );
   }
 };
   return (
