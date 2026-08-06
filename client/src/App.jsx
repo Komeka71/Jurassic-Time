@@ -1,3 +1,11 @@
+
+
+
+
+// // old
+
+
+// // after adding profilepage
 // import CursorGlow from "./components/landing/CursorGlow";
 // import Maps from "./pages/Maps";
 // import GuideToggle from "./components/guide/GuideToggle";
@@ -6,6 +14,7 @@
 // import MuseumPage from "./pages/MuseumPage";
 // import DNALaboratory from "./pages/DNALaboratory/DNALaboratory";
 // import ExhibitPage from "./pages/ExhibitPage";
+
 // // Auth
 // import ProtectedRoute from "./components/ProtectedRoute";
 // import RequireOnboarding from "./components/RequireOnboarding";
@@ -38,7 +47,7 @@
 // import DinoShop from "./pages/DinoShop";
 // import Collection from "./pages/Collection";
 // import Leaderboard from "./pages/Leaderboard";
-// import Profile from "./pages/Profile";
+// import Profile from "./pages/Profile"; // Existing Quiz Profile
 // import ResearchHub from "./components/ResearchHub/ResearchHub";
 
 // // Mini Games
@@ -57,10 +66,10 @@
 // export default function App() {
 //   return (
 //     <BrowserRouter>
-//     <CursorGlow />
-//     <GuideToggle />
-//       <Routes>
+//       <CursorGlow />
+//       <GuideToggle />
 
+//       <Routes>
 //         {/* Authentication */}
 //         <Route path="/login" element={<Login />} />
 //         <Route path="/signup" element={<Signup />} />
@@ -68,14 +77,17 @@
 
 //         <Route element={<MainLayout />}>
 
-//           {/* Main Jurassic Landing Page */}
+//           {/* Landing */}
 //           <Route path="/" element={<LandingPage />} />
 
 //           {/* Timeline */}
 //           <Route path="/timeline" element={<TimelineLandingPage />} />
 //           <Route path="/timeline/:era" element={<EraTimeline />} />
 //           <Route path="/search" element={<SearchPage />} />
-// <Route path="/dna-lab" element={<DNALaboratory />} />
+
+//           {/* DNA Lab */}
+//           <Route path="/dna-lab" element={<DNALaboratory />} />
+
 //           {/* Login System */}
 //           <Route path="/login-home" element={<HomeLogin />} />
 
@@ -89,13 +101,15 @@
 //               />
 //             </Route>
 //           </Route>
-// {/* Museum */}
-// <Route path="/museum" element={<MuseumExplorer />} />
-// <Route path="/museum/:slug" element={<MuseumPage />} />
-// <Route
-//   path="/museum/:slug/exhibit/:exhibitSlug"
-//   element={<ExhibitPage />}
-// />
+
+//           {/* Museum */}
+//           <Route path="/museum" element={<MuseumExplorer />} />
+//           <Route path="/museum/:slug" element={<MuseumPage />} />
+//           <Route
+//             path="/museum/:slug/exhibit/:exhibitSlug"
+//             element={<ExhibitPage />}
+//           />
+
 //           {/* Jurassic */}
 //           <Route path="/home" element={<Home />} />
 //           <Route path="/profile" element={<Profile />} />
@@ -108,6 +122,9 @@
 //           <Route path="/collection" element={<Collection />} />
 //           <Route path="/leaderboard" element={<Leaderboard />} />
 //           <Route path="/research" element={<ResearchHub />} />
+
+//           {/* NEW Profile Dashboard */}
+//           <Route path="/dashboard" element={<ProfilePage />} />
 
 //           {/* Mini Games */}
 //           <Route
@@ -122,13 +139,14 @@
 //             path="/mini-games/fossil-excavation"
 //             element={<FossilExcavation />}
 //           />
-// <Route path="/maps" element={<Maps />} />
-// <Route path="/dna-lab" element={<DNALaboratory />} />
+
+//           <Route path="/maps" element={<Maps />} />
+
+//           {/* 404 */}
 //           <Route
 //             path="*"
 //             element={<h2>404 - Page Not Found</h2>}
 //           />
-
 //         </Route>
 //       </Routes>
 //     </BrowserRouter>
@@ -138,11 +156,17 @@
 
 
 
+// // old
 
 
 
 
 
+
+import React, { useState } from "react";
+
+// Loader
+import LoaderPage from "./components/LoaderPage";
 
 // after adding profilepage
 import CursorGlow from "./components/landing/CursorGlow";
@@ -186,7 +210,7 @@ import Camp from "./pages/Camp";
 import DinoShop from "./pages/DinoShop";
 import Collection from "./pages/Collection";
 import Leaderboard from "./pages/Leaderboard";
-import Profile from "./pages/Profile"; // Existing Quiz Profile
+import Profile from "./pages/Profile";
 import ResearchHub from "./components/ResearchHub/ResearchHub";
 
 // Mini Games
@@ -203,6 +227,17 @@ function MainLayout() {
 }
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  // Show loader first
+  if (loading) {
+    return (
+      <LoaderPage
+        onComplete={() => setLoading(false)}
+      />
+    );
+  }
+
   return (
     <BrowserRouter>
       <CursorGlow />
@@ -262,7 +297,7 @@ export default function App() {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/research" element={<ResearchHub />} />
 
-          {/* NEW Profile Dashboard */}
+          {/* Dashboard */}
           <Route path="/dashboard" element={<ProfilePage />} />
 
           {/* Mini Games */}

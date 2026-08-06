@@ -606,6 +606,11 @@ useEffect(() => {
                 scale: 0.97,
               }}
              onClick={() => {
+  if (level > unlockedLevel) {
+    alert(`🔒 Reach Level ${level} to unlock this expedition!`);
+    return;
+  }
+
   const difficultyMap = {
     1: "easy",
     2: "easy",
@@ -619,7 +624,7 @@ useEffect(() => {
       level,
       levelTitle,
       difficulty: difficultyMap[level],
-      topic: "mixed",
+      topic,
       questionCount,
     },
   });

@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-
+import { useAuth } from "../context/AuthContext";
 import correctSound from "../assets/sounds/correct.mp3";
 import wrongSound from "../assets/sounds/wrong.mp3";
 import levelUpSound from "../assets/sounds/levelup.mp3";
@@ -13,8 +13,7 @@ import levelUpSound from "../assets/sounds/levelup.mp3";
 
 const AudioContext = createContext(null);
 
-const USERNAME = "Shreya";
-
+// const USER
 
 const effectSources = {
   correct: correctSound,
@@ -24,7 +23,7 @@ const effectSources = {
 
 
 export function AudioProvider({ children }) {
-
+const { user } = useAuth();
   const [musicEnabled, setMusicEnabled] =
     useState(true);
 
@@ -50,11 +49,14 @@ export function AudioProvider({ children }) {
 
       try {
 
-        const response = await fetch(
-          `/api/user/${encodeURIComponent(
-            USERNAME
-          )}`
-        );
+if (!user) {
+  setPreferencesLoaded(true);
+  return;
+}
+
+const response = await fetch(
+  `/api/user/${encodeURIComponent(user.username)}`
+);
 
 
         if (!response.ok) {
@@ -117,9 +119,7 @@ export function AudioProvider({ children }) {
 
 
     loadSoundPreferences();
-
-  }, []);
-
+}, [user]);
 
   /*
   ========================================

@@ -13,14 +13,14 @@ import SideMenu from "../components/SideMenu";
 import { useAudio } from "../context/AudioContext";
 import { useAuth } from "../context/AuthContext";
 import { getQuestions } from "../api/quizApi";
-
-import {
-  getPlayerProgress,
-  savePlayerProgress,
-  updateDailyStreak,
-  getPlayerRank,
-  completeLevel,
-} from "../utils/playerProgress";
+import { getUserProgress } from "../utils/userProgress";
+// import {
+//   getPlayerProgress,
+//   savePlayerProgress,
+//   updateDailyStreak,
+//   getPlayerRank,
+//   completeLevel,
+// } from "../utils/playerProgress";
 
 const API_URL = "http://localhost:3000";
 
@@ -74,20 +74,29 @@ const {
   ========================================
   */
 
-const [player, setPlayer] = useState(() => {
-  if (user) {
-    return {
-      coins: 0,
-      xp: 0,
-      level: 1,
-      dailyStreak: 0,
-      questionStreak: 0,
-      bestQuestionStreak: 0,
-    };
+const [player, setPlayer] = useState({
+  coins: 0,
+  xp: 0,
+  level: 1,
+  dailyStreak: 0,
+  questionStreak: 0,
+  bestQuestionStreak: 0,
+});
+
+useEffect(() => {
+  async function loadPlayer() {
+    const progress = await getUserProgress();
+
+    setPlayer((prev) => ({
+      ...prev,
+      coins: progress.coins,
+      xp: progress.xp,
+      level: progress.level,
+    }));
   }
 
-  return getPlayerProgress();
-});
+  loadPlayer();
+}, []);
 
   const coins = player.coins;
 
@@ -98,7 +107,13 @@ const [player, setPlayer] = useState(() => {
   const questionStreak =
     player.questionStreak;
 
-  const rank = getPlayerRank(xp);
+const rank = (() => {
+  if (xp >= 5000) return "Legend";
+  if (xp >= 3000) return "Master";
+  if (xp >= 1500) return "Explorer";
+  if (xp >= 500) return "Ranger";
+  return "Beginner";
+})();
 
   /*
   ========================================
@@ -177,11 +192,11 @@ const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   ========================================
   */
 
- useEffect(() => {
-  if (!user) {
-    savePlayerProgress(player);
-  }
-}, [player, user]);
+//  useEffect(() => {
+//   if (!user) {
+//     savePlayerProgress(player);
+//   }
+// }, [player, user]);
 
   /*
   ========================================
@@ -298,9 +313,13 @@ console.log("First question:", data[0]);
     }
 
     setSubmitted(true);
-// Guests are prompted after answering 2 questions
-if (isGuest && currentIndex >= 1) {
+if (
+  isGuest &&
+  currentIndex >= 1 &&
+  !sessionStorage.getItem("guestLoginPromptShown")
+) {
   setShowLoginPrompt(true);
+  sessionStorage.setItem("guestLoginPromptShown", "true");
 }
     const isCorrect =
       selectedAnswer === currentQuestion.answer;
@@ -332,9 +351,9 @@ if (isGuest && currentIndex >= 1) {
     ========================================
     */
 
-    setPlayer((prev) => {
-      return updateDailyStreak(prev);
-    });
+    // setPlayer((prev) => {
+    //   return updateDailyStreak(prev);
+    // });
 
     /*
     ========================================
@@ -444,27 +463,28 @@ playEffect("wrong");
         )
       );
 
-      const response = await fetch(
-        `${API_URL}/api/quiz/submit`,
-        {
-          method: "POST",
+const response = await fetch(
+  `${API_URL}/api/quiz/submit`,
+  {
+    method: "POST",
 
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
+    credentials: "include",
 
-          body: JSON.stringify({
-    topic,
-    difficulty,
-    answers,
-    score: accuracy,
-    totalQuestions: questions.length,
-    correctAnswers,
-    timeTaken,
-}),
-        }
-      );
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      topic,
+      difficulty,
+      answers,
+      score: accuracy,
+      totalQuestions: questions.length,
+      correctAnswers,
+      timeTaken,
+    }),
+  }
+);
 
       const data = await response.json();
 
@@ -626,8 +646,6 @@ playEffect("wrong");
 // ========================================
 // */
 
-// await fetch(`${API_URL}/api/daily/shreya/progress`, {
-//   method: "PATCH",
 
 //   headers: {
 //     "Content-Type": "application/json",
@@ -691,7 +709,6 @@ if (!isGuest) {
   // ============================
   // Update player locally
   // ============================
-  setPlayer((prev) => completeLevel(prev, level));
 
   setTimeout(() => {
     setMood("loveHappy");
@@ -709,25 +726,29 @@ if (!isGuest) {
   // Update Daily Missions
   // (Don't block the UI)
   // ============================
+ if (!isGuest) {
   try {
-    const res = await fetch(`${API_URL}/api/daily/shreya/progress`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        expeditions: 1,
-        questions: questions.length,
-        xp: correctAnswers * 20,
-      }),
-    });
+    const res = await fetch(
+      `${API_URL}/api/daily/${USERNAME}/progress`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          expeditions: 1,
+          questions: questions.length,
+          xp: correctAnswers * 20,
+        }),
+      }
+    );
 
     const data = await res.json();
-
     console.log("Daily Mission Updated:", data);
   } catch (err) {
     console.error("Daily Mission Update Failed:", err);
   }
+}
 };
 
 console.log("expedition complete");
@@ -753,53 +774,131 @@ console.log("expedition complete");
 
   return (
     <AnimatedBackground level={level}>
-      {showLoginPrompt && (
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-    <div className="w-[90%] max-w-md rounded-3xl border border-yellow-500 bg-[#10281C] p-8 text-center shadow-2xl">
+{showLoginPrompt && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md">
 
-      <div className="text-6xl mb-4">🦖</div>
+    <div
+      className="
+        relative
+        w-[92%]
+        max-w-lg
+        rounded-[32px]
+        overflow-hidden
+        border border-green-400/30
+        bg-gradient-to-b
+        from-[#133523]
+        to-[#09120D]
+        shadow-[0_25px_80px_rgba(0,0,0,.6)]
+      "
+    >
+      {/* Glow */}
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-green-500/20 blur-[120px]" />
 
-      <h2 className="text-3xl font-bold text-yellow-300 mb-3">
-        Save Your Jurassic Adventure!
-      </h2>
+      <div className="relative z-10 p-8">
 
-      <p className="text-gray-200 mb-6">
-        Create an account to permanently save your:
-      </p>
+        {/* Dino Emoji */}
+        <div className="flex justify-center mb-5">
+          <div
+            className="
+              w-24
+              h-24
+              rounded-full
+              bg-green-500/10
+              border
+              border-green-400/30
+              flex
+              items-center
+              justify-center
+              text-5xl
+            "
+          >
+            🦖
+          </div>
+        </div>
 
-      <div className="text-left text-green-300 mb-8 space-y-2">
-        <div>✅ XP & Levels</div>
-        <div>✅ Coins</div>
-        <div>✅ Dinosaur Collection</div>
-        <div>✅ Daily Missions</div>
-        <div>✅ Leaderboard Rank</div>
+        <h2 className="text-3xl font-black text-center text-yellow-300">
+          Save Your Progress
+        </h2>
+
+        <p className="mt-3 text-center text-gray-300 leading-7">
+          You're doing great!
+          <br />
+          Create a free account so your adventure is never lost.
+        </p>
+
+        <div className="mt-7 rounded-2xl bg-black/20 border border-white/10 p-5">
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+
+            <div>⭐ XP & Levels</div>
+            <div>🪙 Coins</div>
+
+            <div>🦕 Collection</div>
+            <div>🏆 Leaderboard</div>
+
+            <div>🎯 Daily Missions</div>
+            <div>☁️ Cloud Save</div>
+
+          </div>
+
+        </div>
+
+        <div className="mt-8 space-y-3">
+
+          <button
+            onClick={() => navigate("/signup")}
+            className="
+              w-full
+              rounded-2xl
+              bg-gradient-to-r
+              from-green-500
+              to-emerald-400
+              py-4
+              text-lg
+              font-bold
+              text-black
+              hover:scale-[1.02]
+              transition
+            "
+          >
+            Create Free Account
+          </button>
+
+          <button
+            onClick={() => navigate("/login")}
+            className="
+              w-full
+              rounded-2xl
+              border
+              border-green-400/30
+              py-4
+              font-semibold
+              hover:bg-white/5
+              transition
+            "
+          >
+            I already have an account
+          </button>
+
+          <button
+            onClick={() => setShowLoginPrompt(false)}
+            className="
+              w-full
+              py-2
+              text-gray-400
+              hover:text-white
+              transition
+            "
+          >
+            Continue as Guest →
+          </button>
+
+        </div>
+
       </div>
 
-      <div className="flex flex-col gap-3">
-
-        <button
-          onClick={() => navigate("/login")}
-          className="rounded-xl bg-green-600 py-3 font-bold hover:bg-green-700 transition"
-        >
-          Login
-        </button>
-
-        <button
-          onClick={() => navigate("/signup")}
-          className="rounded-xl bg-blue-600 py-3 font-bold hover:bg-blue-700 transition"
-        >
-          Sign Up
-        </button>
-
-        <button
-          onClick={() => setShowLoginPrompt(false)}
-          className="rounded-xl border border-gray-500 py-3 hover:bg-white/10 transition"
-        >
-          Continue as Guest
-        </button>
-
-      </div>
     </div>
+
   </div>
 )}
       <div className="min-h-screen text-white">
