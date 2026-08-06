@@ -11,11 +11,9 @@ export default function VerificationHero() {
       className="relative mx-auto max-w-5xl text-center"
     >
       {/* Glow */}
-
       <div className="absolute left-1/2 top-24 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-[#d6aa62]/10 blur-[140px]" />
 
       {/* Badge */}
-
       <div
         className="
           inline-flex
@@ -34,12 +32,23 @@ export default function VerificationHero() {
           backdrop-blur-md
         "
       >
-        <ShieldCheck size={15} />
+        <motion.div
+          animate={{
+            rotate: [-3, 3, -3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <ShieldCheck size={15} />
+        </motion.div>
+
         Verification Pipeline
       </div>
 
       {/* Heading */}
-
       <h2
         className="
           mt-8
@@ -52,11 +61,10 @@ export default function VerificationHero() {
       >
         Every Discovery
         <br />
-        Earns Its Place
+        Earns Its Place in History
       </h2>
 
       {/* Description */}
-
       <p
         className="
           mx-auto
@@ -67,14 +75,18 @@ export default function VerificationHero() {
           text-[#d4c2a5]
         "
       >
-        Every fossil submitted to Paleora undergoes a rigorous scientific
-        verification process before becoming part of the permanent Museum
-        Archive.
+        Every fossil submitted to Paleora is analyzed by AI, reviewed by the
+        research community, and verified by museum experts before becoming part
+        of the permanent Museum Archive.
       </p>
 
       {/* Divider */}
-
       <div className="mx-auto mt-10 h-px w-52 bg-gradient-to-r from-transparent via-[#ddb878]/70 to-transparent" />
+
+      {/* Mission Strip */}
+      <div className="mx-auto mt-10 inline-flex items-center rounded-full border border-[#8b6637]/30 bg-[#24180f]/70 px-6 py-3 text-sm text-[#d4c2a5] backdrop-blur-md">
+        🦴 AI Analysis → Community Review → Museum Verification
+      </div>
     </motion.div>
   );
 }

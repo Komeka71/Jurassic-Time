@@ -1,20 +1,19 @@
 import { motion } from "framer-motion";
 import VerificationCard from "./VerificationCard";
-import { verificationStages } from "./verificationData";
+import { getVerificationStages } from "./verificationData";
 
-export default function VerificationTimeline() {
+export default function VerificationTimeline({
+  discovery,
+}) {
+  const verificationStages =
+    getVerificationStages(discovery);
+
   return (
     <section className="relative mt-24">
-
       {/* ================= DESKTOP ================= */}
 
       <div className="relative hidden xl:block">
-
-        {/* Base Line */}
-
         <div className="absolute left-[12%] right-[12%] top-[120px] h-[3px] rounded-full bg-[#4a3520]" />
-
-        {/* Animated Gold Line */}
 
         <motion.div
           initial={{ width: 0 }}
@@ -37,14 +36,12 @@ export default function VerificationTimeline() {
           "
         />
 
-        {/* Cards */}
-
         <div className="grid grid-cols-4 gap-10">
           {verificationStages.map((stage, index) => (
-            <div key={stage.id} className="relative">
-
-              {/* Timeline Dot */}
-
+            <div
+              key={stage.id}
+              className="relative"
+            >
               <motion.div
                 initial={{
                   scale: 0,
@@ -70,7 +67,6 @@ export default function VerificationTimeline() {
                   border-[5px]
                   border-[#ddb878]
                   bg-[#120d09]
-                  shadow-[0_0_20px_rgba(221,184,120,.7)]
                 "
               />
 
@@ -78,7 +74,6 @@ export default function VerificationTimeline() {
                 {...stage}
                 delay={index * 0.15}
               />
-
             </div>
           ))}
         </div>
@@ -87,19 +82,13 @@ export default function VerificationTimeline() {
       {/* ================= MOBILE ================= */}
 
       <div className="space-y-8 xl:hidden">
-
-        {/* Vertical Line */}
-
-        <div className="absolute left-6 top-0 bottom-0 w-[3px] bg-[#4a3520]" />
+        <div className="absolute bottom-0 left-6 top-0 w-[3px] bg-[#4a3520]" />
 
         {verificationStages.map((stage, index) => (
           <div
             key={stage.id}
             className="relative pl-14"
           >
-
-            {/* Dot */}
-
             <div
               className="
                 absolute
@@ -118,10 +107,8 @@ export default function VerificationTimeline() {
               {...stage}
               delay={index * 0.1}
             />
-
           </div>
         ))}
-
       </div>
     </section>
   );

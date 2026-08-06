@@ -7,7 +7,7 @@ import CurrentStage from "./CurrentStage";
 
 export default function VerificationPipeline() {
   const [discovery, setDiscovery] = useState(null);
-console.log(discovery);
+
   useEffect(() => {
     async function fetchDiscovery() {
       try {
@@ -38,9 +38,19 @@ console.log(discovery);
 
         <VerificationTimeline />
 
-        <CurrentStage discovery={discovery} />
+        {!discovery && (
+          <div className="mt-20 flex justify-center">
+            <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#ddb878]/20 border-t-[#ddb878]" />
+          </div>
+        )}
 
-        <CommunityReview discovery={discovery} />
+        {discovery && (
+          <>
+            <CurrentStage discovery={discovery} />
+
+            <CommunityReview discovery={discovery} />
+          </>
+        )}
       </div>
     </section>
   );

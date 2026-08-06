@@ -1,4 +1,3 @@
-
 import Chatbot from "../chat/Chatbot";
 import ArchiveHero from "./Hero/ArchiveHero";
 import MapRoom from "./MapRoom/MapRoom";
@@ -23,110 +22,124 @@ export default function ResearchHub() {
   const personalization = getPersonalization(user);
   const { setCurrentPage, setLastAction } = useGuide();
 
-useEffect(() => {
-  // Always start at the Hero
-  window.scrollTo(0, 0);
+  useEffect(() => {
+    // Always start at the Hero
+    window.scrollTo(0, 0);
 
-  if ("scrollRestoration" in history) {
-    history.scrollRestoration = "manual";
-  }
-
-  if (videoRef.current) {
-    videoRef.current.playbackRate = 0.15;
-  }
-}, []);
-
-// The shared guide context previously had no idea the user was on the
-// Research Hub at all (this page never called setCurrentPage), so the
-// chat guide would answer "what page is this?" using whatever page the
-// visitor had been on before. Keep it in sync here.
-useEffect(() => {
-  setCurrentPage("research");
-  setLastAction("researchVisited");
-}, [setCurrentPage, setLastAction]);
-const [guideMood, setGuideMood] = useState("wave");
-const heroRef = useRef(null);
-const mapRef = useRef(null);
-const submitRef = useRef(null);
-const verificationRef = useRef(null);
-const discoveriesRef = useRef(null);
-const networkRef = useRef(null);
-const [guideMessage, setGuideMessage] = useState(
-  "Welcome to the Paleora Research Archive."
-);
-useEffect(() => {
-const sections = [
-  {
-    ref: heroRef,
-    mood: "wave",
-    message: "Welcome to the Paleora Research Archive.",
-  },
-
-  {
-    ref: mapRef,
-    mood: "pointingRight",
-    message: "Explore fossil discoveries from around the world.",
-  },
-
-  {
-    ref: submitRef,
-    mood: "happy",
-    message: "Upload your fossil discovery for verification.",
-  },
-
-  {
-    ref: verificationRef,
-    mood: "thinking",
-    message: "Every submission is carefully verified using AI.",
-  },
-
-  {
-    ref: discoveriesRef,
-    mood: "celebrate",
-    message: "Browse verified discoveries from our researchers.",
-  },
-
-  {
-    ref: networkRef,
-    mood: "loveHappy",
-    message: "Connect with paleontologists across the globe.",
-  },
-];
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-
-        const section = sections.find(
-          (s) => s.ref.current === entry.target
-        );
-
-        if (section) {
-         setGuideMood(section.mood);
-setGuideMessage(section.message);
-        }
-      });
-    },
-    {
-      threshold: 0.45,
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
     }
+
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.15;
+    }
+  }, []);
+
+  // The shared guide context previously had no idea the user was on the
+  // Research Hub at all (this page never called setCurrentPage), so the
+  // chat guide would answer "what page is this?" using whatever page the
+  // visitor had been on before. Keep it in sync here, and reset it on
+  // unmount so a later page doesn't inherit "research" as a stale value.
+  useEffect(() => {
+    setCurrentPage("research");
+    setLastAction("researchVisited");
+
+    return () => {
+      setCurrentPage(null);
+    };
+  }, [setCurrentPage, setLastAction]);
+
+  const [guideMood, setGuideMood] = useState("wave");
+  const heroRef = useRef(null);
+  const mapRef = useRef(null);
+  const submitRef = useRef(null);
+  const verificationRef = useRef(null);
+  const discoveriesRef = useRef(null);
+  const networkRef = useRef(null);
+  const [guideMessage, setGuideMessage] = useState(
+    "Welcome to the Paleora Research Archive."
   );
 
-  sections.forEach((s) => {
-    if (s.ref.current)
-      observer.observe(s.ref.current);
-  });
+  useEffect(() => {
+    const sections = [
+      {
+        ref: heroRef,
+        mood: "wave",
+        message: "Welcome to the Paleora Research Archive.",
+      },
 
-  return () => observer.disconnect();
-}, []);
+      {
+        ref: mapRef,
+        mood: "pointingRight",
+        message: "Explore fossil discoveries from around the world.",
+      },
+
+      {
+        ref: submitRef,
+        mood: "happy",
+        message: "Upload your fossil discovery for verification.",
+      },
+
+      {
+        ref: verificationRef,
+        mood: "thinking",
+        message: "Every submission is carefully verified using AI.",
+      },
+
+      {
+        ref: discoveriesRef,
+        mood: "celebrate",
+        message: "Browse verified discoveries from our researchers.",
+      },
+
+      {
+        ref: networkRef,
+        mood: "loveHappy",
+        message: "Connect with paleontologists across the globe.",
+      },
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const section = sections.find(
+            (s) => s.ref.current === entry.target
+          );
+
+          if (section) {
+            setGuideMood((prev) =>
+              prev !== section.mood ? section.mood : prev
+            );
+
+            setGuideMessage((prev) =>
+              prev !== section.message ? section.message : prev
+            );
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+        rootMargin: "-10% 0px -10% 0px",
+      }
+    );
+
+    sections.forEach((s) => {
+      if (s.ref.current) observer.observe(s.ref.current);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-<section className="relative overflow-hidden bg-[#090806]">
+    <section className="relative overflow-hidden bg-[#090806]">
+      <FloatingNavigation />
 
-  <FloatingNavigation />
-
-  {/* HERO */}      <div ref={heroRef}>
-    <ArchiveHero />
-</div>
+      {/* HERO */}
+      <div ref={heroRef}>
+        <ArchiveHero />
+      </div>
 
       {/* ================= REST OF RESEARCH HUB ================= */}
       <div className="relative">
@@ -140,53 +153,38 @@ setGuideMessage(section.message);
             playsInline
             className="h-full w-full object-cover"
           >
-            <source
-              src="/videos/research/museum.mp4"
-              type="video/mp4"
-            />
+            <source src="/videos/research/museum.mp4" type="video/mp4" />
           </video>
 
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-black/80" />
 
           {/* Warm Museum Tint */}
-<div className="absolute inset-0 bg-gradient-to-b from-[#1b130d]/40 via-[#090806]/75 to-black/95" />        </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1b130d]/40 via-[#090806]/75 to-black/95" />
+        </div>
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-[1600px] px-6 lg:px-12">
-          <div
-    ref={mapRef}
-    className="pt-32"
->
-    <MapRoom />
-</div>
+          <div ref={mapRef} className="pt-32">
+            <MapRoom />
+          </div>
 
-          <div
-    ref={submitRef}
-    className="pt-40"
->
-    <SubmitJournal />
-</div>
+          <div ref={submitRef} className="pt-40">
+            <SubmitJournal />
+          </div>
 
-          <div
-    ref={verificationRef}
-    className="pt-40"
->
-    <VerificationPipeline />
-</div>
+          <div ref={verificationRef} className="pt-40">
+            <VerificationPipeline />
+          </div>
 
-         <div
-    ref={discoveriesRef}
-    className="pt-40"
->
-    <DiscoveriesSection />
-</div>
-          <div
-    ref={networkRef}
-    className="pt-40"
->
-    <ResearchNetwork />
-</div>
+          <div ref={discoveriesRef} className="pt-40">
+            <DiscoveriesSection />
+          </div>
+
+          <div ref={networkRef} className="pt-40">
+            <ResearchNetwork />
+          </div>
+
           {/*
           <div className="pt-40">
             <ActivityFeed />
@@ -202,49 +200,53 @@ setGuideMessage(section.message);
           */}
         </div>
       </div>
-  {/* ================= FLOATING DINO ================= */}
-<div
-  className="
-    fixed
-    bottom-2
-    right-3
 
-    xl:bottom-4
-    xl:right-6
+      {/* ================= FLOATING DINO ================= */}
+      <div
+        className="
+          fixed
+          bottom-2
+          right-3
 
-    z-[90]
+          xl:bottom-4
+          xl:right-6
 
-    origin-bottom-right
-    scale-[0.9]
+          z-[90]
 
-    xl:scale-[1.2]
-    2xl:scale-[1.05]
-  "
->
-  <DinoGuide
-    controlled
-    disableClick
-    mood={guideMood}
-    message={guideMessage}
-  />
-</div>
+          origin-bottom-right
+          scale-[0.9]
 
-{/* ================= AI CHATBOT ================= */}
-<div
-  className="
-    fixed
-    bottom-4
-    left-0
+          xl:scale-[1.2]
+          2xl:scale-[1.05]
+        "
+      >
+        <DinoGuide
+          controlled
+          disableClick
+          mood={guideMood}
+          message={guideMessage}
+        />
+      </div>
 
-    md:bottom-6
-    md:left-6
+      {/* ================= AI CHATBOT ================= */}
+      <div
+        className="
+          fixed
+          bottom-4
+          left-0
 
-    z-[95]
-  "
->
-  <Chatbot personalization={personalization} page="research" userName={user?.username} />
-</div>
+          md:bottom-6
+          md:left-6
 
-</section>
+          z-[95]
+        "
+      >
+        <Chatbot
+          personalization={personalization}
+          page="research"
+          userName={user?.username}
+        />
+      </div>
+    </section>
   );
 }

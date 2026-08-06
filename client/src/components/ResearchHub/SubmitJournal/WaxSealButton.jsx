@@ -26,38 +26,64 @@ export default function WaxSealButton({
         transition-all
         ${
           disabled || loading
-            ? "border-[#5d4630] bg-[#2b1c14] opacity-60 cursor-not-allowed"
-            : "border-[#8d5e32] bg-gradient-to-b from-[#4f1d18] to-[#32110f] shadow-[0_20px_45px_rgba(0,0,0,.45)]"
+            ? "cursor-not-allowed border-[#5d4630] bg-[#2b1c14] opacity-60"
+            : "cursor-pointer border-[#8d5e32] bg-gradient-to-b from-[#4f1d18] to-[#32110f] shadow-[0_20px_45px_rgba(0,0,0,.45)] hover:border-[#ddb878] hover:shadow-[0_25px_60px_rgba(221,184,120,.25)]"
         }
       `}
     >
       {/* Glow */}
 
       {!disabled && !loading && (
-        <motion.div
-          animate={{
-            opacity: [0.15, 0.35, 0.15],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-          }}
-          className="
-            absolute
-            inset-0
-            bg-[radial-gradient(circle,#ffcf7b40,transparent_70%)]
-          "
-        />
+        <>
+          <motion.div
+            animate={{
+              opacity: [0.15, 0.35, 0.15],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+            }}
+            className="
+              absolute
+              inset-0
+              bg-[radial-gradient(circle,#ffcf7b40,transparent_70%)]
+            "
+          />
+
+          {/* Shimmer */}
+
+          <motion.div
+            animate={{
+              x: ["-120%", "120%"],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="
+              pointer-events-none
+              absolute
+              inset-y-0
+              w-24
+              -skew-x-12
+              bg-white/10
+              blur-md
+            "
+          />
+        </>
       )}
 
       <div className="relative z-10 flex flex-col items-center">
-
         {/* Wax Seal */}
 
         <motion.img
           animate={
             !disabled && !loading
-              ? { rotate: [-2, 2, -2] }
+              ? {
+                  rotate: [-2, 2, -2],
+                  y: [0, -4, 0],
+                }
               : {}
           }
           transition={{
@@ -71,8 +97,8 @@ export default function WaxSealButton({
 
         <h3 className="text-xl font-bold text-[#f7e4c2]">
           {loading
-            ? "Archiving Discovery..."
-            : "Seal Expedition Record"}
+            ? "Applying Museum Seal..."
+            : "Seal Museum Record"}
         </h3>
 
         <p className="mt-2 max-w-xs text-center text-sm leading-6 text-[#d2b089]">
@@ -82,7 +108,14 @@ export default function WaxSealButton({
         </p>
 
         {loading ? (
-          <span
+          <motion.span
+            animate={{
+              scale: [1, 1.06, 1],
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+            }}
             className="
               mt-6
               rounded-full
@@ -95,7 +128,7 @@ export default function WaxSealButton({
             "
           >
             Archiving...
-          </span>
+          </motion.span>
         ) : !disabled ? (
           <span
             className="
@@ -124,10 +157,9 @@ export default function WaxSealButton({
               text-[#b89667]
             "
           >
-            Complete Research Checklist
+            Complete All Required Fields
           </span>
         )}
-
       </div>
     </motion.button>
   );
