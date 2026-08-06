@@ -65,7 +65,7 @@ router.get("/:id", protect, getDiscoveryById);
 LIKE DISCOVERY
 ========================================
 */
-router.post("/:id/verify", protect, verifyDiscovery);
+router.post("/:id/like", protect, likeDiscovery);
 
 /*
 ========================================
@@ -73,7 +73,6 @@ VERIFY DISCOVERY
 ========================================
 */
 router.post("/:id/verify", protect, verifyDiscovery);
-
 /*
 ========================================
 GET COMMENTS

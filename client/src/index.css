@@ -140,3 +140,24 @@ a {
 }
 
 
+
+
+
+input,
+textarea,
+select {
+  outline: none;
+  box-shadow: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}

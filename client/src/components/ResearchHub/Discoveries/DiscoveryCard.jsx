@@ -50,43 +50,49 @@ const handleLike = async (e) => {
 };
   return (
     <motion.div
-      layout
-      initial={{
-        opacity: 0,
-        y: 40,
-      }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-      }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.55,
-        delay: index * 0.1,
-      }}
-      whileHover={{
-  y: -10,
-  scale: 1.025,
-}}
-      onClick={() => onClick(discovery)}
-      className="
-        group
-        cursor-pointer
-        overflow-hidden
-        rounded-[30px]
-        border
-        border-[#8b6a3d]/30
-        bg-gradient-to-b
-        from-[#1b140f]
-        via-[#120d09]
-        to-[#090705]
-        shadow-[0_25px_70px_rgba(0,0,0,.45)]
-        transition-all
-        duration-500
-        hover:border-[#ddb878]/60
-        hover:shadow-[0_35px_90px_rgba(0,0,0,.75)]
-      "
-    >
+  layout
+  initial={{
+    opacity: 0,
+    y: 40,
+  }}
+  whileInView={{
+    opacity: 1,
+    y: 0,
+  }}
+  viewport={{ once: true }}
+  transition={{
+    duration: 0.55,
+    delay: index * 0.1,
+  }}
+  whileHover={{
+    y: -10,
+    scale: 1.025,
+  }}
+  onClick={() => onClick(discovery)}
+  tabIndex={-1}
+  className="
+    group
+    cursor-pointer
+    overflow-hidden
+    rounded-[30px]
+    border
+    border-[#8b6a3d]/30
+    bg-gradient-to-b
+    from-[#1b140f]
+    via-[#120d09]
+    to-[#090705]
+    shadow-[0_25px_70px_rgba(0,0,0,.45)]
+    transition-all
+    duration-500
+    hover:border-[#ddb878]/60
+    hover:shadow-[0_35px_90px_rgba(0,0,0,.75)]
+    outline-none
+    focus:outline-none
+    focus:ring-0
+    focus-visible:outline-none
+    focus-visible:ring-0
+  "
+>
       {/* ================= IMAGE ================= */}
 
 <div className="relative h-60 overflow-hidden">
