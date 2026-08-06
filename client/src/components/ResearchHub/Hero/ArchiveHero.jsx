@@ -9,46 +9,60 @@ import {
 } from "lucide-react";
 
 export default function ArchiveHero() {
+  const API =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:3000";
+
   const [statsData, setStatsData] = useState({
-  archivedFossils: 0,
-  verifiedPercent: 0,
-  pendingVerification: 0,
-  todaySubmissions: 0,
-});
-const stats = [
-  {
-    value: statsData.archivedFossils,
-    label: "Archived Fossils",
-    icon: BookOpen,
-  },
-  {
-  value: "—",
-  label: "Researchers",
-  icon: Users,
-},
-  {
-    value: `${statsData.verifiedPercent}%`,
-    label: "Verified",
-    icon: ShieldCheck,
-  },
-];
-useEffect(() => {
-  async function loadStats() {
-    try {
-      const res = await fetch(
-        "http://localhost:3000/api/discoveries/archive-stats"
-      );
+    archivedFossils: "--",
+    verifiedPercent: "--",
+    pendingVerification: "--",
+    todaySubmissions: "--",
+  });
 
-      const data = await res.json();
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const res = await fetch(
+          `${API}/api/discoveries/archive-stats`
+        );
 
-      setStatsData(data);
-    } catch (err) {
-      console.error(err);
+        const data = await res.json();
+
+        setStatsData(data);
+      } catch (err) {
+        console.error(err);
+
+        setStatsData({
+          archivedFossils: "--",
+          verifiedPercent: "--",
+          pendingVerification: "--",
+          todaySubmissions: "--",
+        });
+      }
     }
-  }
 
-  loadStats();
-}, []);
+    loadStats();
+  }, [API]);
+
+  const stats = [
+    {
+      value: statsData.archivedFossils,
+      label: "Archived Fossils",
+      icon: BookOpen,
+    },
+    {
+      value: statsData.pendingVerification,
+      label: "Active Reviews",
+      icon: Users,
+    },
+    {
+      value: `${statsData.verifiedPercent}%`,
+      label: "Verified",
+      icon: ShieldCheck,
+    },
+  ];
+
   return (
     <section
       className="
@@ -314,14 +328,22 @@ useEffect(() => {
             backdrop-blur-lg
           "
         >
-          <h3 className="mb-3 uppercase tracking-[0.3em] text-[#ddb878] text-sm">
+          <h3 className="mb-3 text-sm uppercase tracking-[0.3em] text-[#ddb878]">
             Today's Archive Activity
           </h3>
 
           <div className="flex flex-wrap justify-center gap-8 text-[#e6d6bf]">
-            <span>🦴 {statsData.pendingVerification} Discoveries Awaiting Verification</span>
-            <span>📄 {statsData.todaySubmissions} Discoveries Submitted Today</span>
-            <span>👨‍🔬 3 Researchers Reviewing Evidence</span>
+            <span>
+              🦴 {statsData.pendingVerification} Discoveries Awaiting Verification
+            </span>
+
+            <span>
+              📄 {statsData.todaySubmissions} Discoveries Submitted Today
+            </span>
+
+            <span>
+              👨‍🔬 Community researchers are actively reviewing new submissions
+            </span>
           </div>
         </motion.div>
       </motion.div>
@@ -348,7 +370,7 @@ useEffect(() => {
         <ArrowDown className="mx-auto" />
 
         <p className="mt-2 text-xs uppercase tracking-[0.35em]">
-          Explore Expedition Atlas
+          Explore Research Collection
         </p>
       </motion.div>
 

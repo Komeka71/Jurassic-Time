@@ -15,6 +15,9 @@ import {
 export default function EvidenceTab({ discovery }) {
   const evidence = discovery.evidence || [];
 const [selectedImage, setSelectedImage] = useState(null);
+const API =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:3000";
   const getIcon = (mime = "") => {
     if (mime.startsWith("image"))
       return <Image size={22} className="text-[#ddb878]" />;
@@ -76,7 +79,7 @@ const [selectedImage, setSelectedImage] = useState(null);
           </h3>
 
           <p className="mt-3 text-[#9d8a70]">
-            Supporting evidence has not yet been added to this archive.
+No supporting field evidence has been archived for this discovery yet.
           </p>
         </div>
       )}
@@ -85,7 +88,7 @@ const [selectedImage, setSelectedImage] = useState(null);
 
       <div className="space-y-5">
         {evidence.map((file, index) => {
-  console.log(file);
+  // console.log(file);
 
   return (
           <motion.div
@@ -113,14 +116,9 @@ const [selectedImage, setSelectedImage] = useState(null);
   <button
   onClick={() => {
     if (file.mimetype.startsWith("image")) {
-      setSelectedImage(
-        `http://localhost:3000/${file.path}`
-      );
+    setSelectedImage(`${API}/${file.path}`);
     } else {
-      window.open(
-        `http://localhost:3000/${file.path}`,
-        "_blank"
-      );
+    window.open(`${API}/${file.path}`, "_blank");
     }
   }}
   className="
@@ -135,9 +133,9 @@ const [selectedImage, setSelectedImage] = useState(null);
     hover:scale-105
   "
 >
-  {file.mimetype.startsWith("image")
-    ? "Preview Image"
-    : "Open File"}
+{file.mimetype.startsWith("image")
+  ? "View Evidence"
+  : "Open Evidence"}
 </button>
 </div>
                   <p className="mt-2 text-[#bca88b]">
@@ -172,7 +170,7 @@ const [selectedImage, setSelectedImage] = useState(null);
                 </p>
 
                 <p className="mt-2 text-emerald-400">
-                  Accepted
+                  Archived
                 </p>
               </div>
 
@@ -193,35 +191,53 @@ const [selectedImage, setSelectedImage] = useState(null);
       </div>
       <AnimatePresence>
   {selectedImage && (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => setSelectedImage(null)}
-      className="
-        fixed
-        inset-0
-        z-[100]
-        flex
-        items-center
-        justify-center
-        bg-black/80
-        backdrop-blur-sm
-        p-10
-      "
+  <motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  onClick={() => setSelectedImage(null)}
+className="
+fixed
+inset-0
+z-[100]
+flex
+flex-col
+items-center
+justify-center
+bg-black/80
+backdrop-blur-sm
+p-10
+"
     >
       <motion.img
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0.8 }}
+      onClick={(e) => e.stopPropagation()}
+        initial={{
+  scale: 0.6,
+  opacity: 0
+}}
+
+animate={{
+  scale: 1,
+  opacity: 1
+}}
+
+exit={{
+  scale: 0.6,
+  opacity: 0
+}}
+       
         src={selectedImage}
-        className="
-          max-h-[90vh]
-          max-w-[90vw]
-          rounded-3xl
-          shadow-2xl
-        "
+       className="
+max-h-[90vh]
+max-w-[90vw]
+rounded-3xl
+shadow-2xl
+cursor-zoom-out
+"
       />
+      <p className="mt-4 text-sm text-[#ccb998]">
+Click anywhere outside the image to close
+</p>
     </motion.div>
   )}
 </AnimatePresence>

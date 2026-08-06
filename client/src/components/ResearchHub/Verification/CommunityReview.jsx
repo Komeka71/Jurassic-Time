@@ -79,7 +79,7 @@ const progress =
         {reviewers.map((reviewer, index) => (
 
           <motion.div
-key={`${reviewer.name}-${index}`}            initial={{ opacity: 0, y: 40 }}
+key={`${reviewer.user?.username || "Anonymous Researcher"}-${index}`}            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.15 }}
@@ -113,12 +113,16 @@ key={`${reviewer.name}-${index}`}            initial={{ opacity: 0, y: 40 }}
             </div>
 
             <h3 className="mt-6 text-2xl font-bold text-[#f5e4c4]">
-              {reviewer.name}
+              {reviewer.user?.username || "Anonymous Researcher"}
             </h3>
 
-            <p className="mt-2 text-[#bda98b]">
-              {reviewer.role}
-            </p>
+           <p className="mt-2 text-[#bda98b]">
+  {reviewer.verdict === "approved"
+    ? "Community Reviewer"
+    : reviewer.verdict === "rejected"
+    ? "Community Reviewer"
+    : "Awaiting Review"}
+</p>
 
             <div className="my-6 h-px bg-gradient-to-r from-transparent via-[#8b6a3d]/40 to-transparent" />
 

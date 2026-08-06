@@ -74,10 +74,12 @@ const stages = [
     icon: "Users",
     description: `${approvals} approvals • ${rejections} rejections`,
     color: "text-amber-400",
-    status:
-      discovery.status === "under-review"
-        ? "current"
-        : "completed",
+   status:
+  discovery.status === "under-review"
+    ? "current"
+    : discovery.status === "verified"
+    ? "completed"
+    : "completed",
   },
   {
     title: "Museum Archive",
@@ -159,7 +161,7 @@ toast.error(
     </h3>
 
     <p className="mt-1 text-[#bca88b]">
-      Automated fossil verification completed.
+   Automated specimen analysis completed.
     </p>
   </div>
 
@@ -233,6 +235,26 @@ toast.error(
       {report}
     </p>
   </div>
+  <div className="mt-8">
+  <div className="mb-2 flex justify-between">
+    <span className="text-[#ddb878]">
+      Verification Progress
+    </span>
+
+    <span className="font-bold text-[#ddb878]">
+      {Math.round(progress)}%
+    </span>
+  </div>
+
+  <div className="h-3 overflow-hidden rounded-full bg-[#2b2119]">
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: `${progress}%` }}
+      transition={{ duration: 1 }}
+      className="h-full rounded-full bg-[#ddb878]"
+    />
+  </div>
+</div>
 </motion.div>
       <div className="relative ml-5 border-l border-[#6f5632]">
 
@@ -272,97 +294,7 @@ toast.error(
                   className={stage.color}
                 />
               </div>
-<div className="mt-10 rounded-3xl border border-[#8b6a3d]/20 bg-[#1b140f] p-8">
 
-  <h3 className="text-xl font-bold text-[#f5e4c4]">
-    Community Verification
-  </h3>
-
-  <p className="mt-2 text-[#bca88b]">
-    Verified researchers can help validate this discovery.
-  </p>
-
-<div className="mt-8 grid grid-cols-2 gap-5">
-
-  <motion.button
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.98 }}
-    disabled={!user || voted || isOwner}
-    onClick={() => vote("approve")}
-    className="
-      rounded-2xl
-      border
-      border-emerald-500/30
-      bg-emerald-500/10
-      p-6
-      text-left
-      transition
-      hover:bg-emerald-500/20
-      disabled:opacity-50
-    "
-  >
-    <div className="text-3xl">✅</div>
-
-    <h4 className="mt-3 text-lg font-bold text-emerald-300">
-      Approve
-    </h4>
-
-    <p className="mt-2 text-sm text-[#ccb998]">
-      This discovery appears authentic.
-    </p>
-
-    <div className="mt-5 text-3xl font-bold text-white">
-      {approvals}
-    </div>
-  </motion.button>
-
-
-  <motion.button
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.98 }}
-    disabled={!user || voted || isOwner}
-    onClick={() => vote("reject")}
-    className="
-      rounded-2xl
-      border
-      border-red-500/30
-      bg-red-500/10
-      p-6
-      text-left
-      transition
-      hover:bg-red-500/20
-      disabled:opacity-50
-    "
-  >
-    <div className="text-3xl">❌</div>
-
-    <h4 className="mt-3 text-lg font-bold text-red-300">
-      Reject
-    </h4>
-
-    <p className="mt-2 text-sm text-[#ccb998]">
-      Evidence appears insufficient.
-    </p>
-
-    <div className="mt-5 text-3xl font-bold text-white">
-      {rejections}
-    </div>
-  </motion.button>
-
-</div>
-  {isOwner && (
-    <p className="mt-5 text-yellow-400">
-      You cannot review your own discovery.
-    </p>
-  )}
-
-  {voted && (
-    <p className="mt-5 text-emerald-400">
-      ✔ Thank you for reviewing this fossil.
-    </p>
-  )}
-
-</div>
               {/* Card */}
 
               <div
@@ -408,6 +340,97 @@ toast.error(
         })}
 
       </div>
+      <div className="mt-10 rounded-3xl border border-[#8b6a3d]/20 bg-[#1b140f] p-8">
+
+  <h3 className="text-xl font-bold text-[#f5e4c4]">
+    Community Verification
+  </h3>
+
+  <p className="mt-2 text-[#bca88b]">
+    Verified researchers can help validate this discovery.
+  </p>
+
+<div className="mt-8 grid grid-cols-2 gap-5">
+
+  <motion.button
+whileHover={!voted && !isOwner ? { scale: 1.03 } : {}}
+    whileTap={{ scale: 0.98 }}
+    disabled={!user || voted || isOwner}
+    onClick={() => vote("approve")}
+    className="
+      rounded-2xl
+      border
+      border-emerald-500/30
+      bg-emerald-500/10
+      p-6
+      text-left
+      transition
+      hover:bg-emerald-500/20
+      disabled:opacity-50
+    "
+  >
+    <div className="text-3xl">✅</div>
+
+    <h4 className="mt-3 text-lg font-bold text-emerald-300">
+      Approve
+    </h4>
+
+    <p className="mt-2 text-sm text-[#ccb998]">
+      This discovery appears authentic.
+    </p>
+
+    <div className="mt-5 text-3xl font-bold text-white">
+      {approvals}
+    </div>
+  </motion.button>
+
+
+  <motion.button
+   whileHover={!voted && !isOwner ? { scale: 1.03 } : {}}
+    whileTap={{ scale: 0.98 }}
+    disabled={!user || voted || isOwner}
+    onClick={() => vote("reject")}
+    className="
+      rounded-2xl
+      border
+      border-red-500/30
+      bg-red-500/10
+      p-6
+      text-left
+      transition
+      hover:bg-red-500/20
+      disabled:opacity-50
+    "
+  >
+    <div className="text-3xl">❌</div>
+
+    <h4 className="mt-3 text-lg font-bold text-red-300">
+      Reject
+    </h4>
+
+    <p className="mt-2 text-sm text-[#ccb998]">
+      Evidence appears insufficient.
+    </p>
+
+    <div className="mt-5 text-3xl font-bold text-white">
+      {rejections}
+    </div>
+  </motion.button>
+
+</div>
+  {isOwner && (
+    <p className="mt-5 text-yellow-400">
+      You cannot review your own discovery.
+    </p>
+  )}
+
+  {voted && (
+    <p className="mt-5 text-emerald-400">
+      ✔ Thank you for reviewing this fossil.
+    </p>
+  )}
+
+</div>
     </motion.div>
   );
 }

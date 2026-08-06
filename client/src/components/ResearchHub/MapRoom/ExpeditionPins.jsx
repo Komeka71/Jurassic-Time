@@ -29,9 +29,19 @@ const statusStyles = {
     glow: "bg-[#df5a5a]",
     border: "border-[#ffb2b2]",
   },
+
+  rejected: {
+    color: "from-[#ff8b8b] to-[#c23c3c]",
+    glow: "bg-[#df5a5a]",
+    border: "border-[#ffb2b2]",
+  },
 };
 
 export default function ExpeditionPins() {
+  const API =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:3000";
+
   const [hovered, setHovered] = useState(null);
   const [sites, setSites] = useState([]);
 
@@ -42,11 +52,12 @@ export default function ExpeditionPins() {
   async function fetchSites() {
     try {
       const { data } = await axios.get(
-        "http://localhost:3000/api/discoveries"
+        `${API}/api/discoveries`
       );
 
-      setSites(data.discoveries.map(mapPin));
-      console.table(data.discoveries.map(mapPin));
+      setSites(
+        (data.discoveries || []).map(mapPin)
+      );
     } catch (err) {
       console.error(err);
     }
@@ -55,9 +66,10 @@ export default function ExpeditionPins() {
   return (
     <>
       {sites.map((site) => {
-const style =
-  statusStyles[site.status] ??
-  statusStyles["under-review"];
+        const style =
+          statusStyles[site.status] ??
+          statusStyles["under-review"];
+
         return (
           <motion.div
             key={site.id}
@@ -75,7 +87,10 @@ const style =
             onMouseLeave={() => setHovered(null)}
           >
             {/* Pin */}
-            <button className="relative cursor-pointer">
+            <button
+              type="button"
+              className="relative cursor-pointer"
+            >
               {/* Pulse */}
               <motion.span
                 animate={{
@@ -108,7 +123,10 @@ const style =
 
               {/* Pin */}
               <motion.span
-                whileHover={{ scale: 1.35 }}
+                whileHover={{
+                  scale: 1.35,
+                  rotate: 10,
+                }}
                 className={`
                   relative
                   block
@@ -146,7 +164,7 @@ const style =
                   transition={{
                     duration: 0.2,
                   }}
-                  className="absolute left-1/2 bottom-7 -translate-x-1/2 z-[999]"
+                  className="absolute bottom-7 left-1/2 z-[999] -translate-x-1/2"
                 >
                   <MapTooltip site={site} />
                 </motion.div>

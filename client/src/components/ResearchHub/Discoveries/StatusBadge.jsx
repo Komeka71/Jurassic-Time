@@ -20,15 +20,29 @@ const statusConfig = {
       "border-emerald-400/40 bg-emerald-500/15 text-emerald-300 shadow-[0_0_18px_rgba(16,185,129,.16)]",
   },
 
-"under-review": {
+  "under-review": {
     label: "Under Review",
     Icon: Clock3,
     className:
       "border-orange-400/40 bg-orange-500/15 text-orange-300 shadow-[0_0_18px_rgba(249,115,22,.16)]",
   },
 
+  "field-draft": {
+    label: "Field Draft",
+    Icon: Clock3,
+    className:
+      "border-slate-400/40 bg-slate-500/15 text-slate-300 shadow-[0_0_18px_rgba(148,163,184,.15)]",
+  },
+
   pending: {
     label: "Evidence Required",
+    Icon: ShieldAlert,
+    className:
+      "border-red-400/40 bg-red-500/15 text-red-300 shadow-[0_0_18px_rgba(239,68,68,.16)]",
+  },
+
+  rejected: {
+    label: "Rejected",
     Icon: ShieldAlert,
     className:
       "border-red-400/40 bg-red-500/15 text-red-300 shadow-[0_0_18px_rgba(239,68,68,.16)]",
@@ -39,9 +53,9 @@ export default function StatusBadge({
   status,
   size = "md",
 }) {
-  const config = statusConfig[status];
-
-  if (!config) return null;
+  const config =
+    statusConfig[status] ||
+    statusConfig["under-review"];
 
   const { Icon, label, className } = config;
 

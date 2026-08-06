@@ -1,6 +1,8 @@
+
+
+
 const express = require("express");
 const router = express.Router();
-
 const {
   createDiscovery,
   getLatestDiscoveries,
@@ -8,6 +10,7 @@ const {
   getArchiveStats,
   getDiscoveryById,
   likeDiscovery,
+  verifyDiscovery,
   addComment,
   getComments,
   getResearchNetworkStats,
@@ -18,6 +21,7 @@ const {
 
 const upload = require("../middleware/uploadDiscovery");
 const { protect } = require("../middleware/authMiddleware");
+
 /*
 ========================================
 ARCHIVE STATS
@@ -34,29 +38,41 @@ router.get("/latest", getLatestDiscoveries);
 
 /*
 ========================================
-ALL DISCOVERIES
+NETWORK
 ========================================
 */
-router.get("/", getAllDiscoveries);
 router.get("/network-stats", getResearchNetworkStats);
-
 router.get("/activity", getResearchActivity);
 router.get("/top-contributors", getTopContributors);
 router.get("/network-health", getNetworkHealth);
 
 /*
 ========================================
+ALL DISCOVERIES
+========================================
+*/
+router.get("/", getAllDiscoveries);
+
+/*
+========================================
 GET SINGLE DISCOVERY
 ========================================
 */
-router.get("/:id", getDiscoveryById);
+router.get("/:id", protect, getDiscoveryById);
+
 /*
 ========================================
 LIKE DISCOVERY
 ========================================
 */
-router.post("/:id/like", likeDiscovery);
+router.post("/:id/verify", protect, verifyDiscovery);
 
+/*
+========================================
+VERIFY DISCOVERY
+========================================
+*/
+router.post("/:id/verify", protect, verifyDiscovery);
 
 /*
 ========================================
@@ -70,7 +86,8 @@ router.get("/:id/comments", getComments);
 ADD COMMENT
 ========================================
 */
-router.post("/:id/comments", addComment);
+router.post("/:id/comments", protect, addComment);
+
 /*
 ========================================
 CREATE DISCOVERY

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import axios from "axios";
+import api from "../../../api/axios";
 import {
   ArrowRight,
   CalendarDays,
@@ -8,40 +8,43 @@ import {
   MessageCircle,
   ThumbsUp,
 } from "lucide-react";
-
-import StatusBadge from "./StatusBadge";
+import toast from "react-hot-toast";
 import { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
+import StatusBadge from "./StatusBadge";
+
 
 export default function DiscoveryCard({
   discovery,
   onClick,
   index = 0,
 }) {
-  const [votes, setVotes] = useState(discovery.upvotes);
+  // const API =
+  // import.meta.env.VITE_API_URL ||
+  // "http://localhost:3000";
+const [votes, setVotes] = useState(discovery.upvotes);
+const [liked, setLiked] = useState(discovery.liked || false);
 const { user } = useAuth();
 const handleLike = async (e) => {
   e.preventDefault();
   e.stopPropagation();
 
   if (!user) {
-    alert("Please login to like discoveries.");
+    toast.error("Please login to like discoveries.");
     return;
   }
 
   try {
-    const { data } = await axios.post(
-      `http://localhost:3000/api/discoveries/${discovery._id}/like`,
-      {},
-      {
-        withCredentials: true,
-      }
+    const { data } = await api.post(
+      `/discoveries/${discovery._id}/like`
     );
 
     setVotes(data.upvotes);
+    setLiked(data.liked);
   } catch (err) {
-    alert(
-      err.response?.data?.message || "Unable to like discovery."
+    toast.error(
+      err.response?.data?.message ||
+        "Unable to like discovery."
     );
   }
 };
@@ -186,7 +189,8 @@ const handleLike = async (e) => {
         <div className="grid grid-cols-3 gap-3 text-center">
 
           <div>
-<button
+<motion.button
+  whileTap={{ scale: 0.9 }}
   onClick={handleLike}
   className="
     flex
@@ -198,9 +202,16 @@ const handleLike = async (e) => {
     hover:text-yellow-300
   "
 >
-  <ThumbsUp size={16} />
+  <ThumbsUp
+    size={16}
+    className={
+      liked
+        ? "fill-yellow-400 text-yellow-400"
+        : ""
+    }
+  />
   {votes}
-</button>
+</motion.button>
             <p className="mt-1 text-[11px] uppercase tracking-widest text-[#8f7d61]">
               Votes
             </p>

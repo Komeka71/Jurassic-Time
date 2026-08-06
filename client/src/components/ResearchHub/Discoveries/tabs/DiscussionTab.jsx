@@ -63,8 +63,9 @@ await fetchComments();
 
 toast.success("Comment posted successfully!");
     } catch (err) {
-      console.error(err);
-    }
+  console.error(err);
+  toast.error("Failed to post comment.");
+}
   }
 
   return (
@@ -119,22 +120,25 @@ toast.success("Comment posted successfully!");
 />
 
         <div className="mt-4 flex justify-end">
-          <button
-            onClick={handleComment}
-            className="
-              flex
-              items-center
-              gap-2
-              rounded-xl
-              bg-[#ddb878]
-              px-5
-              py-3
-              font-semibold
-              text-[#24170f]
-              transition
-              hover:scale-105
-            "
-          >
+       <button
+  onClick={handleComment}
+  disabled={!user}
+  className="
+    flex
+    items-center
+    gap-2
+    rounded-xl
+    bg-[#ddb878]
+    px-5
+    py-3
+    font-semibold
+    text-[#24170f]
+    transition
+    disabled:cursor-not-allowed
+    disabled:opacity-60
+    hover:scale-105
+  "
+>
             <Send size={18} />
             {user ? "Post Comment" : "Login to Comment"}
           </button>
@@ -192,7 +196,9 @@ toast.success("Comment posted successfully!");
                     </h3>
 
                     <p className="text-sm text-[#9d8a70]">
-                      Researcher
+                     {comment.author === user?.username
+  ? "You"
+  : "Community Researcher"}
                     </p>
                   </div>
 
@@ -205,17 +211,11 @@ toast.success("Comment posted successfully!");
                   {comment.message}
                 </p>
 
-                <div className="mt-5 flex gap-6">
-                  <button className="flex items-center gap-2 text-[#bca88b] transition hover:text-red-400">
-                    <Heart size={18} />
-                    0
-                  </button>
-
-                  <button className="flex items-center gap-2 text-[#bca88b] transition hover:text-[#ddb878]">
-                    <MessageCircle size={18} />
-                    Reply
-                  </button>
-                </div>
+               <div className="mt-5">
+  <span className="text-sm text-[#8f7b5d] italic">
+    Community Discussion
+  </span>
+</div>
               </div>
             </div>
           </motion.div>

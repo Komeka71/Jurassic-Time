@@ -19,10 +19,14 @@ const checks =
 const report =
   discovery.aiVerification?.report ??
   "No AI report available.";
-
+const breakdown =
+  discovery.aiVerification?.breakdown || {};
 const species = discovery.species;
 
-const estimatedAge = `${discovery.era} Period`;
+const estimatedAge =
+  discovery.era && discovery.era !== "Unknown"
+    ? discovery.era
+    : "Not Determined";
   return (
     <motion.div
       key="ai"
@@ -46,7 +50,7 @@ const estimatedAge = `${discovery.era} Period`;
       </div>
 
       {/* Confidence */}
-
+{discovery.aiVerification?.breakdown && (
       <div className="rounded-3xl border border-[#8b6a3d]/20 bg-[#1b140f] p-7">
 
         <div className="mb-4 flex items-center justify-between">
@@ -71,7 +75,66 @@ const estimatedAge = `${discovery.era} Period`;
         </div>
 
       </div>
+      )}
+{/* Confidence Breakdown */}
 
+<div className="rounded-3xl border border-[#8b6a3d]/20 bg-[#1b140f] p-7">
+
+  <h3 className="mb-6 text-xl font-semibold text-[#f5e4c4]">
+    Confidence Breakdown
+  </h3>
+
+  {[
+    {
+      label: "Image Quality",
+      value: breakdown.imageQuality,
+    },
+    {
+      label: "Fossil Detection",
+      value: breakdown.fossilDetection,
+    },
+    {
+      label: "Species Match",
+      value: breakdown.speciesMatch,
+    },
+    {
+      label: "Geological Consistency",
+      value: breakdown.geologicalConsistency,
+    },
+    {
+      label: "Preservation Score",
+      value: breakdown.preservationScore,
+    },
+  ].map((item) => (
+    <div key={item.label} className="mb-5 last:mb-0">
+
+      <div className="mb-2 flex justify-between">
+
+        <span className="text-[#ccb998]">
+          {item.label}
+        </span>
+
+        <span className="font-semibold text-[#ddb878]">
+          {item.value || 0}%
+        </span>
+
+      </div>
+
+      <div className="h-2 overflow-hidden rounded-full bg-[#2a2118]">
+
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${item.value || 0}%` }}
+          transition={{ duration: 1 }}
+          className="h-full rounded-full bg-[#ddb878]"
+        />
+
+      </div>
+
+    </div>
+  ))}
+
+</div>
       {/* Analysis Cards */}
 
       <div className="grid gap-5 md:grid-cols-2">

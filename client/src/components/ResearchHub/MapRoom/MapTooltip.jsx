@@ -12,25 +12,43 @@ import {
 const statusConfig = {
   featured: {
     label: "Featured Discovery",
-    color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
+    color:
+      "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
     Icon: Star,
   },
 
   verified: {
     label: "Verified Discovery",
-    color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    color:
+      "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
     Icon: CheckCircle2,
   },
 
-"under-review": {
+  "under-review": {
     label: "Under Review",
-    color: "bg-orange-500/20 text-orange-300 border-orange-500/30",
+    color:
+      "bg-orange-500/20 text-orange-300 border-orange-500/30",
+    Icon: Clock3,
+  },
+
+  "field-draft": {
+    label: "Field Draft",
+    color:
+      "bg-slate-500/20 text-slate-300 border-slate-500/30",
     Icon: Clock3,
   },
 
   pending: {
     label: "Evidence Required",
-    color: "bg-red-500/20 text-red-300 border-red-500/30",
+    color:
+      "bg-red-500/20 text-red-300 border-red-500/30",
+    Icon: ShieldCheck,
+  },
+
+  rejected: {
+    label: "Rejected",
+    color:
+      "bg-red-500/20 text-red-300 border-red-500/30",
     Icon: ShieldCheck,
   },
 };
@@ -38,20 +56,20 @@ const statusConfig = {
 export default function MapTooltip({ site }) {
   if (!site) return null;
 
-const status =
-  statusConfig[site.status] ??
-  statusConfig["under-review"];
-    const StatusIcon = status.Icon;
+  const status =
+    statusConfig[site.status] ??
+    statusConfig["under-review"];
+
+  const StatusIcon = status.Icon;
 
   return (
     <div
       className="
-       absolute
-left-1/2
-bottom-[28px]
--translate-x-1/2
+        absolute
+        left-1/2
+        bottom-[28px]
         z-50
-        min-w-[285px]
+        min-w-[300px]
         -translate-x-1/2
         rounded-2xl
         border
@@ -62,9 +80,6 @@ bottom-[28px]
         backdrop-blur-xl
         pointer-events-none
       "
-      style={{
-  pointerEvents: "none",
-}}
     >
       {/* Dinosaur */}
 
@@ -75,7 +90,10 @@ bottom-[28px]
       {/* Location */}
 
       <div className="mt-3 flex items-center gap-2 text-sm text-stone-300">
-        <MapPin size={15} className="text-amber-400" />
+        <MapPin
+          size={15}
+          className="text-amber-400"
+        />
         {site.location}
       </div>
 
@@ -88,7 +106,10 @@ bottom-[28px]
       {/* Discovery Year */}
 
       <div className="mt-3 flex items-center gap-2 text-sm text-stone-300">
-        <CalendarDays size={15} className="text-amber-400" />
+        <CalendarDays
+          size={15}
+          className="text-amber-400"
+        />
         First documented in {site.discoveryYear}
       </div>
 
@@ -112,7 +133,7 @@ bottom-[28px]
         {status.label}
       </div>
 
-      {/* Verified */}
+      {/* Verified By */}
 
       {site.verifiedBy && (
         <div className="mt-3 text-xs text-stone-400">
@@ -130,17 +151,15 @@ bottom-[28px]
       {/* Footer */}
 
       <div className="flex items-center justify-between text-sm text-stone-300">
-
         <div className="flex items-center gap-1">
           <ThumbsUp size={15} />
-          {site.upvotes}
+          {site.upvotes} Votes
         </div>
 
         <div className="flex items-center gap-1">
           <MessageCircle size={15} />
-          {site.comments}
+          {site.comments} Comments
         </div>
-
       </div>
 
       {/* Arrow */}

@@ -9,11 +9,15 @@ import {
 } from "lucide-react";
 
 export default function ArchiveStats() {
+  const API =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:3000";
+
   const [stats, setStats] = useState({
-    discoveries: 0,
-    sites: 0,
-    reviewing: 0,
-    species: 0,
+    discoveries: "--",
+    sites: "--",
+    reviewing: "--",
+    species: "--",
   });
 
   useEffect(() => {
@@ -23,10 +27,9 @@ export default function ArchiveStats() {
   async function fetchStats() {
     try {
       const { data } = await axios.get(
-        "http://localhost:3000/api/discoveries"
+        `${API}/api/discoveries`
       );
-console.log(data);
-      // const discoveries = data;
+
       const discoveries = data.discoveries;
 
       const uniqueSites = new Set(
@@ -49,6 +52,13 @@ console.log(data);
       });
     } catch (err) {
       console.error(err);
+
+      setStats({
+        discoveries: "--",
+        sites: "--",
+        reviewing: "--",
+        species: "--",
+      });
     }
   }
 
@@ -93,6 +103,7 @@ console.log(data);
           shadow-[0_25px_70px_rgba(0,0,0,.55)]
         "
       >
+        {/* Decorative Top Border */}
         <div
           className="
             pointer-events-none
@@ -107,9 +118,10 @@ console.log(data);
           "
         />
 
+        {/* Heading */}
         <h3
           className="
-            mb-8
+            mb-3
             text-center
             text-xs
             uppercase
@@ -120,6 +132,11 @@ console.log(data);
           Archive Summary
         </h3>
 
+        <p className="mb-10 text-center text-[#bca88b]">
+          Live statistics from the Paleora Museum Archive.
+        </p>
+
+        {/* Statistics */}
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {cards.map(({ icon: Icon, value, label }) => (
             <div
@@ -151,6 +168,7 @@ console.log(data);
         </div>
       </div>
 
+      {/* Legend */}
       <div
         className="
           mt-6
@@ -164,22 +182,22 @@ console.log(data);
       >
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-emerald-400" />
-          Verified
+          Verified Discoveries
         </div>
 
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-orange-400" />
-          Under Review
+          Under Community Review
         </div>
 
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-red-400" />
-          Evidence Required
+          Evidence Pending
         </div>
 
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-yellow-400" />
-          Featured Discovery
+          Featured Museum Specimens
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export default function OverviewTab({ discovery }) {
 
         <div className="rounded-3xl border border-[#8b6a3d]/20 bg-[#1b140f] p-7">
           <p className="leading-8 text-[#ccb998]">
-            {discovery.description}
+            {discovery.notes}
           </p>
         </div>
       </section>
@@ -51,9 +51,11 @@ export default function OverviewTab({ discovery }) {
               {discovery.location}
             </p>
 
-            <p className="text-[#bfa98b]">
-              {discovery.country}
-            </p>
+           <p className="text-[#bfa98b]">
+  {discovery.latitude && discovery.longitude
+    ? `${discovery.latitude}, ${discovery.longitude}`
+    : "GPS coordinates unavailable"}
+</p>
           </div>
 
           <div className="rounded-2xl border border-[#8b6a3d]/20 bg-[#1b140f] p-6">
@@ -67,9 +69,9 @@ export default function OverviewTab({ discovery }) {
               {discovery.era}
             </p>
 
-            <p className="text-[#bfa98b]">
-              {discovery.discoveryYear}
-            </p>
+           <p className="text-[#bfa98b]">
+  {new Date(discovery.createdAt).toLocaleDateString()}
+</p>
           </div>
 
           <div className="rounded-2xl border border-[#8b6a3d]/20 bg-[#1b140f] p-6 md:col-span-2">
@@ -79,9 +81,11 @@ export default function OverviewTab({ discovery }) {
               Verified By
             </p>
 
-            <p className="mt-3 text-lg text-[#f5e4c4]">
-              {discovery.verifiedBy || "Pending Review"}
-            </p>
+           <p className="mt-3 text-lg text-[#f5e4c4]">
+  {discovery.reviewers?.length
+    ? `${discovery.reviewers.length} Researcher(s)`
+    : "Pending Community Review"}
+</p>
           </div>
 
         </div>

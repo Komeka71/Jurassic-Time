@@ -5,7 +5,6 @@ import JournalSection from "./JournalSection";
 export default function SubmitJournal() {
   return (
     <section className="relative overflow-hidden">
-
       {/* ================= Background Video ================= */}
 
       <video
@@ -13,14 +12,7 @@ export default function SubmitJournal() {
         muted
         loop
         playsInline
-        className="
-          absolute
-          inset-0
-          h-full
-          w-full
-          object-cover
-          -z-20
-        "
+        className="absolute inset-0 h-full w-full object-cover -z-20"
       >
         <source
           src="/videos/research/library.mp4"
@@ -30,26 +22,53 @@ export default function SubmitJournal() {
 
       {/* ================= Dark Overlay ================= */}
 
-      <div
-        className="
-          absolute
-          inset-0
-          -z-10
-          bg-black/60
-        "
-      />
+      <div className="absolute inset-0 -z-10 bg-black/60" />
 
       {/* ================= Gradient Overlay ================= */}
 
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/40 via-[#090705]/55 to-[#090705]" />
+
+      {/* ================= Floating Dust ================= */}
+
+      <div className="absolute inset-0 overflow-hidden -z-10">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              y: [0, -80],
+              opacity: [0, 0.7, 0],
+            }}
+            transition={{
+              duration: 8 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "linear",
+            }}
+            className="absolute rounded-full bg-[#ddb878]"
+            style={{
+              width: `${2 + Math.random() * 3}px`,
+              height: `${2 + Math.random() * 3}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ================= Hero Glow ================= */}
+
       <div
         className="
           absolute
-          inset-0
+          left-1/2
+          top-44
+          h-[420px]
+          w-[420px]
+          -translate-x-1/2
+          rounded-full
+          bg-[#ddb878]/10
+          blur-[180px]
           -z-10
-          bg-gradient-to-b
-          from-black/40
-          via-[#090705]/55
-          to-[#090705]
         "
       />
 
@@ -81,7 +100,7 @@ export default function SubmitJournal() {
           "
         >
           <Feather size={15} />
-          Field Journal
+          Museum Expedition Journal
         </div>
 
         <h2
@@ -93,7 +112,7 @@ export default function SubmitJournal() {
             lg:text-5xl
           "
         >
-          Submit Your Discovery
+          Archive a New Discovery
         </h2>
 
         <p
@@ -106,10 +125,12 @@ export default function SubmitJournal() {
             text-[#c8b79d]
           "
         >
-          Record your field observations, attach supporting evidence,
-          and submit your expedition record for archival review by the
-          Paleora Museum.
+          Document your field observations, attach supporting evidence,
+          and preserve your discovery within the Paleora Museum Archive,
+          where it will undergo AI analysis and community verification.
         </p>
+
+        <div className="mx-auto mt-10 h-px w-56 bg-gradient-to-r from-transparent via-[#ddb878]/60 to-transparent" />
       </motion.div>
 
       {/* ================= Journal ================= */}
@@ -118,6 +139,9 @@ export default function SubmitJournal() {
         <JournalSection />
       </div>
 
+      {/* ================= Bottom Fade ================= */}
+
+      <div className="absolute bottom-0 left-0 h-40 w-full bg-gradient-to-b from-transparent to-[#090705]" />
     </section>
   );
 }

@@ -25,10 +25,13 @@ const {
 } = useGuide();
 async function fetchDiscoveries() {
   try {
-    const { data } = await axios.get(
-      "http://localhost:3000/api/discoveries/latest"
-    );
+   const API =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:3000";
 
+const { data } = await axios.get(
+  `${API}/api/discoveries/latest`
+);
     setDiscoveries(
       data.discoveries.map(mapDiscovery)
     );
@@ -154,7 +157,7 @@ async function fetchDiscoveries() {
               text-[#f8ebd3]
 text-4xl md:text-[3.3rem]            "
           >
-Research Collection          
+Paleora Research Collection       
           </h2>
 
           {/* Description */}
@@ -169,7 +172,7 @@ Research Collection
               text-[#d7c5aa]
             "
           >
-            Authentic fossil discoveries preserved inside the Paleora Museum Archive.
+Explore community-submitted fossil discoveries that have been analyzed by AI and preserved within the Paleora Museum Archive.
           </p>
 
           {/* Divider */}
@@ -177,44 +180,55 @@ Research Collection
           <div className="mx-auto mt-10 h-px w-48 bg-gradient-to-r from-transparent via-[#ddb878]/60 to-transparent" />
 
         </motion.div>
+{loading ? (
+  <div className="py-20 text-center text-[#ccb998]">
+    Loading museum discoveries...
+  </div>
+) : (
+  <>
+    {/* ================= CARDS ================= */}
 
-        {/* ================= CARDS ================= */}
-
-       <div
-  className="
-    flex
-    gap-8
-    overflow-x-auto
-    pb-6
-    snap-x
-    snap-mandatory
-    scrollbar-hide
-  "
-><div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-24 bg-gradient-to-r from-[#090705] to-transparent" />
-
-<div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-24 bg-gradient-to-l from-[#090705] to-transparent" />
-  {discoveries.map((discovery, index) => (
     <div
-      key={discovery.id}
       className="
-        min-w-[360px]
-        max-w-[360px]
-        shrink-0
-        snap-start
+        
+        flex
+        gap-8
+        overflow-x-auto
+        pb-6
+        snap-x
+        snap-mandatory
+        scrollbar-hide
       "
     >
-      <DiscoveryCard
-        discovery={discovery}
-        index={index}
-        onClick={(discovery) => {
-  setSelectedDiscovery(discovery);
-  setLastAction("discoveryOpened");
-  setCurrentDinosaur(discovery.species);
-}}
-      />
+      <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-24 bg-gradient-to-r from-[#090705] to-transparent" />
+
+      <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-24 bg-gradient-to-l from-[#090705] to-transparent" />
+
+      {discoveries.map((discovery, index) => (
+        <div
+          key={discovery.id}
+          className="
+            min-w-[360px]
+            max-w-[360px]
+            shrink-0
+            snap-start
+          "
+        >
+          <DiscoveryCard
+            discovery={discovery}
+            index={index}
+            onClick={(discovery) => {
+              
+              setSelectedDiscovery(discovery);
+              setLastAction("discoveryOpened");
+              setCurrentDinosaur(discovery.species);
+            }}
+          />
+        </div>
+      ))}
     </div>
-  ))}
-</div>
+  </>
+)}
 
       </div>
 

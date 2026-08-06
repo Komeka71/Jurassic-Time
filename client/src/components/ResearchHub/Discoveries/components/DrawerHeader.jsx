@@ -20,8 +20,12 @@ export default function DrawerHeader({ discovery }) {
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.8 }}
-          src={discovery.image}
-          alt={discovery.name}
+    src={
+  discovery.evidence?.[0]
+    ? `http://localhost:5001/${discovery.evidence[0].path}`
+    : "/images/no-fossil.png"
+}
+alt={discovery.fossilName}
           className="h-full w-full object-contain"
         />
 
@@ -38,7 +42,7 @@ export default function DrawerHeader({ discovery }) {
         <StatusBadge status={discovery.status} />
 
         <h1 className="mt-6 text-5xl font-bold text-[#f6e5c3] leading-tight">
-          {discovery.name}
+          {discovery.fossilName}
         </h1>
 
         <p className="mt-2 text-xl text-[#cdb998] italic">
@@ -46,7 +50,7 @@ export default function DrawerHeader({ discovery }) {
         </p>
 
         <p className="mt-4 text-xs uppercase tracking-[0.35em] text-[#8f7d60]">
-          Specimen {discovery.specimenId}
+          Archive {discovery.archiveId}
         </p>
 
         {/* Metadata Strip */}
@@ -58,7 +62,7 @@ export default function DrawerHeader({ discovery }) {
             <MapPin size={17} className="text-[#ddb878]" />
 
             <span className="text-[#e7d4b4]">
-              {discovery.location}, {discovery.country}
+             {discovery.location}
             </span>
 
           </div>
@@ -78,7 +82,11 @@ export default function DrawerHeader({ discovery }) {
             <Dna size={17} className="text-[#ddb878]" />
 
             <span className="text-[#e7d4b4]">
-              {discovery.verifiedBy || "Pending Review"}
+            <span className="text-[#e7d4b4]">
+  {discovery.status === "verified"
+    ? "Community Verified"
+    : "Pending Review"}
+</span>
             </span>
 
           </div>
@@ -122,7 +130,7 @@ export default function DrawerHeader({ discovery }) {
             <Dna className="mx-auto mb-2 text-[#ddb878]" />
 
             <p className="text-3xl font-bold text-[#f6e5c3]">
-              {discovery.evidenceCount}
+            {discovery.evidence?.length || 0}
             </p>
 
             <p className="mt-1 text-xs uppercase tracking-[0.3em] text-[#8f7d60]">

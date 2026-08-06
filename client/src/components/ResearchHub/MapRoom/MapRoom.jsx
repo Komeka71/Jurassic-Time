@@ -1,66 +1,61 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Compass } from "lucide-react";
 import AncientMap from "./AncientMap";
 
 export default function MapRoom() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="relative overflow-hidden py-28">
-
       {/* ================= BACKGROUND ================= */}
 
       <div className="absolute inset-0 overflow-hidden">
-
         {/* Center Glow */}
-
         <div className="absolute left-1/2 top-40 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[#d4a15d]/10 blur-[190px]" />
 
         {/* Side Glow */}
-
         <div className="absolute left-0 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-[#d9b46a]/5 blur-[170px]" />
 
         <div className="absolute right-0 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-[#d9b46a]/5 blur-[170px]" />
 
-        {/* Dust */}
-
-        {[...Array(18)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              y: [0, -60],
-              opacity: [0, .7, 0],
-            }}
-            transition={{
-              duration: 8 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 6,
-              ease: "linear",
-            }}
-            className="absolute rounded-full bg-[#ffe6a6]"
-            style={{
-              width: `${2 + Math.random() * 3}px`,
-              height: `${2 + Math.random() * 3}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
-
+        {/* Dust Particles */}
+        {!shouldReduceMotion &&
+          [...Array(18)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                y: [0, -60],
+                opacity: [0, 0.7, 0],
+              }}
+              transition={{
+                duration: 8 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 6,
+                ease: "linear",
+              }}
+              className="absolute rounded-full bg-[#ffe6a6]"
+              style={{
+                width: `${2 + Math.random() * 3}px`,
+                height: `${2 + Math.random() * 3}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+            />
+          ))}
       </div>
 
       {/* ================= CONTENT ================= */}
 
-      <div className="relative z-10 mx-auto max-w-[1500px] px-6">
-
+      <div className="relative z-10 mx-auto max-w-[1600px] px-6">
         {/* Header */}
 
         <motion.div
           initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: .7 }}
+          transition={{ duration: 0.7 }}
           className="mx-auto mb-14 max-w-4xl text-center"
         >
-
           {/* Badge */}
 
           <div
@@ -97,9 +92,9 @@ export default function MapRoom() {
               md:text-6xl
             "
           >
-            Verified
+            Global
             <br />
-            Excavation Sites
+            Excavation Atlas
           </h2>
 
           {/* Description */}
@@ -114,21 +109,24 @@ export default function MapRoom() {
               text-[#dac8ab]
             "
           >
-            Each glowing marker represents a discovery preserved within the
-            Paleora Research Archive. Browse the world's most significant
-            excavation sites and uncover the fossils that continue to shape our
-            understanding of prehistoric life.
+            Each glowing marker represents a verified fossil discovery
+            preserved within the Paleora Research Archive. Explore excavation
+            sites across the globe, inspect archived specimens, and trace the
+            scientific evidence behind every discovery.
           </p>
 
           {/* Divider */}
 
           <div className="mx-auto mt-10 h-px w-48 bg-gradient-to-r from-transparent via-[#ddb878]/60 to-transparent" />
-
         </motion.div>
 
         {/* ================= MAP ================= */}
 
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
           className="
             relative
             rounded-[36px]
@@ -142,7 +140,6 @@ export default function MapRoom() {
             shadow-[0_35px_120px_rgba(0,0,0,.75)]
           "
         >
-
           {/* Reflection */}
 
           <div
@@ -160,11 +157,8 @@ export default function MapRoom() {
           />
 
           <AncientMap />
-
-        </div>
-
+        </motion.div>
       </div>
-
     </section>
   );
 }

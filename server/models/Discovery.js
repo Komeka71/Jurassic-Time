@@ -81,7 +81,32 @@ aiVerification: {
     type: Number,
     default: 0,
   },
+breakdown: {
+  imageQuality: {
+    type: Number,
+    default: 0,
+  },
 
+  fossilDetection: {
+    type: Number,
+    default: 0,
+  },
+
+  speciesMatch: {
+    type: Number,
+    default: 0,
+  },
+
+  geologicalConsistency: {
+    type: Number,
+    default: 0,
+  },
+
+  preservationScore: {
+    type: Number,
+    default: 0,
+  },
+},
   checks: {
     speciesClassification: {
       type: Boolean,
@@ -103,7 +128,32 @@ aiVerification: {
       default: false,
     },
   },
+breakdown: {
+  imageQuality: {
+    type: Number,
+    default: 0,
+  },
 
+  fossilDetection: {
+    type: Number,
+    default: 0,
+  },
+
+  speciesMatch: {
+    type: Number,
+    default: 0,
+  },
+
+  geologicalConsistency: {
+    type: Number,
+    default: 0,
+  },
+
+  preservationScore: {
+    type: Number,
+    default: 0,
+  },
+},
   report: {
     type: String,
     default: "",
@@ -144,14 +194,44 @@ reviewers: [
   default: 0,
   min: 0,
 },
-
-likedBy: [
+likes: [
   {
-    type: mongoose.Schema.Types.ObjectId,
+  type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
 ],
 
+approvals: [
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    verdict: {
+      type: String,
+      enum: ["approve", "reject"],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+],
+// likedBy: [
+//   {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: "User",
+//   },
+// ],
+approvalCount: {
+  type: Number,
+  default: 0,
+},
+
+rejectionCount: {
+  type: Number,
+  default: 0,
+},
     comments: {
       type: Number,
       default: 0,
