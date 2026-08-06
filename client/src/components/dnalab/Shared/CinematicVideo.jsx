@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import SkipControls from './SkipControls';
-import './CinematicVideo.css';
+import './cinematicVideo.css';
 
 // How long the skip controls wait before appearing, to avoid accidental clicks.
 const SKIP_BUTTON_DELAY_MS = 1000;
