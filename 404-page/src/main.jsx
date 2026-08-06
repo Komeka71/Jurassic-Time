@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import LoaderPage from './client/src/components/LoaderPage'
+import App from './App.jsx'
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <LoaderPage />
-  </React.StrictMode>,
+    <App />
+  </React.StrictMode>
 )
