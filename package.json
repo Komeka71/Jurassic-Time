@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "name": "not-found-page",
     "version": "1.0.0",
     "type": "module",
@@ -16,3 +17,31 @@
       "vite": "^5.4.1"
     }
   }
+=======
+  "name": "paliora",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "nodemon server.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "lucide-react": "^1.25.0",
+    "mongoose": "^9.7.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.4",
+    "nodemon": "^3.1.14"
+  }
+}
+>>>>>>> 4c123d62716329f81f8602d345d5cae67e071462

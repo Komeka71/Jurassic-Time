@@ -1,0 +1,23 @@
+:root{
+  --soil:#eef2ec;
+  --soil-raised:#fff;
+  --bone:#1f3620;
+  --bone-dim:#6f7c6f;
+
+  --amber:#4c7a4f;
+  --amber-deep:#35502f;
+
+  --fern:#4c7a4f;
+
+  --clay:#d8ded6;
+
+  --gold:#d4a72c;
+
+  --danger:#b3503f;
+
+  --font-display:"Fraunces",Georgia,serif;
+  --font-body:"Work Sans",sans-serif;
+  --font-mono:"JetBrains Mono",monospace;
+
+  --radius:10px;
+}

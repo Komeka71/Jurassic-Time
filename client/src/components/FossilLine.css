@@ -1,0 +1,91 @@
+.fossil-line {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  min-height: 50vh;
+  padding: 10px 0;
+}
+
+.fossil-line__spine {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--era-progress-from) 15%,
+    var(--era-progress-to) 85%,
+    transparent 100%
+  );
+}
+
+.fossil-line__mark {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.32);
+  transition: background 500ms var(--ease-cinematic),
+    box-shadow 500ms var(--ease-cinematic),
+    width 500ms var(--ease-cinematic),
+    height 500ms var(--ease-cinematic);
+}
+
+/* The "active dinosaur" marker — soft era-tinted glow, slightly larger */
+.fossil-line__mark--active {
+  width: 13px;
+  height: 13px;
+  background: var(--era-primary);
+  box-shadow: 0 0 0 4px var(--era-primary-dim), 0 0 18px 2px var(--era-glow);
+}
+
+/* Tablet: same vertical layout, a slightly more compact rail */
+@media (max-width: 1200px) {
+  .fossil-line {
+    min-height: 42vh;
+  }
+
+  .fossil-line__mark {
+    width: 8px;
+    height: 8px;
+  }
+
+  .fossil-line__mark--active {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Mobile: the rail is now a horizontal strip at the bottom of the
+   viewport, so the timeline itself turns sideways too — a row of dots
+   connected by a horizontal spine, read left to right. */
+@media (max-width: 768px) {
+  .fossil-line {
+    flex-direction: row;
+    min-height: 0;
+    width: min(220px, 70vw);
+    padding: 0 4px;
+  }
+
+  .fossil-line__spine {
+    top: 50%;
+    bottom: auto;
+    left: 4px;
+    right: 4px;
+    width: auto;
+    height: 1px;
+    transform: translateY(-50%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--era-progress-from) 15%,
+      var(--era-progress-to) 85%,
+      transparent 100%
+    );
+  }
+}

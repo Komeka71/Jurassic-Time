@@ -1,0 +1,124 @@
+.era-timeline {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-void);
+}
+
+/* Scroll-snap container: the hero and each exhibit are full-viewport
+   "slides" that lock into place — this is a gallery walk-through, not a
+   long scrolling page. Mandatory at every breakpoint so the visitor is
+   never left stopped halfway between two exhibits. */
+.era-timeline__scroll {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.era-timeline__snap-section {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+}
+
+/* Let the hero fill its full snap section. */
+.era-timeline__snap-section--hero .timeline-hero {
+  min-height: 100%;
+}
+
+/* Shared chrome, like the navbar and back button: represents progress
+   across ALL exhibits, so it lives once at the page level rather than
+   being duplicated inside every exhibit. Hidden while the hero is in
+   view so the hero stays clean and immersive; fades in once the visitor
+   reaches the first exhibit. */
+.era-timeline__rail {
+  position: fixed;
+  top: 50%;
+  left: clamp(20px, 4vw, 56px);
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  opacity: 1;
+  transition: opacity 350ms ease;
+}
+
+.era-timeline__rail--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Tablet: preserve the overlay layout, just make the rail narrower */
+@media (max-width: 1200px) {
+  .era-timeline__rail {
+    left: clamp(14px, 3vw, 32px);
+    gap: 12px;
+  }
+}
+
+/* Mobile: the rail becomes a horizontal strip pinned to the bottom of
+   the viewport — timeline dots on top, prev/next controls beneath —
+   completing the stacked order (scene → info panel → timeline → nav)
+   while staying inside the same one-viewport-tall exhibit section. */
+@media (max-width: 768px) {
+  .era-timeline__rail {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    transform: none;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+}
+
+/* The glass info panel: a permanent fixture, like the rail — it doesn't
+   reposition or re-fade per exhibit. It only fades in once, leaving the
+   hero, using the same timing as the rail so both pieces of chrome
+   arrive together. Its own content (title/body) animates internally;
+   see InfoPanel.jsx/.css. */
+.era-timeline__panel {
+  position: fixed;
+  right: clamp(20px, 4vw, 56px);
+  bottom: clamp(28px, 6vh, 64px);
+  z-index: 40;
+  width: min(360px, 34vw);
+  opacity: 1;
+  transition: opacity 350ms ease;
+}
+
+.era-timeline__panel--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Tablet: same overlay layout, a slightly narrower panel */
+@media (max-width: 1200px) {
+  .era-timeline__panel {
+    right: clamp(16px, 3vw, 32px);
+    bottom: clamp(20px, 5vh, 48px);
+    width: min(300px, 38vw);
+  }
+}
+
+/* Mobile: holds the compact summary card (see InfoPanel.jsx/.css) rather
+   than the full panel. Anchored above the bottom nav rail, out of the
+   way of the artwork, which stays the focal point. */
+@media (max-width: 768px) {
+  .era-timeline__panel {
+    left: 16px;
+    right: 16px;
+    bottom: 100px;
+    width: auto;
+  }
+}

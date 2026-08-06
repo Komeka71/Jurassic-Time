@@ -1,0 +1,98 @@
+.holo-panel {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  width: min(280px, 100%);
+  padding: 22px 22px 24px;
+  border-color: rgba(216, 182, 102, 0.16);
+  animation: holo-panel-breathe 7s ease-in-out infinite;
+}
+
+.holo-panel__title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(216, 182, 102, 0.22);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+}
+
+.holo-panel__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Faint blinking status LED, top corner */
+.holo-panel__led {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan-400);
+  box-shadow: 0 0 6px 1px rgba(56, 198, 217, 0.7);
+  animation: holo-panel-led 3.4s ease-in-out infinite;
+}
+
+/* Occasional slow diagonal scan sweep across the panel */
+.holo-panel__sweep {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.holo-panel__sweep::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(111, 227, 240, 0.06) 45%,
+    rgba(111, 227, 240, 0.1) 50%,
+    rgba(111, 227, 240, 0.06) 55%,
+    transparent
+  );
+  transform: rotate(8deg);
+  animation: holo-panel-sweep 8s ease-in-out infinite;
+}
+
+@keyframes holo-panel-breathe {
+  0%, 100% { opacity: 0.96; }
+  50% { opacity: 1; }
+}
+
+@keyframes holo-panel-led {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes holo-panel-sweep {
+  0%, 70%, 100% { left: -60%; }
+  85% { left: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-panel { animation: none; }
+  .holo-panel__led { animation: none; }
+  .holo-panel__sweep::before { animation: none; opacity: 0; }
+}
+
+@media (max-width: 980px) {
+  .holo-panel {
+    width: min(420px, 100%);
+  }
+}

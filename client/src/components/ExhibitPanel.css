@@ -1,0 +1,472 @@
+/* Dimmed backdrop behind the whole stage. Blur is intentionally light —
+   it exists to frame the exhibit, not obscure the timeline entirely. */
+.exhibit-panel__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 6, 11, 0.72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Fullscreen flex-centering stage. Clicking anywhere in here (i.e.
+   outside the panel itself, which stops propagation) closes the panel —
+   this is what makes "click outside" work for the margin around the
+   panel, not just the backdrop layer beneath it. */
+.exhibit-panel__stage {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Desktop/tablet: a centered floating panel, ~88-90% of the viewport,
+   generous margin on every side so the dimmed scene stays visible around
+   it. Sizing uses min()/clamp() so it scales down gradually on narrower
+   desktop and tablet windows without needing a dedicated breakpoint. */
+.exhibit-panel {
+  position: relative;
+  width: min(90vw, 1400px);
+  height: min(88vh, 920px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    165deg,
+    rgba(16, 25, 47, 0.97) 0%,
+    rgba(8, 13, 26, 0.97) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 26px;
+  box-shadow: 0 48px 96px -32px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+.exhibit-panel__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(8, 13, 26, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: border-color var(--duration-fast) var(--ease-cinematic),
+    color var(--duration-fast) var(--ease-cinematic);
+}
+
+.exhibit-panel__close:hover,
+.exhibit-panel__close:focus-visible {
+  border-color: var(--era-primary-dim);
+  color: var(--era-primary);
+}
+
+.exhibit-panel__scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 32px clamp(28px, 3vw, 44px) 40px;
+}
+
+/* --------------------------------------------------------------- */
+/* Hero row — cinematic artwork on the left, identity on the right   */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__hero-row {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  min-height: 300px;
+}
+
+.exhibit-panel__hero-image {
+  flex: 0 0 42%;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  background-color: #0a1712;
+  /* Fades the artwork's right/bottom edge into the panel instead of
+     ending in a hard rectangle — the core of the "integrated into the
+     layout" look. */
+  -webkit-mask-image: linear-gradient(135deg, black 55%, transparent 97%);
+  mask-image: linear-gradient(135deg, black 55%, transparent 97%);
+}
+
+.exhibit-panel__hero-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.exhibit-panel__name {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.exhibit-panel__scientific {
+  margin: 6px 0 0;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+
+/* --------------------------------------------------------------- */
+/* Pronunciation — small, elegant, no large circular button          */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__pronunciation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+}
+
+.exhibit-panel__speaker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: var(--era-chip-background);
+  color: var(--era-primary);
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: border-color var(--duration-fast) var(--ease-cinematic),
+    background var(--duration-fast) var(--ease-cinematic);
+}
+
+.exhibit-panel__speaker:hover,
+.exhibit-panel__speaker:focus-visible {
+  border-color: var(--era-primary-dim);
+  background: var(--era-primary-dim);
+}
+
+.exhibit-panel__speaker--speaking {
+  animation: exhibit-panel-speaker-pulse 0.7s ease-in-out infinite;
+}
+
+@keyframes exhibit-panel-speaker-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+.exhibit-panel__pronunciation-label {
+  color: var(--color-text-tertiary);
+}
+
+.exhibit-panel__pronunciation-text {
+  color: var(--era-primary);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------- */
+/* Species chips                                                    */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.exhibit-panel__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--era-chip-border);
+  border-radius: 999px;
+  background: var(--era-chip-background);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--era-chip-text);
+}
+
+/* --------------------------------------------------------------- */
+/* Museum information board — 2x2 glass "plaque" cards                */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 32px;
+}
+
+.exhibit-panel__card {
+  padding: 22px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  background: rgba(4, 8, 18, 0.35);
+  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.55);
+}
+
+/* Museum Highlight gets a distinct era-tinted treatment so it stands
+   out as the curated "don't miss this" card. */
+.exhibit-panel__card--highlight {
+  background: var(--era-chip-background);
+  border-color: var(--era-chip-border);
+}
+
+.exhibit-panel__card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--era-primary);
+  margin: 0 0 14px;
+}
+
+.exhibit-panel__text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.exhibit-panel__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+}
+
+.exhibit-panel__fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.exhibit-panel__fact dt {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.exhibit-panel__fact dd {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-align: right;
+}
+
+/* --------------------------------------------------------------- */
+/* Gallery — full width, 3 preview thumbnails + a "+N / View All"    */
+/* tile when more images exist                                       */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__gallery-section {
+  margin-top: 28px;
+}
+
+.exhibit-panel__gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.exhibit-panel__gallery-item {
+  aspect-ratio: 1;
+  border: none;
+  padding: 0;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-cinematic);
+}
+
+.exhibit-panel__gallery-item:hover {
+  transform: scale(1.04);
+}
+
+.exhibit-panel__gallery-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  aspect-ratio: 1;
+  border: 1px solid var(--era-primary-dim);
+  border-radius: 14px;
+  background: var(--era-chip-background);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-cinematic);
+}
+
+.exhibit-panel__gallery-more:hover {
+  background: var(--era-primary-dim);
+}
+
+.exhibit-panel__gallery-more-count {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.exhibit-panel__gallery-more-label {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--era-primary);
+}
+
+/* Placeholder fullscreen gallery overlay */
+.exhibit-panel__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(4, 6, 11, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.exhibit-panel__lightbox-card {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 32px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    165deg,
+    rgba(27, 39, 69, 0.9) 0%,
+    rgba(8, 13, 26, 0.9) 100%
+  );
+  text-align: center;
+}
+
+.exhibit-panel__lightbox-text {
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------- */
+/* Tablet: same structure, just narrower — the hero image gets a     */
+/* slightly smaller share so the text column stays comfortable       */
+/* --------------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+  .exhibit-panel__hero-image {
+    flex-basis: 38%;
+  }
+
+  .exhibit-panel__grid {
+    gap: 16px;
+  }
+
+  .exhibit-panel__card {
+    padding: 18px 20px;
+  }
+}
+
+/* --------------------------------------------------------------- */
+/* Mobile: the existing bottom-sheet drawer approach, unchanged in   */
+/* spirit — full-width sheet anchored to the bottom edge, everything */
+/* stacked in a single column. Never the large desktop layout.       */
+/* --------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .exhibit-panel__stage {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .exhibit-panel {
+    width: 100%;
+    height: auto;
+    max-height: 85vh;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -24px 64px -32px rgba(0, 0, 0, 0.6);
+  }
+
+  .exhibit-panel__scroll {
+    padding: 24px 20px 32px;
+  }
+
+  .exhibit-panel__hero-row {
+    flex-direction: column;
+    gap: 18px;
+    min-height: 0;
+  }
+
+  .exhibit-panel__hero-image {
+    flex-basis: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    /* The side-by-side blend mask doesn't apply to a stacked, full-width
+       banner — this is a plain rounded image here, like the earlier
+       drawer's hero. */
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .exhibit-panel__hero-info {
+    padding-top: 0;
+  }
+
+  .exhibit-panel__name {
+    font-size: 1.9rem;
+  }
+
+  .exhibit-panel__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 24px;
+  }
+}
