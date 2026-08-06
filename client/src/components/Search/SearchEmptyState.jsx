@@ -1,4 +1,4 @@
-import './SearchEmptyState.css'
+import './searchEmptyState.css'
 
 /**
  * Polished museum-style empty state for a search that returned nothing.
