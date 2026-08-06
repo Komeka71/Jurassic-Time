@@ -1,5 +1,13 @@
 
 
+
+
+
+/* new */
+
+
+
+
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 @import "tailwindcss";
@@ -44,7 +52,6 @@ body,
   --color-text-secondary: #a7b6cf;
   --color-text-tertiary: #6d7ea0;
 
- 
   --font-display: "Cormorant Garamond", "Times New Roman", serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -125,6 +132,31 @@ a {
 
 .hide-scrollbar {
   scrollbar-width: none;
+}
+
+/* ─────────────────────────────────────────────
+   GLOBAL SCROLLBAR HIDING
+   Hides the native browser scrollbar track/thumb
+   everywhere (html, body, and every scrollable
+   element) while still allowing scroll to work.
+   This removes the highlighted/amber bar that was
+   showing up on scrollable panels (e.g. the
+   specimen/anatomy panel) even where the
+   `.hide-scrollbar` class wasn't explicitly applied.
+   ───────────────────────────────────────────── */
+html,
+body,
+* {
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* old Edge / IE */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;               /* Chrome, Safari, new Edge */
 }
 
 

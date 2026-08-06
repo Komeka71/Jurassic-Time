@@ -75,7 +75,7 @@ export default function HybridLabPreview() {
             </p>
 
             <button
-              onClick={() => navigate("/hybrid-lab")}
+onClick={() => navigate("/dna-lab")}
               className="
                 mt-12
                 rounded-full
@@ -214,7 +214,7 @@ export default function HybridLabPreview() {
       </div>
 
       {/* ================= DINO ================= */}
-<div
+{/* <div
   className="
     absolute
     bottom-6
@@ -232,7 +232,7 @@ export default function HybridLabPreview() {
     mood="idle"
     message="Psst... Only authorized researchers can enter!"
   />
-</div>
+</div> */}
 
     </section>
   );

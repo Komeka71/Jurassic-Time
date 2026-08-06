@@ -9,7 +9,7 @@
 import React, { useState } from "react";
 
 // Loader
-// import LoaderPage from "./components/LoaderPage";
+import LoaderPage from "./components/LoaderPage";
 
 // after adding profilepage
 import CursorGlow from "./components/landing/CursorGlow";
@@ -73,13 +73,13 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   // Show loader first
-  // if (loading) {
-  //   return (
-  //     <LoaderPage
-  //       onComplete={() => setLoading(false)}
-  //     />
-  //   );
-  // }
+  if (loading) {
+    return (
+      <LoaderPage
+        onComplete={() => setLoading(false)}
+      />
+    );
+  }
 
   return (
     <BrowserRouter>

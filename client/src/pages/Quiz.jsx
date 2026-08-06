@@ -22,7 +22,7 @@ import { getUserProgress } from "../utils/userProgress";
 //   completeLevel,
 // } from "../utils/playerProgress";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "https://paleora-ten.vercel.app";
 
 export default function Quiz() {
   const location = useLocation();
