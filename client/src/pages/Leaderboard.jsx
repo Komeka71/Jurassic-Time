@@ -77,7 +77,7 @@ const [leaderboardData, setLeaderboardData] =
   const loadLeaderboard = async () => {
     try {
       const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/api/leaderboard` //ll
+  `${import.meta.env.VITE_API_URL}/leaderboard` //ll
 );
 
       const data = await response.json();

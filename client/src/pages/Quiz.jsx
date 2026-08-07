@@ -464,7 +464,7 @@ playEffect("wrong");
       );
 
 const response = await fetch(
-  `${API_URL}/api/quiz/submit`,
+  `${API_URL}/quiz/submit`,
   {
     method: "POST",
 
@@ -729,7 +729,7 @@ if (!isGuest) {
  if (!isGuest) {
   try {
     const res = await fetch(
-      `${API_URL}/api/daily/${USERNAME}/progress`,
+      `${API_URL}/daily/${USERNAME}/progress`,
       {
         method: "PATCH",
         headers: {

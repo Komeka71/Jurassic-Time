@@ -237,7 +237,7 @@ export default function Chatbot({ personalization, page, userName }) {
     setTyping(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/chat` /*ll*/, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/chat` /*ll*/, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

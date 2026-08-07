@@ -12,7 +12,7 @@ export default function VerificationPipeline() {
     async function fetchDiscovery() {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/discoveries/latest` //ll
+          `${import.meta.env.VITE_API_URL}/discoveries/latest` //ll
         );
 
         const data = await res.json();

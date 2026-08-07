@@ -159,7 +159,7 @@ useEffect(() => {
   async function loadPlayerLevel() {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/users/dashboard`, //ll
+        `${import.meta.env.VITE_API_URL}/users/dashboard`, //ll
         {
           credentials: "include",
         }

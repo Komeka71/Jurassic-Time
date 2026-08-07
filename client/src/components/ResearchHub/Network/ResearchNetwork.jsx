@@ -88,10 +88,10 @@ export default function ResearchNetwork() {
     const fetchAll = async () => {
       const [statsResult, activityResult, contributorResult, healthResult] =
         await Promise.allSettled([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/discoveries/network-stats`), //ll
-          axios.get(`${import.meta.env.VITE_API_URL}/api/discoveries/activity`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/discoveries/top-contributors`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/discoveries/network-health`),
+          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/network-stats`), //ll
+          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/activity`),
+          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/top-contributors`),
+          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/network-health`),
         ]);
 
       if (statsResult.status === "fulfilled") {
