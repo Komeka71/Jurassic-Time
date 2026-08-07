@@ -77,7 +77,7 @@ function MainLayout() {
   return (
     <div className="app-shell">
       <Outlet />
-      <Navbar />
+      {/* <Navbar /> */}
     </div>
   );
 }
