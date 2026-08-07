@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, NavLink } from "react-router-dom";
 // import { Bell, CircleUserRound, Menu } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Bone } from "lucide-react";
 
@@ -58,6 +58,8 @@ const navItems = [
   { title: "Mini Games", to: "/games", icon: Gamepad2 },
 ];
 export default function Navbar() {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
 const [search, setSearch] = useState("");
 const navigate = useNavigate();
@@ -67,7 +69,7 @@ const { user, logout } = useAuth();
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.55 }}
-      className="fixed top-0 left-0 right-0 z-50"
+      className={`${isHome ? "fixed" : "sticky"} top-0 left-0 right-0 z-50`}
     >
       <div className="relative z-[9999] border-b border-green-500/10 bg-black/20 backdrop-blur-3xl">
 
