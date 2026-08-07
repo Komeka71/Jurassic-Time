@@ -181,7 +181,7 @@ export default function Onboarding() {
         </>
       )}
 
-      <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+      <div className="action-buttons">
         {step > 0 && (
           <button className="ghost" type="button" onClick={() => setStep(step - 1)}>
             Back
