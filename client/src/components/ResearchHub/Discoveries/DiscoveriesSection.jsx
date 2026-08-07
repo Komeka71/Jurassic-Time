@@ -27,7 +27,7 @@ async function fetchDiscoveries() {
   try {
    const API =
   import.meta.env.VITE_API_URL ||
-  "http://localhost:3000";
+  `${import.meta.env.VITE_API_URL}`; //ll
 
 const { data } = await axios.get(
   `${API}/api/discoveries/latest`

@@ -11,7 +11,7 @@ import {
 export default function ArchiveStats() {
   const API =
     import.meta.env.VITE_API_URL ||
-    "http://localhost:3000";
+    `${import.meta.env.VITE_API_URL}`;
 
   const [stats, setStats] = useState({
     discoveries: "--",

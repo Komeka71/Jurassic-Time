@@ -12,7 +12,7 @@ const SKIP_BUTTON_DELAY_MS = 1000;
  * onComplete(). If the placeholder asset isn't present yet, falls back
  * to a timed advance so the flow never gets stuck. SkipControls appear
  * after a short delay: "Skip" reuses the same advance() handler as
- * natural playback end, and "Skip All" (after confirmation) reuses the
+ * natural playback end, and "Skip Al" (after confirmation) reuses the
  * page's existing navigation via onSkipAll to jump straight to the
  * Hybrid Report.
  */
