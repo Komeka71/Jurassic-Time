@@ -21,7 +21,7 @@ import React, { useState } from "react";
 const FOSSIL_IMAGE_BASE = "/assets/fossils";
 
 function fossilImageSrc(id) {
-  return `${FOSSIL_IMAGE_BASE}/${id}-fossil.png`;
+  return `${FOSSIL_IMAGE_BASE}/${id}-bone.png`;
 }
 
 export function SpeciesArt({ id, mode = "specimen", accent, className = "" }) {
