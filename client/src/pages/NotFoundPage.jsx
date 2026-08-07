@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-
+// import "./NotFoundPage.css";
 /* ─── Styles ─── */
 const styles = `
   :root {
