@@ -2,7 +2,7 @@
 
 
 // newestt
-
+import AdminDiscoveries from "./pages/AdminDiscoveries";
 import NotFoundPage from "./pages/NotFoundPage";
 import React, { useState } from "react";
 
@@ -81,11 +81,11 @@ function MainLayout() {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
-  if (loading) {
-    return <LoaderPage onComplete={() => setLoading(false)} />;
-  }
+  // if (loading) {
+  //   return <LoaderPage onComplete={() => setLoading(false)} />;
+  // }
 
   return (
     <BrowserRouter>
@@ -123,7 +123,7 @@ export default function App() {
             <Route element={<RequireOnboarding />}>
               <Route
                 path="/login-profile"
-                element={<ProfileLogin />}
+                element={<ProfilePage />}
               />
             </Route>
           </Route>
@@ -177,26 +177,26 @@ export default function App() {
 
           {/* Maps */}
           <Route path="/maps" element={<Maps />} />
+<Route element={<AdminRoute />}>
+  <Route path="/admin" element={<AdminLayout />}>
+    <Route index element={<AdminDashboard />} />
 
+    <Route
+      path="discoveries"
+      element={<AdminDiscoveries />}
+    />
+  </Route>
+</Route>
           {/* ================= ADMIN ================= */}
 
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
 
-              {/*
-                Future Pages
-
-                <Route
-                  path="discoveries"
-                  element={<DiscoveryManagement />}
-                />
-
-                <Route
-                  path="users"
-                  element={<UserManagement />}
-                />
-              */}
+            <Route
+  path="discoveries"
+  element={<AdminDiscoveries />}
+/>
             </Route>
           </Route>
 

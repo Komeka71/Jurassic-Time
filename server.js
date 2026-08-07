@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const quizRoutes = require("./routes/quiz");
 const express = require("express");
+const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const leaderboardRoutes = require("./routes/leaderboard");
@@ -19,14 +20,19 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Local development
-      process.env.CLIENT_URL   // Vercel frontend
-    ],
+  "http://localhost:5173",
+  process.env.CLIENT_URL,
+],
     credentials: true,
   })
 );
 
 app.use(express.json());
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
+
 app.use("/api/quiz", quizRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);

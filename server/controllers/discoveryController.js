@@ -330,169 +330,169 @@ const likeDiscovery = async (req, res) => {
 };
 
 
-const verifyDiscovery = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Login required.",
-      });
-    }
+// const verifyDiscovery = async (req, res) => {
+//   try {
+//     if (!req.user) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Login required.",
+//       });
+//     }
 
-    const { verdict } = req.body;
+//     const { verdict } = req.body;
 
-    const discovery = await Discovery.findById(req.params.id);
+//     const discovery = await Discovery.findById(req.params.id);
 
-    if (!discovery) {
-      return res.status(404).json({
-        success: false,
-        message: "Discovery not found",
-      });
-    }
+//     if (!discovery) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Discovery not found",
+//       });
+//     }
 
-    // Owner cannot vote
-    if (
-      discovery.user &&
-      discovery.user.toString() === req.user._id.toString()
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "You cannot verify your own discovery.",
-      });
-    }
+//     // Owner cannot vote
+//     if (
+//       discovery.user &&
+//       discovery.user.toString() === req.user._id.toString()
+//     ) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "You cannot verify your own discovery.",
+//       });
+//     }
 
-    // Already voted?
-    const already = discovery.approvals.find(
-      (v) => v.user.toString() === req.user._id.toString()
-    );
+//     // Already voted?
+//     const already = discovery.approvals.find(
+//       (v) => v.user.toString() === req.user._id.toString()
+//     );
 
-    if (already) {
-      return res.status(400).json({
-        success: false,
-        message: "You already reviewed this discovery.",
-      });
-    }
-discovery.approvals.push({
-  user: req.user._id,
-  verdict,
-});
-discovery.reviewers = discovery.reviewers.filter(
-  (r) => r.verdict !== "pending"
-);
-const approveComments = [
-  "Morphological characteristics closely match the proposed species.",
-  "Evidence quality is sufficient for peer verification.",
-  "Geological context appears consistent with the submitted era.",
-  "Visible fossil structures support the identification.",
-  "Specimen shows strong diagnostic fossil features."
-];
+//     if (already) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "You already reviewed this discovery.",
+//       });
+//     }
+// discovery.approvals.push({
+//   user: req.user._id,
+//   verdict,
+// });
+// discovery.reviewers = discovery.reviewers.filter(
+//   (r) => r.verdict !== "pending"
+// );
+// const approveComments = [
+//   "Morphological characteristics closely match the proposed species.",
+//   "Evidence quality is sufficient for peer verification.",
+//   "Geological context appears consistent with the submitted era.",
+//   "Visible fossil structures support the identification.",
+//   "Specimen shows strong diagnostic fossil features."
+// ];
 
-const rejectComments = [
-  "Additional photographs are required for verification.",
-  "The fossil characteristics are not sufficiently visible.",
-  "Image quality prevents reliable identification.",
-  "More geological evidence is required.",
-  "Current evidence is insufficient for confirmation."
-];
-discovery.reviewers.push({
-  user: req.user._id,
-  verdict:
-    verdict === "approve"
-      ? "approved"
-      : "rejected",
+// const rejectComments = [
+//   "Additional photographs are required for verification.",
+//   "The fossil characteristics are not sufficiently visible.",
+//   "Image quality prevents reliable identification.",
+//   "More geological evidence is required.",
+//   "Current evidence is insufficient for confirmation."
+// ];
+// discovery.reviewers.push({
+//   user: req.user._id,
+//   verdict:
+//     verdict === "approve"
+//       ? "approved"
+//       : "rejected",
 
-comment:
-  verdict === "approve"
-    ? approveComments[
-        Math.floor(Math.random() * approveComments.length)
-      ]
-    : rejectComments[
-        Math.floor(Math.random() * rejectComments.length)
-      ],
-  reviewedAt: new Date(),
-});
+// comment:
+//   verdict === "approve"
+//     ? approveComments[
+//         Math.floor(Math.random() * approveComments.length)
+//       ]
+//     : rejectComments[
+//         Math.floor(Math.random() * rejectComments.length)
+//       ],
+//   reviewedAt: new Date(),
+// });
 
-    discovery.approvalCount =
-      discovery.approvals.filter(
-        (v) => v.verdict === "approve"
-      ).length;
+//     discovery.approvalCount =
+//       discovery.approvals.filter(
+//         (v) => v.verdict === "approve"
+//       ).length;
 
-    discovery.rejectionCount =
-      discovery.approvals.filter(
-        (v) => v.verdict === "reject"
-      ).length;
+//     discovery.rejectionCount =
+//       discovery.approvals.filter(
+//         (v) => v.verdict === "reject"
+//       ).length;
 
-    // Auto verification
-// Community Review stage
+//     // Auto verification
+// // Community Review stage
 
-if (discovery.verificationTimeline[2]) {
-  discovery.verificationTimeline[2].status =
-    discovery.approvalCount >= 3
-      ? "completed"
-      : "current";
-}
+// if (discovery.verificationTimeline[2]) {
+//   discovery.verificationTimeline[2].status =
+//     discovery.approvalCount >= 3
+//       ? "completed"
+//       : "current";
+// }
 
-// Museum Archive stage
+// // Museum Archive stage
 
-if (discovery.approvalCount >= 3) {
-  discovery.status = "verified";
+// if (discovery.approvalCount >= 3) {
+//   discovery.status = "verified";
 
-  discovery.aiVerification.progress = 100;
-  discovery.aiVerification.confidence = 99;
+//   discovery.aiVerification.progress = 100;
+//   discovery.aiVerification.confidence = 99;
 
-  discovery.aiVerification.report =
-    "AI consensus achieved. Community validation confirms high fossil authenticity. Geological context, morphology, image analysis, GPS metadata, and peer review all indicate this specimen is suitable for permanent inclusion within the Paleora Museum archive.";
+//   discovery.aiVerification.report =
+//     "AI consensus achieved. Community validation confirms high fossil authenticity. Geological context, morphology, image analysis, GPS metadata, and peer review all indicate this specimen is suitable for permanent inclusion within the Paleora Museum archive.";
 
-  discovery.verificationTimeline =
-    discovery.verificationTimeline.map((step) => ({
-      ...step.toObject?.() || step,
-      status: "completed",
-    }));
-}
+//   discovery.verificationTimeline =
+//     discovery.verificationTimeline.map((step) => ({
+//       ...step.toObject?.() || step,
+//       status: "completed",
+//     }));
+// }
 
-if (discovery.rejectionCount >= 3) {
-  discovery.status = "rejected";
+// if (discovery.rejectionCount >= 3) {
+//   discovery.status = "rejected";
 
-  discovery.aiVerification.progress = 100;
-  discovery.aiVerification.confidence = 21;
+//   discovery.aiVerification.progress = 100;
+//   discovery.aiVerification.confidence = 21;
 
-  discovery.aiVerification.report =
-    "AI review concluded that available evidence is insufficient for archival preservation. Community reviewers identified inconsistencies requiring additional fossil evidence or field documentation before this specimen can be reconsidered.";
+//   discovery.aiVerification.report =
+//     "AI review concluded that available evidence is insufficient for archival preservation. Community reviewers identified inconsistencies requiring additional fossil evidence or field documentation before this specimen can be reconsidered.";
 
-  discovery.verificationTimeline =
-    discovery.verificationTimeline.map((step) => ({
-      ...step.toObject?.() || step,
-      status: "completed",
-    }));
-}
+//   discovery.verificationTimeline =
+//     discovery.verificationTimeline.map((step) => ({
+//       ...step.toObject?.() || step,
+//       status: "completed",
+//     }));
+// }
 
-if (discovery.rejectionCount >= 3) {
-  discovery.status = "rejected";
+// if (discovery.rejectionCount >= 3) {
+//   discovery.status = "rejected";
 
-  if (discovery.verificationTimeline[3]) {
-    discovery.verificationTimeline[3].status =
-      "pending";
-  }
-}
+//   if (discovery.verificationTimeline[3]) {
+//     discovery.verificationTimeline[3].status =
+//       "pending";
+//   }
+// }
 
-    await discovery.save();
+//     await discovery.save();
 
-    res.json({
-      success: true,
-      approvalCount: discovery.approvalCount,
-      rejectionCount: discovery.rejectionCount,
-      status: discovery.status,
-    });
+//     res.json({
+//       success: true,
+//       approvalCount: discovery.approvalCount,
+//       rejectionCount: discovery.rejectionCount,
+//       status: discovery.status,
+//     });
 
-  } catch (err) {
-    console.error(err);
+//   } catch (err) {
+//     console.error(err);
 
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
-  }
-};
+//     res.status(500).json({
+//       success: false,
+//       message: "Server Error",
+//     });
+//   }
+// };
 /*
 ========================================
 GET ALL DISCOVERIES
@@ -828,5 +828,4 @@ module.exports = {
   getResearchActivity,
   getTopContributors,
   getNetworkHealth,
-  verifyDiscovery,
 };

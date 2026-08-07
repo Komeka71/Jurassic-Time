@@ -10,7 +10,7 @@ const {
   getArchiveStats,
   getDiscoveryById,
   likeDiscovery,
-  verifyDiscovery,
+
   addComment,
   getComments,
   getResearchNetworkStats,
@@ -72,7 +72,7 @@ router.post("/:id/like", protect, likeDiscovery);
 VERIFY DISCOVERY
 ========================================
 */
-router.post("/:id/verify", protect, verifyDiscovery);
+// router.post("/:id/verify", protect, verifyDiscovery);
 /*
 ========================================
 GET COMMENTS
