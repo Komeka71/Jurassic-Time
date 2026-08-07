@@ -193,7 +193,7 @@ if (!user) {
 }
 
 const response = await fetch(
-  `${API_URL}/api/user/${user.username}`
+  `${API_URL}/user/${user.username}`
 );
 
         if (!response.ok) {
@@ -428,7 +428,7 @@ if (!user) {
       ========================================
       */
 const response = await fetch(
-  `${API_URL}/api/user/${user.username}/shop/buy`,
+  `${API_URL}/user/${user.username}/shop/buy`,
         {
           method: "POST",
 
@@ -629,7 +629,7 @@ if (!user) {
       ========================================
       */
 const response = await fetch(
-  `${API_URL}/api/user/${user.username}/shop/equip`,
+  `${API_URL}/user/${user.username}/shop/equip`,
         {
           method: "PATCH",
 

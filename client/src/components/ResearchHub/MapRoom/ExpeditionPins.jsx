@@ -52,7 +52,7 @@ export default function ExpeditionPins() {
   async function fetchSites() {
     try {
       const { data } = await axios.get(
-        `${API}/api/discoveries`
+        `${API}/discoveries`
       );
 
       setSites(

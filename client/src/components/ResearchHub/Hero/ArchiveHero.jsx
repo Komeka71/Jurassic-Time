@@ -24,7 +24,7 @@ export default function ArchiveHero() {
     async function loadStats() {
       try {
         const res = await fetch(
-          `${API}/api/discoveries/archive-stats`
+          `${API}/discoveries/archive-stats`
         );
 
         const data = await res.json();
