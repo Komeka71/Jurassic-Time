@@ -8,7 +8,7 @@ const getTransporter = () => {
     transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST || "smtp.gmail.com",
       port: Number(process.env.EMAIL_PORT) || 465,
-      secure: false, // true for port 465
+      secure: true, // true for port 465
       family: 4, // force IPv4 - Render's IPv6 egress can't reach Gmail's SMTP host
       auth: {
         user: process.env.EMAIL_USER,
