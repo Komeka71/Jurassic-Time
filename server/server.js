@@ -63,16 +63,23 @@ app.use(
 );
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://paleora-h8quddq6e-komeka71s-projects.vercel.app",
-  process.env.FRONTEND_URL // set this in Render's env vars for flexibility
+  "https://paleora-ten.vercel.app", // your stable public domain
+  process.env.FRONTEND_URL // optional override, set in Render env vars
 ].filter(Boolean);
+
+// matches any Vercel preview deploy for this project, e.g.
+// https://paleora-37z3ucfxu-komeka71s-projects.vercel.app
+const vercelPreviewRegex = /^https:\/\/paleora-[a-z0-9]+-komeka71s-projects\.vercel\.app$/;
 
 app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (like Postman, curl)
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
       callback(null, true);
     } else {
+      console.log("❌ Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS: " + origin));
     }
   },
