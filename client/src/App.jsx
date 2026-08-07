@@ -65,7 +65,7 @@ import ResearchHub from "./components/ResearchHub/ResearchHub";
 import DinoTrackDetective from "./games/DinoTrackDetective/DinoTrackDetective";
 import EraSorting from "./games/EraSorting/EraSorting";
 import FossilExcavation from "./games/FossilExcavation/FossilExcavation";
-
+import ScrollToTop from "./components/ScrollToTop";
 // ----------------------
 // Admin Panel
 // ----------------------
@@ -93,7 +93,7 @@ export default function App() {
     <BrowserRouter>
       <CursorGlow />
       <GuideToggle />
-
+  <ScrollToTop />
       <Routes>
         {/* ================= AUTH ================= */}
 
