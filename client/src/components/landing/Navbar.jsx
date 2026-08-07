@@ -233,6 +233,36 @@ const { user, logout } = useAuth();
   );
 })}
 </nav>
+
+{user?.role === "admin" && (
+  <NavLink
+    to="/admin"
+    onClick={() => setMenuOpen(false)}
+    className="
+      group
+      mt-2
+      flex
+      items-center
+      justify-between
+      rounded-2xl
+      border
+      border-amber-400/30
+      bg-amber-500/10
+      px-5
+      py-5
+      text-amber-300
+      transition-all
+      duration-300
+      hover:bg-amber-500/20
+    "
+  >
+    <span className="text-[17px] font-medium">
+      Admin Dashboard
+    </span>
+
+    <ChevronRight size={18} />
+  </NavLink>
+)}
 {/* <div className="mx-5 mb-5 rounded-2xl border border-green-500/10 bg-[#111714] p-5">
   <p className="text-[11px] uppercase tracking-[0.35em] text-[#8ea672]">
     Dino of the Day
@@ -460,7 +490,7 @@ hover:bg-green-500/10
           {/* Desktop Navigation */}
           {/* Desktop Search */}
 <div className="hidden xl:flex flex-1 items-center justify-between gap-8 px-8">
-   <nav className="flex items-center gap-3">
+<nav className="flex items-center gap-3">
   {navItems.map((item) => (
     <NavLink
       key={item.title}
@@ -485,6 +515,30 @@ hover:bg-green-500/10
       {item.title}
     </NavLink>
   ))}
+
+  {user?.role === "admin" && (
+    <NavLink
+      to="/admin"
+      className={({ isActive }) =>
+        `
+        rounded-full
+        px-4
+        py-2
+        text-sm
+        font-semibold
+        transition-all
+        duration-300
+        ${
+          isActive
+            ? "bg-amber-500/20 border border-amber-400/50 text-amber-300"
+            : "border border-amber-400/20 text-amber-200 hover:bg-amber-500/10 hover:border-amber-400/40"
+        }
+        `
+      }
+    >
+      Admin
+    </NavLink>
+  )}
 </nav>
  <div className="relative w-full max-w-md">
     <Search

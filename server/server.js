@@ -4,7 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
+const adminRoutes = require("./routes/admin.routes");
 const authRoutes = require("./routes/authRoutes");
 const authUserRoutes = require("./routes/userRoutes");
 
@@ -128,7 +128,7 @@ USER
 */
 
 app.use("/api/user", userRoutes);
-
+app.use("/api/admin", adminRoutes);
 /*
 ----------------------------------------
 SHOP
