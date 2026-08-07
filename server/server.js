@@ -310,16 +310,47 @@ app.use(cookieParser());
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
+);app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
 );
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://paleora-ten.vercel.app",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+// Matches Vercel preview deployments
+const vercelPreviewRegex =
+  /^https:\/\/paleora-[a-z0-9]+-komeka71s-projects\.vercel\.app$/;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin(origin, callback) {
+      // Allow Postman/curl
+      if (!origin) return callback(null, true);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        vercelPreviewRegex.test(origin)
+      ) {
+        return callback(null, true);
+      }
+
+      console.log("❌ Blocked by CORS:", origin);
+      return callback(
+        new Error("Not allowed by CORS: " + origin)
+      );
+    },
     credentials: true,
   })
 );
 
-// Routes
+app.use("/api/daily", dailyMissionRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
+app.use("/api/quiz", quizRoutes);
+app.use("/api/questions", questionRoutes);
 app.use("/api/daily", dailyMissionRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/quiz", quizRoutes);

@@ -1,3 +1,4 @@
+console.log("✅ authRoutes loaded");
 const express = require("express");
 
 const {
@@ -13,7 +14,10 @@ const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/signup", (req, res, next) => {
+  console.log("✅ Signup route hit");
+  next();
+}, signup);
 router.post("/verify-otp", verifyOtp);
 router.post("/resend-otp", resendOtp);
 router.post("/login", login);

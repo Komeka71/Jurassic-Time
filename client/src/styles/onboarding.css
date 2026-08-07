@@ -836,3 +836,151 @@ button.ghost{
         transform:translateY(0);
     }
 }
+
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .field-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .field-card h2 {
+    font-size: 1.8rem;
+    margin-top: 42px;
+    text-align: center;
+  }
+
+  .helper-text {
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .option-grid,
+  .companion-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .option-card,
+  .companion-card {
+    padding: 18px;
+  }
+
+  .option-card strong,
+  .companion-card h3 {
+    font-size: 1.05rem;
+  }
+
+  .companion-emoji {
+    font-size: 3rem;
+  }
+
+  .field input {
+    font-size: 16px; /* prevents iOS zoom */
+    padding: 14px 16px;
+  }
+
+  .skin-toggle {
+    flex-wrap: wrap;
+  }
+
+  .skin-toggle button {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .step-tracker {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .step {
+    font-size: 0.72rem;
+    padding: 6px 12px;
+  }
+
+  /* Button Container */
+  .field-card > div:last-child {
+    flex-direction: column-reverse;
+    gap: 12px;
+    width: 100%;
+  }
+
+  button.primary,
+  button.ghost {
+    width: 100%;
+    padding: 14px;
+  }
+}
+
+/* Small Phones */
+
+@media (max-width: 480px) {
+
+  .onboarding-page {
+    padding: 15px;
+  }
+
+  .field-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .field-card::before {
+    left: 16px;
+    top: 14px;
+    font-size: 0.55rem;
+  }
+
+  .field-card h2 {
+    font-size: 1.45rem;
+    margin-top: 38px;
+  }
+
+  .helper-text {
+    font-size: 0.85rem;
+  }
+
+  .option-card,
+  .companion-card {
+    padding: 16px;
+  }
+
+  .option-card strong {
+    font-size: 1rem;
+  }
+
+  .companion-emoji {
+    font-size: 2.5rem;
+  }
+
+  .field label {
+    font-size: 0.7rem;
+  }
+
+  .field input {
+    padding: 13px 15px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+}

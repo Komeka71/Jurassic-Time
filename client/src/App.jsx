@@ -13,6 +13,7 @@ import LoaderPage from "./components/LoaderPage";
 import CursorGlow from "./components/landing/CursorGlow";
 import GuideToggle from "./components/guide/GuideToggle";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import Navbar from "./components/landing/Navbar";
 
 // Maps
 import Maps from "./pages/Maps";
@@ -76,6 +77,7 @@ function MainLayout() {
   return (
     <div className="app-shell">
       <Outlet />
+      <Navbar />
     </div>
   );
 }
