@@ -22,7 +22,7 @@ import React, { useEffect, useState } from 'react';
 //     fallback={<TrexIllustration className="result-card__art-illustration" />}
 //   />
 
-const DEFAULT_EXTENSIONS = ['webp', 'png', 'jpg'];
+const DEFAULT_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'];
 
 export default function ArtworkImage({
   id,
