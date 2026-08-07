@@ -5,10 +5,10 @@ PLAYER PROGRESSION
 */
 const XP_TABLE = [
   0,      // Level 1
-  500,    // Level 2
-  1000,   // Level 3
-  1500,   // Level 4
-  2000,   // Level 5
+  150,    // Level 2
+  350,    // Level 3
+  600,    // Level 4
+  900,    // Level 5
 ];
 /*
 ========================================
