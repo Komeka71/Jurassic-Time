@@ -13,6 +13,14 @@ const getTransporter = () => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      // Without these, a blocked/throttled SMTP port (common on cloud
+      // hosts like Render) causes sendMail() to hang on the OS-level
+      // TCP timeout (can be 2+ minutes) instead of failing fast. That
+      // hangs the whole signup/verify request even though the user
+      // record was already created successfully.
+      connectionTimeout: 8000, // time to establish the TCP connection
+      greetingTimeout: 8000,   // time to wait for the SMTP greeting
+      socketTimeout: 10000,    // time before an idle socket is killed
     });
   }
 
