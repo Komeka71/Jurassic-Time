@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { Compass } from "lucide-react";
 import DinoGuide from "../components/DinoGuide";
 
 export default function Home() {
@@ -130,43 +130,41 @@ export default function Home() {
 
         </div>
 
-        <motion.button
+     <motion.button
+whileHover={{
+scale:1.05,
+backdropFilter:"blur(20px)"
+}}
+whileTap={{scale:.95}}
+onClick={()=>navigate("/map")}
+className="
+group
 
-          whileHover={{ scale:1.05 }}
+px-14
+py-5
 
-          whileTap={{ scale:.95 }}
+rounded-full
 
-          onClick={()=>navigate("/map")}
+bg-white/10
+backdrop-blur-xl
 
-          className="
-            px-12
+border
+border-white/30
 
-            py-5
+text-white
+font-semibold
+text-xl
 
-            rounded-full
+shadow-[0_8px_30px_rgba(0,0,0,.35)]
+"
+>
 
-            bg-gradient-to-r
+<span className="flex items-center gap-3">
+    <Compass size={24} />
+    Begin Expedition
+</span>
 
-            from-green-500
-
-            to-emerald-600
-
-            text-2xl
-
-            font-bold
-
-            shadow-2xl
-
-            hover:shadow-green-500/40
-
-            transition-all
-          "
-
-        >
-
-          🧭 Begin Expedition
-
-        </motion.button>
+</motion.button>
 
       </div>
 
