@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import {
   Award,
@@ -38,20 +39,11 @@ if (!user) {
   setLoading(false);
   return;
 }
-
-const response = await fetch(
-  `/api/user/${encodeURIComponent(user.username)}`
+const { data } = await api.get(
+  `/user/${encodeURIComponent(user.username)}`
 );
 
-        if (!response.ok) {
-          throw new Error(
-            "Could not load explorer profile."
-          );
-        }
-
-        const data = await response.json();
-
-        setProfileData(data);
+setProfileData(data);
       } catch (err) {
         console.error(
           "PROFILE FETCH ERROR:",
