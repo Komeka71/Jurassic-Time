@@ -172,7 +172,7 @@ console.log("Evidence:", discovery.evidence);
 
 const image =
   discovery.evidence?.length > 0
-    ? `http://localhost:3000/${discovery.evidence[0].path.replace(/\\/g, "/")}`
+    ? `${import.meta.env.VITE_API_URL}/${discovery.evidence[0].path.replace(/\\/g, "/")}` //ll
     : "/images/no-fossil.png";
   return (
     <>

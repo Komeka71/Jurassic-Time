@@ -21,7 +21,7 @@ id: discovery._id,
 
     image:
   discovery.evidence?.length > 0
-    ? `http://localhost:3000/${discovery.evidence[0].path
+    ? `${import.meta.env.VITE_API_URL}/${discovery.evidence[0].path //ll
         .replace(/^uploads[\\/]/, "uploads/")
         .replace(/\\/g, "/")}`
     : "/images/discoveries/default.png",

@@ -17,7 +17,7 @@ export default function EvidenceTab({ discovery }) {
 const [selectedImage, setSelectedImage] = useState(null);
 const API =
   import.meta.env.VITE_API_URL ||
-  "http://localhost:3000";
+  `${import.meta.env.VITE_API_URL}`;
   const getIcon = (mime = "") => {
     if (mime.startsWith("image"))
       return <Image size={22} className="text-[#ddb878]" />;

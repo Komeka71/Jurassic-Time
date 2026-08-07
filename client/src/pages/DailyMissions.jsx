@@ -9,7 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import SideMenu from "../components/SideMenu";
 import { getUserProgress } from "../utils/userProgress";
 // import { getPlayerProgress } from "../utils/playerProgress";
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = `${import.meta.env.VITE_API_URL}`; //ll
 
 export default function DailyMissions() {
   const { user } = useAuth();

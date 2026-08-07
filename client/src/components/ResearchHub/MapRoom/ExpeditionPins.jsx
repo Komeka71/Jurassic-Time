@@ -40,7 +40,7 @@ const statusStyles = {
 export default function ExpeditionPins() {
   const API =
     import.meta.env.VITE_API_URL ||
-    "http://localhost:3000";
+    `${import.meta.env.VITE_API_URL}`; //ll
 
   const [hovered, setHovered] = useState(null);
   const [sites, setSites] = useState([]);
