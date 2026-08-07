@@ -255,7 +255,10 @@
 .case-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 140px; height: 140px; border-radius: 50%; filter: blur(40px); opacity: 0.35; }
 .case-pedestal-light { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70%; height: 40%; background: radial-gradient(ellipse at 50% 100%, rgba(200,155,60,0.14), transparent 70%); pointer-events: none; }
 .case-glyph { position: relative; z-index: 1; height: 90px; display: flex; align-items: center; justify-content: center; }
-.case.dim .case-glyph { opacity: 0.55; }
+.case.dim .case-glyph {
+  opacity: 0.15;
+  filter: brightness(0.65) saturate(0.7);
+}
 .case-plate { position: relative; z-index: 1; margin-top: 10px; border-top: 1px solid #3a2f1e; padding-top: 8px; }
 .case-name { display: block; font-size: 13px; letter-spacing: 0.03em; color: var(--ivory); }
 .case.dim .case-name { color: #6b5c3e; font-family: 'Space Mono', monospace; font-size: 11px; }
