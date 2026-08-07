@@ -22,7 +22,7 @@ import { getUserProgress } from "../utils/userProgress";
 //   completeLevel,
 // } from "../utils/playerProgress";
 
-const API_URL = "http://localhost:5173";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Quiz() {
   const location = useLocation();
