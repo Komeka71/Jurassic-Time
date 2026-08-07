@@ -11,7 +11,7 @@ import DinosaurCollection from "./components/DinosaurCollection";
 import RecentQuizzesTable from "./components/RecentQuizzesTable";
 import DailyMissions from "./components/DailyMissions";
 import ShopInventory from "./components/ShopInventory";
-import SettingsSection from "./components/SettingsSection";
+// import SettingsSection from "./components/SettingsSection";
 import EditProfileModal from "./components/EditProfileModal";
 import AccountInfo from "./components/AccountInfo";
 import SectionNav from "./components/SectionNav";
@@ -29,7 +29,6 @@ const SECTIONS = [
   { id: "missions", label: "Missions" },
   { id: "shop", label: "Inventory" },
   { id: "account", label: "Account" },
-  { id: "settings", label: "Settings" },
 ];
 
 export default function ProfilePage() {
@@ -122,9 +121,9 @@ export default function ProfilePage() {
             <AccountInfo account={profile.account} />
           </section>
 
-          <section id="settings">
+          {/* <section id="settings">
             <SettingsSection settings={profile.settings} onChange={updateProfile} />
-          </section>
+          </section> */}
         </main>
       </div>
 

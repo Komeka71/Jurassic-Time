@@ -31,7 +31,17 @@ const Discovery = require("../models/Discovery");
 function todayKey() {
   return new Date().toISOString().split("T")[0];
 }
-
+/**
+ * Discovery.status uses: field-draft, under-review, verified, rejected, featured.
+ * ResearchContributions.jsx only knows about three tones: verified, pending, rejected.
+ * Normalize here so the badge color always resolves instead of falling through
+ * to the default "neutral" tone for under-review/field-draft/featured docs.
+ */
+function mapDiscoveryStatus(status) {
+  if (status === "verified" || status === "featured") return "verified";
+  if (status === "rejected") return "rejected";
+  return "pending"; // field-draft, under-review
+}
 // GET /api/users/dashboard  (protected)
 exports.getDashboard = async (req, res) => {
   try {
@@ -138,22 +148,28 @@ exports.getDashboard = async (req, res) => {
           rewardCoins: m.rewardCoins,
         })),
       },
+discoveries: discoveries.map((d) => ({
+  _id: d._id,
+  title: d.species,
+  species: d.species,
+  era: d.era,
+  location: d.location,
+  verified: d.status === "verified",
+  likes: d.upvotes || 0,
+  photoUrl: d.evidence?.[0]
+    ? `/uploads/discoveries/${d.evidence[0].filename}`
+    : null,
 
-      discoveries: discoveries.map((d) => ({
-        id: d._id,
-        archiveId: d.archiveId,
-        species: d.species,
-        era: d.era,
-        location: d.location,
-        status: d.status,
-        verified: d.status === "verified",
-        date: d.createdAt,
-        // evidence[] holds uploaded files -- first one used as the photo
-        photoUrl: d.evidence?.[0]
-          ? `/uploads/${d.evidence[0].filename}`
-          : null,
-      })),
+  // NEW — needed by DiscoveriesSection.jsx
+  archiveId: d.archiveId,
+  date: d.createdAt,
 
+  // From the earlier Research Contributions patch
+  status: mapDiscoveryStatus(d.status),
+  aiConfidence: d.aiVerification?.confidence ?? 0,
+  comments: d.comments ?? 0,
+  submitted: d.createdAt,
+})),
       account: {
         email: user.email,
         accountId: user._id,

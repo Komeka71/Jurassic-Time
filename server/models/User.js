@@ -119,7 +119,53 @@ const userSchema = new mongoose.Schema(
         default: false,
       },
     },
+fullName: {
+  type: String,
+  default: "",
+},
 
+bio: {
+  type: String,
+  default: "",
+},
+
+// avatar: {
+//   type: String,
+//   default: "",
+// },
+museumVisits: {
+  type: Number,
+  default: 0,
+},
+
+discoveries: {
+  type: Number,
+  default: 0,
+},
+
+verifiedDiscoveries: {
+  type: Number,
+  default: 0,
+},
+
+completedQuizzes: {
+  type: Number,
+  default: 0,
+},
+
+expeditions: {
+  type: Number,
+  default: 0,
+},
+currentStreak: {
+  type: Number,
+  default: 0,
+},
+
+highestStreak: {
+  type: Number,
+  default: 0,
+},
     quizStats: {
       maxScore: {
         type: Number,
@@ -133,12 +179,39 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    points: {
+    researchPoints: {
       type: Number,
       default: 0,
       min: 0,
     },
+coins: {
+  type: Number,
+  default: 0,
+  min: 0,
+},
 
+xp: {
+  type: Number,
+  default: 0,
+  min: 0,
+},
+
+level: {
+  type: Number,
+  default: 1,
+  min: 1,
+},
+
+unlockedLevels: {
+  type: [Number],
+  default: [1],
+},
+shopItems: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ShopItem",
+  },
+],
     badges: {
       type: [String],
       default: [],
@@ -176,9 +249,25 @@ userSchema.methods.toPublicJSON = function () {
     hasOnboarded: this.hasOnboarded,
     preferences: this.preferences,
     companion: this.companion,
-    photo: this.photo,
+  photo: this.photo?.url ?? null,
+    fullName: this.fullName,
+bio: this.bio,
+// avatar: this.avatar,
+currentStreak: this.currentStreak,
+highestStreak: this.highestStreak,
     quizStats: this.quizStats,
-    points: this.points,
+    researchPoints: this.researchPoints,
+    coins: this.coins,
+     museumVisits: this.museumVisits,
+  discoveries: this.discoveries,
+  verifiedDiscoveries: this.verifiedDiscoveries,
+  completedQuizzes: this.completedQuizzes,
+  expeditions: this.expeditions,
+
+xp: this.xp,
+level: this.level,
+unlockedLevels: this.unlockedLevels,
+shopItems: this.shopItems,
     badges: this.badges,
     role: this.role,
     createdAt: this.createdAt,

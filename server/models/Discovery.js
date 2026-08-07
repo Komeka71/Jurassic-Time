@@ -58,19 +58,30 @@ user: {
     },
 
     evidence: [evidenceSchema],
+status: {
+  type: String,
+  enum: [
+    "field-draft",
+    "under-review",
+    "verified",
+    "rejected",
+    "featured",
+  ],
+  default: "under-review",
+},
 
-    status: {
-      type: String,
-      enum: [
-        "field-draft",
-        "under-review",
-        "verified",
-        "featured",
-      ],
-      default: "under-review",
-    },
+moderatedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
 
-    verifiedBy: [String],
+moderatedAt: {
+  type: Date,
+  default: null,
+},
+
+verifiedBy: [String],
 aiVerification: {
   confidence: {
     type: Number,
@@ -172,23 +183,7 @@ verificationTimeline: [
     color: String,
   },
 ],
-reviewers: [
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
 
-    verdict: {
-      type: String,
-      enum: ["approved", "pending", "rejected"],
-    },
-
-    comment: String,
-
-    reviewedAt: Date,
-  }
-],
    upvotes: {
   type: Number,
   default: 0,
@@ -201,37 +196,7 @@ likes: [
   },
 ],
 
-approvals: [
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    verdict: {
-      type: String,
-      enum: ["approve", "reject"],
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-],
-// likedBy: [
-//   {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: "User",
-//   },
-// ],
-approvalCount: {
-  type: Number,
-  default: 0,
-},
 
-rejectionCount: {
-  type: Number,
-  default: 0,
-},
     comments: {
       type: Number,
       default: 0,

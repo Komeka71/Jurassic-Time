@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BadgeCheck, Camera, Pencil, Coins, Flame } from "lucide-react";
+import { BadgeCheck, Coins, Flame } from "lucide-react";
 
 function xpPercent(xp, xpToNext) {
   if (!xpToNext) return 0;
@@ -49,14 +49,7 @@ export default function HeroPassportCard({ profile, onEdit }) {
                 border: "3px solid var(--jt-bg-2)",
               }}
             />
-            <button
-              className="jt-btn-ghost"
-              style={{ position: "absolute", bottom: -6, left: "50%", transform: "translateX(-50%)", padding: "4px 8px", fontSize: 11, display: "flex", gap: 4, alignItems: "center" }}
-              onClick={onEdit}
-              aria-label="Change avatar"
-            >
-              <Camera size={12} /> Change
-            </button>
+    
           </div>
 
           {/* Identity */}
@@ -95,9 +88,7 @@ export default function HeroPassportCard({ profile, onEdit }) {
               <MiniStat icon={<Coins size={16} color="var(--jt-amber-2)" />} value={coins} />
               <MiniStat icon={<Flame size={16} color="#f97316" />} value={`${dailyStreak}d`} />
             </div>
-            <button className="jt-btn-amber" onClick={onEdit} style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              <Pencil size={14} /> Edit Profile
-            </button>
+            
           </div>
         </div>
       </div>
