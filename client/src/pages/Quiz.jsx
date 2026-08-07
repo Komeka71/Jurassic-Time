@@ -21,6 +21,8 @@ import { getUserProgress } from "../utils/userProgress";
 //   getPlayerRank,
 //   completeLevel,
 // } from "../utils/playerProgress";
+
+// >>>>>>> 437461b8231e83b90eb3d3cc010ec8a954a988bc
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Quiz() {
