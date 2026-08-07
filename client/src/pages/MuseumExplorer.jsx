@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import MuseumHero from "../components/museum/MuseumHero.jsx";
 import FeaturedMuseum from "../components/museum/FeaturedMuseum.jsx";
 import MuseumGrid from "../components/museum/MuseumGrid.jsx";
-import MuseumCategories from "../components/museum/MuseumCategories.jsx";
+// import MuseumCategories from "../components/museum/MuseumCategories.jsx";
 import WorldMap from "../components/museum/WorldMap.jsx";
 import MuseumFooter from "../components/museum/MuseumFooter.jsx";
 import { museums, categories } from "../data/museums.js";
@@ -33,11 +33,11 @@ export default function MuseumExplorer() {
       <MuseumHero query={query} onQueryChange={setQuery} featuredHeroImage={featured.heroImage} />
       <FeaturedMuseum museum={featured} />
       <MuseumGrid museums={filteredMuseums} />
-      <MuseumCategories
+      {/* <MuseumCategories
         categories={categories}
         activeCategory={activeCategory}
         onSelect={setActiveCategory}
-      />
+      /> */}
       <WorldMap museums={museums} />
       <MuseumFooter />
     </main>
