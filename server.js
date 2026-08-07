@@ -16,12 +16,33 @@ const app = express();
 // ===========================
 // Middleware
 // ===========================
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173", // Local development
+//       process.env.CLIENT_URL   // Vercel frontend
+//     ],
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.CLIENT_URL,
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // Local development
-      process.env.CLIENT_URL   // Vercel frontend
-    ],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (e.g. Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );

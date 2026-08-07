@@ -61,12 +61,24 @@ app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
 );
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://paleora-h8quddq6e-komeka71s-projects.vercel.app",
+  process.env.FRONTEND_URL // set this in Render's env vars for flexibility
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like Postman, curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
+  credentials: true
+}));
+
 app.use("/api/daily", dailyMissionRoutes);
 app.use(
   "/api/leaderboard",
