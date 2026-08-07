@@ -4,14 +4,18 @@ const User = require("../models/User");
 // Verifies the JWT cookie and attaches the logged-in user to req.user.
 // Any route that uses this should be considered "logged-in users only."
 const protect = async (req, res, next) => {
-  const token = req.cookies?.jwt;
+ const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({
-      message: "Not logged in. Please sign in first.",
-    });
-  }
+const token =
+  authHeader?.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
 
+if (!token) {
+  return res.status(401).json({
+    message: "Not logged in. Please sign in first.",
+  });
+}
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 

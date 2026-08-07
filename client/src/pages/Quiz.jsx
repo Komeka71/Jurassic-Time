@@ -464,11 +464,11 @@ playEffect("wrong");
         )
       );
 
-fetch(`${API_URL}/quiz/submit`, {
+const response = await fetch(`${API_URL}/quiz/submit`, {
   method: "POST",
-  credentials: "include",
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
   },
   body: JSON.stringify({
     topic,
@@ -481,7 +481,9 @@ fetch(`${API_URL}/quiz/submit`, {
   }),
 });
 
-      const data = await response.json();
+const data = await response.json();
+
+      // const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
@@ -723,11 +725,11 @@ if (!isGuest) {
   // ============================
  if (!isGuest) {
   try {
-    const res = await fetch(`${API_URL}/daily/${USERNAME}/progress`, {
+const res = await fetch(`${API_URL}/daily/${USERNAME}/progress`, {
   method: "PATCH",
-  credentials: "include",
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
   },
   body: JSON.stringify({
     expeditions: 1,

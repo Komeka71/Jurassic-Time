@@ -117,13 +117,13 @@ const verifyOtp = async (req, res, next) => {
       subject: "Welcome to Paleora 🦖",
       html: welcomeEmailTemplate(user.username),
     });
+const token = generateToken(user._id);
 
-    generateToken(res, user._id);
-
-    res.status(200).json({
-      ...user.toPublicJSON(),
-      justVerified: true,
-    });
+res.status(200).json({
+  ...user.toPublicJSON(),
+  token,
+  justVerified: true,
+});
   } catch (error) {
     next(error);
   }
@@ -200,10 +200,12 @@ const login = async (req, res, next) => {
         email: user.email,
       });
     }
+const token = generateToken(user._id);
 
-    generateToken(res, user._id);
-
-    res.status(200).json(user.toPublicJSON());
+res.status(200).json({
+  ...user.toPublicJSON(),
+  token,
+});
   } catch (error) {
     next(error);
   }
@@ -211,11 +213,6 @@ const login = async (req, res, next) => {
 
 // @route POST /api/auth/logout
 const logout = (req, res) => {
-  res.cookie("jwt", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-
   res.status(200).json({
     message: "Logged out.",
   });
