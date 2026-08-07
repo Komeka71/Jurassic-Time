@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import MapNode from "../components/map/MapNode";
 import MapPath from "../components/map/MapPath";
 import DinoGuide from "../components/DinoGuide";
-
-// import { getUnlockedLevel } from "../utils/playerProgress";
+import api from "../api/axios"; // adjust path if your axios.js lives elsewhere
 
 const levels = [
   {
@@ -34,50 +32,36 @@ const levels = [
 export default function Map() {
   const navigate = useNavigate();
 
-// const navigate = useNavigate();
+  const [unlockedLevel, setUnlockedLevel] = useState(1);
 
-const [unlockedLevel, setUnlockedLevel] = useState(1);
-
-useEffect(() => {
-  async function loadPlayerLevel() {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/users/dashboard`, //ll
-        {
-          credentials: "include",
-        }
-      );
-
-      if (!response.ok) {
+  useEffect(() => {
+    async function loadPlayerLevel() {
+      try {
+        const { data } = await api.get("/users/dashboard");
+        setUnlockedLevel(data.stats?.level || 1);
+      } catch {
         setUnlockedLevel(1);
-        return;
       }
-
-      const data = await response.json();
-
-      setUnlockedLevel(data.stats?.level || 1);
-    } catch {
-      setUnlockedLevel(1);
     }
-  }
 
-  loadPlayerLevel();
-}, []);
-const openLevel = (level) => {
-  if (level.id > unlockedLevel) {
-    alert(
-      `🔒 Reach Level ${level.id} to unlock this expedition!`
-    );
-    return;
-  }
+    loadPlayerLevel();
+  }, []);
 
-  navigate("/expedition", {
-    state: {
-      level: level.id,
-      title: level.title,
-    },
-  });
-};
+  const openLevel = (level) => {
+    if (level.id > unlockedLevel) {
+      alert(
+        `🔒 Reach Level ${level.id} to unlock this expedition!`
+      );
+      return;
+    }
+
+    navigate("/expedition", {
+      state: {
+        level: level.id,
+        title: level.title,
+      },
+    });
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden text-white">
