@@ -6,21 +6,30 @@ import {
   useState,
 } from "react";
 import { useAuth } from "../context/AuthContext";
+import clickSound from "../assets/sounds/click.mp3";
+import coinSound from "../assets/sounds/coin.mp3";
 import correctSound from "../assets/sounds/correct.mp3";
-import wrongSound from "../assets/sounds/wrong.mp3";
+import discoverSound from "../assets/sounds/discover.mp3";
+import equipSound from "../assets/sounds/equip.mp3";
+// import jungleAmbience from "../assets/sounds/jungle-ambience.mp3";
 import levelUpSound from "../assets/sounds/levelup.mp3";
-
-
+import purchaseSound from "../assets/sounds/purchase.mp3";
+import rewardSound from "../assets/sounds/reward.mp3";
+import wrongSound from "../assets/sounds/wrong.mp3";
 const AudioContext = createContext(null);
 
 // const USER
-
 const effectSources = {
+  click: clickSound,
+  coin: coinSound,
   correct: correctSound,
-  wrong: wrongSound,
+  discover: discoverSound,
+  equip: equipSound,
   levelup: levelUpSound,
+  purchase: purchaseSound,
+  reward: rewardSound,
+  wrong: wrongSound,
 };
-
 
 export function AudioProvider({ children }) {
 const { user } = useAuth();
@@ -35,7 +44,7 @@ const { user } = useAuth();
 
 
   const activeSoundsRef = useRef([]);
-
+const backgroundMusicRef = useRef(null);
 
   /*
   ========================================
@@ -120,7 +129,48 @@ const response = await fetch(
 
     loadSoundPreferences();
 }, [user]);
+// useEffect(() => {
+//   const music = new Audio(jungleAmbience);
 
+//   music.loop = true;
+//   music.volume = 0.35;
+
+//   backgroundMusicRef.current = music;
+
+//   return () => {
+//     music.pause();
+//     music.currentTime = 0;
+//   };
+// }, []);
+useEffect(() => {
+  if (!preferencesLoaded) return;
+
+  const music = backgroundMusicRef.current;
+
+  if (!music) return;
+
+  if (musicEnabled) {
+    music.play().catch(() => {});
+  } else {
+    music.pause();
+  }
+}, [musicEnabled, preferencesLoaded]);
+
+useEffect(() => {
+  return () => {
+    if (backgroundMusicRef.current) {
+      backgroundMusicRef.current.pause();
+      backgroundMusicRef.current.currentTime = 0;
+    }
+
+    activeSoundsRef.current.forEach((sound) => {
+      sound.pause();
+      sound.currentTime = 0;
+    });
+
+    activeSoundsRef.current = [];
+  };
+}, []);
   /*
   ========================================
   PLAY SOUND EFFECT

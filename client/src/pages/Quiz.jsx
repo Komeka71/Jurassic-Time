@@ -21,8 +21,7 @@ import { getUserProgress } from "../utils/userProgress";
 //   getPlayerRank,
 //   completeLevel,
 // } from "../utils/playerProgress";
-
-const API_URL = "http://localhost:5173";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Quiz() {
   const location = useLocation();
@@ -463,28 +462,22 @@ playEffect("wrong");
         )
       );
 
-const response = await fetch(
-  `${API_URL}/quiz/submit`,
-  {
-    method: "POST",
-
-    credentials: "include",
-
-    headers: {
-      "Content-Type": "application/json",
-    },
-
-    body: JSON.stringify({
-      topic,
-      difficulty,
-      answers,
-      score: accuracy,
-      totalQuestions: questions.length,
-      correctAnswers,
-      timeTaken,
-    }),
-  }
-);
+fetch(`${API_URL}/quiz/submit`, {
+  method: "POST",
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    topic,
+    difficulty,
+    answers,
+    score: accuracy,
+    totalQuestions: questions.length,
+    correctAnswers,
+    timeTaken,
+  }),
+});
 
       const data = await response.json();
 
@@ -728,20 +721,18 @@ if (!isGuest) {
   // ============================
  if (!isGuest) {
   try {
-    const res = await fetch(
-      `${API_URL}/daily/${USERNAME}/progress`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          expeditions: 1,
-          questions: questions.length,
-          xp: correctAnswers * 20,
-        }),
-      }
-    );
+    const res = await fetch(`${API_URL}/daily/${USERNAME}/progress`, {
+  method: "PATCH",
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    expeditions: 1,
+    questions: questions.length,
+    xp: correctAnswers * 20,
+  }),
+});
 
     const data = await res.json();
     console.log("Daily Mission Updated:", data);
