@@ -8,7 +8,7 @@ function BackButton() {
     <button
       type="button"
       className="back-button"
-      onClick={() => navigate('/')}
+      onClick={() => navigate('/timeline')}
     >
       <span className="back-button__arrow" aria-hidden="true">
         ←
