@@ -17,6 +17,7 @@ import { getDiscoveries } from "../../services/profileService";
 // your Vercel deploy).
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
 function resolvePhotoUrl(photoUrl) {
   if (!photoUrl) return null;
   // Already absolute (e.g. S3/CDN URL) — use as-is.
@@ -94,6 +95,8 @@ export default function SavedDiscoveries() {
               className="group overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:border-amber-400/40 hover:shadow-lg hover:shadow-amber-500/10"
             >
               <div className="relative overflow-hidden">
+                console.log("DISCOVERY PHOTO:", d.photoUrl);
+console.log("RESOLVED PHOTO:", resolvePhotoUrl(d.photoUrl));
                 <ImageWithFallback
                   src={resolvePhotoUrl(d.photoUrl)}
                   alt={d.title}
