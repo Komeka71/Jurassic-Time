@@ -427,7 +427,7 @@ export default function App() {
           {/* Main Museum landing page */}
           <Route
             path="/museum"
-            element={<Museum />}
+            element={<MuseumExplorer />}
           />
 
           {/* Museum archive */}
