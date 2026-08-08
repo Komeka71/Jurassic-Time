@@ -60,12 +60,6 @@ const sectionOrder = personalization.homepage.order;
         />
       );
 
-  //     case "hybridLab":
-  // return (
-  //   <HybridLabPreview
-  //     key="hybridLab"
-  //   />
-  // );
 
     case "games":
       return <MiniGamesPreview key="games" />;
@@ -74,8 +68,9 @@ const sectionOrder = personalization.homepage.order;
       return null;
   }
 })}
-<HybridLabPreview/>
 <MuseumIntro/>
+
+<HybridLabPreview/>
 {/* <Explore /> */}
       {/* <DailyChallenge />
       <Games />
