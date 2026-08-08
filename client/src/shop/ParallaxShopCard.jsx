@@ -1,5 +1,4 @@
 import { useRef } from "react";
-
 import {
   motion,
   useMotionValue,
@@ -39,15 +38,15 @@ export default function ParallaxShopCard({
 }) {
   const cardRef = useRef(null);
 
+  // --------------------------------------------------
+  // PARALLAX
+  // --------------------------------------------------
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   const rotateX = useSpring(
-    useTransform(
-      mouseY,
-      [-0.5, 0.5],
-      [10, -10]
-    ),
+    useTransform(mouseY, [-0.5, 0.5], [10, -10]),
     {
       stiffness: 180,
       damping: 20,
@@ -55,11 +54,7 @@ export default function ParallaxShopCard({
   );
 
   const rotateY = useSpring(
-    useTransform(
-      mouseX,
-      [-0.5, 0.5],
-      [-10, 10]
-    ),
+    useTransform(mouseX, [-0.5, 0.5], [-10, 10]),
     {
       stiffness: 180,
       damping: 20,
@@ -78,25 +73,22 @@ export default function ParallaxShopCard({
     ["20%", "80%"]
   );
 
+  // --------------------------------------------------
+  // MOUSE MOVE
+  // --------------------------------------------------
+
   const handleMouseMove = (event) => {
     const card = cardRef.current;
 
-    if (!card) {
-      return;
-    }
+    if (!card) return;
 
-    const rect =
-      card.getBoundingClientRect();
+    const rect = card.getBoundingClientRect();
 
     const x =
-      (event.clientX - rect.left) /
-        rect.width -
-      0.5;
+      (event.clientX - rect.left) / rect.width - 0.5;
 
     const y =
-      (event.clientY - rect.top) /
-        rect.height -
-      0.5;
+      (event.clientY - rect.top) / rect.height - 0.5;
 
     mouseX.set(x);
     mouseY.set(y);
@@ -107,37 +99,71 @@ export default function ParallaxShopCard({
     mouseY.set(0);
   };
 
-  /*
-  ========================================
-  SHOP BUTTON
-  ========================================
+  // --------------------------------------------------
+  // BUTTON ACTION
+  // --------------------------------------------------
 
-  IMPORTANT:
+  const handleButtonClick = (event) => {
+    // Don't let the card's onClick fire.
+    event.stopPropagation();
 
-  Even when the player cannot afford
-  an item, we still call onBuy.
+    // Already equipped → unequip
+    if (equipped) {
+      onEquip?.(item);
+      return;
+    }
 
-  The backend is responsible for
-  validating the player's real balance.
+    // Purchased → equip
+    if (purchased) {
+      onEquip?.(item);
+      return;
+    }
 
-  This allows DinoShop to react to
-  insufficient coins with the angry Dino.
-  */
+    // Not purchased but affordable → buy
+    if (canAfford) {
+      onBuy?.(item);
+      return;
+    }
 
-const handleButtonClick = (event) => {
-  event.stopPropagation();
+    // Not affordable → do absolutely nothing
+  };
 
-  if (equipped) {
-    return;
-  }
+  // --------------------------------------------------
+  // BUTTON STATE
+  // --------------------------------------------------
 
-  if (purchased) {
-    onEquip(item);
-    return;
-  }
-
-  onBuy(item);
-};
+  const buttonClasses = equipped
+    ? `
+      bg-red-500/10
+      border
+      border-red-500/30
+      text-red-300
+      hover:bg-red-500/20
+      hover:border-red-400/40
+      cursor-pointer
+    `
+    : purchased
+      ? `
+        bg-cyan-500
+        text-[#06130D]
+        hover:bg-cyan-400
+        cursor-pointer
+      `
+      : canAfford
+        ? `
+          bg-green-500
+          text-[#06130D]
+          hover:bg-green-400
+          cursor-pointer
+        `
+        : `
+          bg-white/5
+          border
+          border-white/10
+          text-white/35
+          cursor-not-allowed
+          opacity-70
+        `;
 
   return (
     <motion.div
@@ -152,40 +178,34 @@ const handleButtonClick = (event) => {
       }}
       transition={{
         delay: index * 0.05,
+        duration: 0.4,
       }}
       style={{
         rotateX,
         rotateY,
         transformStyle: "preserve-3d",
+        perspective: 1000,
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={() => onInspect(item)}
+      onClick={() => onInspect?.(item)}
       className="
         group
         relative
-
         rounded-[28px]
-
         bg-[#0E2117]/90
-
         border
         border-green-500/20
-
         p-5
-
         overflow-hidden
-
         shadow-[0_20px_60px_rgba(0,0,0,0.3)]
-
         cursor-pointer
-
         will-change-transform
       "
     >
-      {/* ========================================
+      {/* ==========================================
           MOVING GLOW
-      ======================================== */}
+      ========================================== */}
 
       <motion.div
         style={{
@@ -194,26 +214,20 @@ const handleButtonClick = (event) => {
         }}
         className="
           absolute
-
           w-56
           h-56
-
           -translate-x-1/2
           -translate-y-1/2
-
           rounded-full
-
           bg-green-400/10
-
           blur-[70px]
-
           pointer-events-none
         "
       />
 
-      {/* ========================================
+      {/* ==========================================
           ITEM PREVIEW
-      ======================================== */}
+      ========================================== */}
 
       <div
         style={{
@@ -221,22 +235,16 @@ const handleButtonClick = (event) => {
         }}
         className="
           relative
-
           h-44
-
           rounded-[22px]
-
           flex
           items-center
           justify-center
-
           bg-gradient-to-br
           from-green-500/10
           to-cyan-500/5
-
           border
           border-white/5
-
           overflow-hidden
         "
       >
@@ -252,14 +260,12 @@ const handleButtonClick = (event) => {
             stiffness: 220,
             damping: 16,
           }}
+          draggable={false}
           className="
             w-[78%]
             h-[78%]
-
             object-contain
-
             drop-shadow-[0_18px_25px_rgba(0,0,0,0.35)]
-
             select-none
             pointer-events-none
           "
@@ -270,30 +276,24 @@ const handleButtonClick = (event) => {
         <div
           className={`
             absolute
-
             top-3
             right-3
-
             px-3
             py-1.5
-
             rounded-full
-
             border
-
             text-xs
             font-bold
-
-            ${rarityStyles[item.rarity]}
+            ${rarityStyles[item.rarity] || rarityStyles.Common}
           `}
         >
           {item.rarity}
         </div>
       </div>
 
-      {/* ========================================
+      {/* ==========================================
           ITEM INFO
-      ======================================== */}
+      ========================================== */}
 
       <div
         style={{
@@ -304,57 +304,56 @@ const handleButtonClick = (event) => {
           pt-5
         "
       >
+        {/* CATEGORY */}
+
         <p
           className="
             text-xs
-
             uppercase
             tracking-[0.2em]
-
             text-green-300/50
-
             mb-2
           "
         >
           {item.category}
         </p>
 
+        {/* NAME */}
+
         <h3
           className="
             text-xl
             font-bold
-
             mb-2
+            text-white
           "
         >
           {item.name}
         </h3>
 
+        {/* DESCRIPTION */}
+
         <p
           className="
             min-h-[48px]
-
             text-sm
             leading-relaxed
-
             text-white/55
           "
         >
           {item.description}
         </p>
 
-        {/* ========================================
+        {/* ==========================================
             CARD BOTTOM
-        ======================================== */}
+        ========================================== */}
 
         <div
           className="
             flex
             items-center
             justify-between
-
             gap-3
-
             mt-5
           "
         >
@@ -365,9 +364,7 @@ const handleButtonClick = (event) => {
               flex
               items-center
               gap-2
-
               text-yellow-300
-
               font-bold
             "
           >
@@ -383,113 +380,70 @@ const handleButtonClick = (event) => {
           ======================================== */}
 
           <motion.button
+            type="button"
             whileHover={
-              equipped
-                ? {}
-                : {
+              !(!canAfford && !purchased && !equipped)
+                ? {
                     scale: 1.04,
                     y: -1,
                   }
+                : undefined
             }
             whileTap={
-              equipped
-                ? {}
-                : {
+              !(!canAfford && !purchased && !equipped)
+                ? {
                     scale: 0.95,
                   }
+                : undefined
             }
             onClick={handleButtonClick}
-            disabled={false}
+            disabled={
+              !canAfford &&
+              !purchased &&
+              !equipped
+            }
             className={`
               min-w-[118px]
-
               px-4
               py-2.5
-
               rounded-xl
-
               flex
               items-center
               justify-center
-
               gap-2
-
               text-sm
               font-bold
-
-              transition
-
-              ${
-                equipped
-                  ? `
-                    bg-green-500/10
-
-                    border
-                    border-green-500/30
-
-                    text-green-300
-
-                    cursor-default
-                  `
-                  : purchased
-                    ? `
-                      bg-cyan-500
-
-                      text-[#06130D]
-
-                      hover:bg-cyan-400
-
-                      cursor-pointer
-                    `
-                    : canAfford
-                      ? `
-                        bg-green-500
-
-                        text-[#06130D]
-
-                        hover:bg-green-400
-
-                        cursor-pointer
-                      `
-                      : `
-                        bg-white/5
-
-                        border
-                        border-white/10
-
-                        text-white/35
-
-                        hover:bg-red-500/10
-                        hover:border-red-400/25
-                        hover:text-red-200
-
-                        cursor-pointer
-                      `
-              }
+              transition-all
+              duration-200
+              ${buttonClasses}
             `}
           >
+            {/* EQUIPPED */}
+
             {equipped ? (
               <>
                 <Check size={16} />
-
-                Equipped
+                Unequip
               </>
             ) : purchased ? (
+              /* PURCHASED */
+
               <>
                 <Check size={16} />
-
                 Equip
               </>
             ) : canAfford ? (
+              /* CAN AFFORD */
+
               <>
                 <Coins size={16} />
-
                 Buy
               </>
             ) : (
+              /* CANNOT AFFORD */
+
               <>
                 <LockKeyhole size={16} />
-
                 Need Coins
               </>
             )}

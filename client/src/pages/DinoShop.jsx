@@ -706,14 +706,26 @@ const equipItem = async (item) => {
     return;
   }
 
+  /*
+  ========================================
+  ALREADY EQUIPPED
+  ========================================
+  */
+
+  if (isEquipped(item)) {
+    await unequipItem(item);
+    return;
+  }
+
   try {
     setEquipInProgress(true);
 
-    const equippedItems = player.equippedItems || {};
+    const currentEquipped =
+      player.equippedItems || {};
 
     /*
     ========================================
-    CURRENT SLOT
+    DETERMINE ITEM SLOT
     ========================================
     */
 
@@ -721,78 +733,34 @@ const equipItem = async (item) => {
       item.avatarSlot ||
       item.category?.toLowerCase();
 
-    const currentlyInSameSlot =
-      equippedItems[itemSlot];
-
     /*
     ========================================
-    ALREADY EQUIPPED
+    SAME SLOT ALREADY OCCUPIED
     ========================================
-    */
 
-    if (currentlyInSameSlot === item.id) {
-      reactDino(
-        "thinking",
-        `👋 Taking off ${item.name}...`,
-        0
-      );
-
-      const response = await fetch(
-        `${API_URL}/user/${user.username}/shop/unequip`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            itemId: item.id,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Could not unequip item"
-        );
-      }
-
-      setPlayer({
-        ...defaultPlayer,
-        ...(data.stats || {}),
-        purchasedItems:
-          data.stats?.purchasedItems || [],
-        equippedItems:
-          data.stats?.equippedItems || {},
-      });
-
-      reactDino(
-        "happy",
-        `👋 ${item.name} unequipped.`
-      );
-
-      return;
-    }
-
-    /*
-    ========================================
-    REPLACE ITEM IN SAME SLOT
-    ========================================
-    
     Example:
-    Explorer Hat is equipped
-    User clicks Leaf Hat
-    Both use "hat"
-    
-    → Explorer Hat is removed
-    → Leaf Hat is equipped
+
+    Explorer Hat → hat
+    Leaf Hat     → hat
+
+    Equipping Leaf Hat automatically removes
+    Explorer Hat.
     */
 
-    if (currentlyInSameSlot) {
+    const sameSlotItemId =
+      currentEquipped[itemSlot];
+
+    if (sameSlotItemId) {
+      const oldItem = shopItems.find(
+        (shopItem) =>
+          shopItem.id === sameSlotItemId
+      );
+
       reactDino(
         "thinking",
-        `🔄 Swapping your ${itemSlot}...`,
+        `🔄 Swapping ${
+          oldItem?.name || "your old gear"
+        } for ${item.name}...`,
         0
       );
 
@@ -804,7 +772,7 @@ const equipItem = async (item) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            itemId: currentlyInSameSlot,
+            itemId: sameSlotItemId,
           }),
         }
       );
@@ -822,41 +790,41 @@ const equipItem = async (item) => {
 
     /*
     ========================================
-    MAX 2 ITEMS
+    MAX 2 EQUIPPED ITEMS
     ========================================
 
-    If two different items are already equipped
-    and this is a NEW slot:
+    If there are already 2 equipped items
+    and this is a new slot:
 
-    Oldest / first equipped item
-    ↓
-    gets unequipped
-    ↓
-    new item gets equipped
+    remove the first existing one
+    then equip the new item.
     */
 
-    const equippedAfterSlotCheck = {
-      ...equippedItems,
+    const remainingEquipped = {
+      ...currentEquipped,
     };
 
-    if (currentlyInSameSlot) {
-      delete equippedAfterSlotCheck[itemSlot];
+    if (sameSlotItemId) {
+      delete remainingEquipped[itemSlot];
     }
 
-    const equippedIds = Object.values(
-      equippedAfterSlotCheck
-    );
+    const equippedEntries =
+      Object.entries(remainingEquipped);
 
-    if (equippedIds.length >= 2) {
-      const firstSlot =
-        Object.keys(equippedAfterSlotCheck)[0];
+    if (equippedEntries.length >= 2) {
+      const [oldestSlot, oldestItemId] =
+        equippedEntries[0];
 
-      const oldestItemId =
-        equippedAfterSlotCheck[firstSlot];
+      const oldItem = shopItems.find(
+        (shopItem) =>
+          shopItem.id === oldestItemId
+      );
 
       reactDino(
         "thinking",
-        "🔄 Making room for your new gear...",
+        `🔄 Making room by removing ${
+          oldItem?.name || "your oldest gear"
+        }...`,
         0
       );
 
@@ -865,7 +833,8 @@ const equipItem = async (item) => {
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type":
+              "application/json",
           },
           body: JSON.stringify({
             itemId: oldestItemId,
@@ -901,7 +870,8 @@ const equipItem = async (item) => {
       {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
         body: JSON.stringify({
           itemId: item.id,
@@ -913,13 +883,14 @@ const equipItem = async (item) => {
 
     if (!response.ok) {
       throw new Error(
-        data.message || "Could not equip item"
+        data.message ||
+          "Could not equip item"
       );
     }
 
     /*
     ========================================
-    SYNC PLAYER WITH MONGODB
+    SYNC PLAYER
     ========================================
     */
 
