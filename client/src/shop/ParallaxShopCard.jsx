@@ -124,20 +124,20 @@ export default function ParallaxShopCard({
   insufficient coins with the angry Dino.
   */
 
-  const handleButtonClick = (event) => {
-    event.stopPropagation();
+const handleButtonClick = (event) => {
+  event.stopPropagation();
 
-    if (equipped) {
-      return;
-    }
+  if (equipped) {
+    return;
+  }
 
-    if (purchased) {
-      onEquip(item);
-      return;
-    }
+  if (purchased) {
+    onEquip(item);
+    return;
+  }
 
-    onBuy(item);
-  };
+  onBuy(item);
+};
 
   return (
     <motion.div
