@@ -310,11 +310,7 @@ app.use(cookieParser());
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
-);app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
 );
-
 const allowedOrigins = [
   "http://localhost:5173",
   "https://paleora-ten.vercel.app",
