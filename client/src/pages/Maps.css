@@ -396,3 +396,64 @@
 .leaflet-tooltip-top.custom-tooltip::before {
   border-top-color: rgba(196,163,90,.3) !important;
 }
+
+/* ========================================
+   BACK TO HOME BUTTON
+   ======================================== */
+
+.maps-back-home {
+  position: absolute;
+  top: 88px;
+  left: 24px;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 9px 16px;
+
+  border: 1px solid rgba(196, 163, 90, 0.75);
+  border-radius: 22px;
+
+  background: rgba(8, 15, 14, 0.94);
+
+  color: #f1eee4;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.35),
+    inset 0 0 10px rgba(196, 163, 90, 0.05);
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.maps-back-home:hover {
+  background: rgba(20, 28, 24, 0.97);
+
+  border-color: #c4a35a;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 0 18px rgba(196, 163, 90, 0.2),
+    0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.maps-back-arrow {
+  color: #c4a35a;
+  font-size: 19px;
+  line-height: 1;
+}
