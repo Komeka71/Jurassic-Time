@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import '../DinoTrackDetective.css';
+import ArtworkImage from '../../../shared/components/ArtworkImage.jsx';
 
 // ---------------------------------------------------------------------------
 // Deterministic pseudo-random generator (seeded so a given trail never
@@ -155,14 +156,74 @@ function seedFromString(str) {
   return seed || 1;
 }
 
-export default function TrackTrail({ dino, trailNumber, totalTrails }) {
-  const { footprint: fp } = dino;
-  const seed = seedFromString(dino.id);
+// The procedurally-generated trail, used as the fallback whenever no
+// real track photo/render exists yet at /assets/tracks/{id}-track.*
+function ProceduralTrail({ fp, dinoId }) {
+  const seed = seedFromString(dinoId);
 
   const prints = useMemo(
     () => (fp.gait === 'biped' ? buildBipedTrail(fp, seed) : buildQuadrupedTrail(fp, seed)),
-    [dino.id]
+    [dinoId]
   );
+
+  return (
+    <svg
+      className="track-trail__svg"
+      viewBox="0 0 900 320"
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Fossilized footprint trail awaiting identification"
+    >
+      <defs>
+        <radialGradient id="groundLight" cx="30%" cy="55%" r="75%">
+          <stop offset="0%" stopColor="#5a4a34" />
+          <stop offset="55%" stopColor="#332a1f" />
+          <stop offset="100%" stopColor="#171310" />
+        </radialGradient>
+        <linearGradient id="vignette" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#000000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000000" stopOpacity="0.55" />
+        </linearGradient>
+      </defs>
+
+      <rect x="0" y="0" width="900" height="320" fill="url(#groundLight)" />
+
+      {/* subtle scattered sediment texture */}
+      {Array.from({ length: 26 }).map((_, i) => {
+        const gx = (i * 137) % 900;
+        const gy = 40 + ((i * 71) % 240);
+        const r = 1 + ((i * 13) % 3);
+        return (
+          <circle
+            key={`grain-${i}`}
+            cx={gx}
+            cy={gy}
+            r={r}
+            className="track-grain"
+          />
+        );
+      })}
+
+      {prints.map((p) => (
+        <g key={p.key} transform={`translate(${p.x}, ${p.y}) rotate(${p.rotation}) scale(${p.scale})`}>
+          <Footprint
+            id={p.key}
+            size={54}
+            toeCount={fp.toeCount}
+            clawed={fp.clawed}
+            opacity={p.opacity}
+            rngSeed={p.seed}
+          />
+        </g>
+      ))}
+
+      <rect x="0" y="0" width="900" height="320" fill="url(#vignette)" />
+    </svg>
+  );
+}
+
+export default function TrackTrail({ dino, trailNumber, totalTrails }) {
+  const { footprint: fp } = dino;
 
   return (
     <div className="track-trail">
@@ -177,58 +238,14 @@ export default function TrackTrail({ dino, trailNumber, totalTrails }) {
           <span className="track-trail__subtitle">Museum AI Archive</span>
         </div>
 
-        <svg
-          className="track-trail__svg"
-          viewBox="0 0 900 320"
-          preserveAspectRatio="xMidYMid meet"
-          role="img"
-          aria-label="Fossilized footprint trail awaiting identification"
-        >
-          <defs>
-            <radialGradient id="groundLight" cx="30%" cy="55%" r="75%">
-              <stop offset="0%" stopColor="#5a4a34" />
-              <stop offset="55%" stopColor="#332a1f" />
-              <stop offset="100%" stopColor="#171310" />
-            </radialGradient>
-            <linearGradient id="vignette" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#000000" stopOpacity="0" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0.55" />
-            </linearGradient>
-          </defs>
-
-          <rect x="0" y="0" width="900" height="320" fill="url(#groundLight)" />
-
-          {/* subtle scattered sediment texture */}
-          {Array.from({ length: 26 }).map((_, i) => {
-            const gx = (i * 137) % 900;
-            const gy = 40 + ((i * 71) % 240);
-            const r = 1 + ((i * 13) % 3);
-            return (
-              <circle
-                key={`grain-${i}`}
-                cx={gx}
-                cy={gy}
-                r={r}
-                className="track-grain"
-              />
-            );
-          })}
-
-          {prints.map((p) => (
-            <g key={p.key} transform={`translate(${p.x}, ${p.y}) rotate(${p.rotation}) scale(${p.scale})`}>
-              <Footprint
-                id={p.key}
-                size={54}
-                toeCount={fp.toeCount}
-                clawed={fp.clawed}
-                opacity={p.opacity}
-                rngSeed={p.seed}
-              />
-            </g>
-          ))}
-
-          <rect x="0" y="0" width="900" height="320" fill="url(#vignette)" />
-        </svg>
+        <ArtworkImage
+          id={`${dino.id}-track`}
+          alt="Fossilized footprint trail awaiting identification"
+          basePath="/assets/tracks"
+          className="track-trail__photo"
+          fallbackClassName="track-trail__art"
+          fallback={<ProceduralTrail fp={fp} dinoId={dino.id} />}
+        />
       </div>
     </div>
   );
