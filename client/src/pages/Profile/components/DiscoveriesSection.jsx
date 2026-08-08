@@ -51,7 +51,10 @@ export default function DiscoveriesSection({ discoveries = [], onView }) {
             transition={{ delay: i * 0.04 }}
             whileHover={{ y: -4 }}
           >
-            <DiscoveryMedia photoUrl={d.photoUrl} alt={d.species} />
+            <DiscoveryMedia
+  photoUrl={d.photoUrl}
+  alt={d.species || "Discovery"}
+/>
             <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 6 }}>
               <strong>{d.species}</strong>
               <span style={{ fontSize: 12, color: "var(--jt-cream-dim)" }}>{d.era}</span>
