@@ -11,22 +11,23 @@ export default function Museum() {
       <MuseumHero
         primaryCta={{
           label: "Explore Archive",
-          onClick: () => navigate("/museum/archive"),
+          onClick: () => {
+            console.log("🔥 EXPLORE ARCHIVE CLICKED");
+            navigate("/museum/archive");
+          },
         }}
         secondaryCta={{
           label: "Virtual Tour",
-          onClick: () => setTourOpen(true),
+          onClick: () => {
+            console.log("🔥 VIRTUAL TOUR CLICKED");
+            setTourOpen(true);
+          },
         }}
       />
 
-      {/* Virtual Tour - enable when modal is ready */}
       {/* {tourOpen && (
-        <VirtualTourModal
-          onClose={() => setTourOpen(false)}
-        />
+        <VirtualTourModal onClose={() => setTourOpen(false)} />
       )} */}
-
-      {/* Rest of the museum page */}
     </>
   );
 }

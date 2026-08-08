@@ -48,7 +48,7 @@ import {
 //     to: "/games",
 //     icon: Gamepad2,
 //   },
-// ];
+// ]; 
 const navItems = [
   { title: "Timeline", to: "/timeline", icon: Clock3 },
   { title: "Map", to: "/maps", icon: Map },
