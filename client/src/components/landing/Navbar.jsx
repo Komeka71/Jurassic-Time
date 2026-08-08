@@ -33,8 +33,10 @@ const navItems = [
   { title: "Mini Games", to: "/#mini-games", icon: Gamepad2 },
 ];
 
-// Desktop top bar — Hybrid Lab stays drawer-only
-const desktopNavItems = navItems.filter((item) => item.title !== "Hybrid Lab");
+// Desktop top bar — Hybrid Lab and Mini Games stay drawer-only
+const desktopNavItems = navItems.filter(
+  (item) => item.title !== "Hybrid Lab" && item.title !== "Mini Games"
+);
 
 export default function Navbar() {
   const location = useLocation();
