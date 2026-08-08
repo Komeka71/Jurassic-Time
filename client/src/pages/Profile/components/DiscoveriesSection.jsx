@@ -11,13 +11,13 @@ function resolvePhotoUrl(photoUrl) {
   if (!photoUrl) return null;
   if (/^https?:\/\//i.test(photoUrl)) return photoUrl; // already absolute
   return `${API_URL}${photoUrl}`;
+}
 function DiscoveryMedia({ photoUrl, alt }) {
   const [failed, setFailed] = useState(false);
   const resolved = resolvePhotoUrl(photoUrl);
 
   console.log("PHOTO FROM API:", photoUrl);
   console.log("FINAL IMAGE URL:", resolved);
-
   if (!resolved || failed) {
     return (
       <div className="jt-card-media jt-card-media--empty">
