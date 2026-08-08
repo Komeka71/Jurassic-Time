@@ -1,11 +1,11 @@
-// components/profile/AchievementsSection.jsx
+// src/pages/Profile/components/AchievementsGrid.jsx
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock } from "lucide-react";
 import SectionHeading from "./shared/SectionHeading";
-import { getProfile } from "../../services/profileService";
+import { getProfile } from "../../../services/profileService";
 
-export default function AchievementsSection() {
+export default function AchievementsGrid() {
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hovered, setHovered] = useState(null);
