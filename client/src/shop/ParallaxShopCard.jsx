@@ -399,7 +399,7 @@ const handleButtonClick = (event) => {
                   }
             }
             onClick={handleButtonClick}
-            disabled={equipped}
+            disabled={false}
             className={`
               min-w-[118px]
 

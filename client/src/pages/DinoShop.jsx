@@ -685,157 +685,273 @@ const response = await fetch(
   equipped, this unequips it instead.
   */
 
-  const equipItem = async (item) => {
-if (!user) {
-  reactDino(
-    "confused",
-    "🔒 Login to equip purchased items."
-  );
+const equipItem = async (item) => {
+  if (!user) {
+    reactDino(
+      "confused",
+      "🔒 Login to equip purchased items."
+    );
+    return;
+  }
 
-  return;
-}
-    if (
-      !item ||
-      equipInProgress ||
-      loadingPlayer
-    ) {
+  if (!item || equipInProgress || loadingPlayer) {
+    return;
+  }
 
-      return;
+  if (!isPurchased(item.id)) {
+    reactDino(
+      "confused",
+      "🤔 We should probably own that before wearing it."
+    );
+    return;
+  }
 
-    }
+  try {
+    setEquipInProgress(true);
 
-
-    if (!isPurchased(item.id)) {
-
-      reactDino(
-        "confused",
-        "🤔 We should probably own that before wearing it."
-      );
-
-
-      return;
-
-    }
-
+    const equippedItems = player.equippedItems || {};
 
     /*
     ========================================
-    TOGGLE: ALREADY EQUIPPED -> UNEQUIP
+    CURRENT SLOT
     ========================================
     */
 
-    if (isEquipped(item)) {
+    const itemSlot =
+      item.avatarSlot ||
+      item.category?.toLowerCase();
 
-      unequipItem(item);
+    const currentlyInSameSlot =
+      equippedItems[itemSlot];
 
-      return;
+    /*
+    ========================================
+    ALREADY EQUIPPED
+    ========================================
+    */
 
-    }
-
-
-    try {
-
-      setEquipInProgress(true);
-
-
+    if (currentlyInSameSlot === item.id) {
       reactDino(
         "thinking",
-        `🤔 Equipping ${item.name}... prehistoric fashion is serious business.`,
+        `👋 Taking off ${item.name}...`,
         0
       );
 
-
-      /*
-      ========================================
-      EQUIP THROUGH BACKEND
-      ========================================
-      */
-const response = await fetch(
-  `${API_URL}/user/${user.username}/shop/equip`,
+      const response = await fetch(
+        `${API_URL}/user/${user.username}/shop/unequip`,
         {
           method: "PATCH",
-
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
-
           body: JSON.stringify({
             itemId: item.id,
           }),
         }
       );
 
-
       const data = await response.json();
 
-
       if (!response.ok) {
-
         throw new Error(
-          data.message ||
-          "Could not equip item"
+          data.message || "Could not unequip item"
         );
-
       }
-
-
-      /*
-      ========================================
-      SYNC PLAYER WITH MONGODB RESPONSE
-      ========================================
-      */
 
       setPlayer({
         ...defaultPlayer,
-
         ...(data.stats || {}),
-
         purchasedItems:
           data.stats?.purchasedItems || [],
-
         equippedItems:
           data.stats?.equippedItems || {},
       });
 
+      reactDino(
+        "happy",
+        `👋 ${item.name} unequipped.`
+      );
 
-      /*
-      ========================================
-      EQUIP SUCCESS
-      ========================================
-      */
+      return;
+    }
+
+    /*
+    ========================================
+    REPLACE ITEM IN SAME SLOT
+    ========================================
+    
+    Example:
+    Explorer Hat is equipped
+    User clicks Leaf Hat
+    Both use "hat"
+    
+    → Explorer Hat is removed
+    → Leaf Hat is equipped
+    */
+
+    if (currentlyInSameSlot) {
+      reactDino(
+        "thinking",
+        `🔄 Swapping your ${itemSlot}...`,
+        0
+      );
+
+      const unequipResponse = await fetch(
+        `${API_URL}/user/${user.username}/shop/unequip`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            itemId: currentlyInSameSlot,
+          }),
+        }
+      );
+
+      const unequipData =
+        await unequipResponse.json();
+
+      if (!unequipResponse.ok) {
+        throw new Error(
+          unequipData.message ||
+            "Could not replace equipped item"
+        );
+      }
+    }
+
+    /*
+    ========================================
+    MAX 2 ITEMS
+    ========================================
+
+    If two different items are already equipped
+    and this is a NEW slot:
+
+    Oldest / first equipped item
+    ↓
+    gets unequipped
+    ↓
+    new item gets equipped
+    */
+
+    const equippedAfterSlotCheck = {
+      ...equippedItems,
+    };
+
+    if (currentlyInSameSlot) {
+      delete equippedAfterSlotCheck[itemSlot];
+    }
+
+    const equippedIds = Object.values(
+      equippedAfterSlotCheck
+    );
+
+    if (equippedIds.length >= 2) {
+      const firstSlot =
+        Object.keys(equippedAfterSlotCheck)[0];
+
+      const oldestItemId =
+        equippedAfterSlotCheck[firstSlot];
 
       reactDino(
-        "happyJumps",
-        `💚 ${item.name} equipped! Looking extremely expedition-ready.`
+        "thinking",
+        "🔄 Making room for your new gear...",
+        0
       );
 
-    }
-
-    catch (error) {
-
-      console.error(
-        "EQUIP SHOP ITEM ERROR:",
-        error
+      const unequipResponse = await fetch(
+        `${API_URL}/user/${user.username}/shop/unequip`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            itemId: oldestItemId,
+          }),
+        }
       );
 
+      const unequipData =
+        await unequipResponse.json();
 
-      reactDino(
-        "confused",
-        `🤔 ${error.message}`
+      if (!unequipResponse.ok) {
+        throw new Error(
+          unequipData.message ||
+            "Could not make room for the new item"
+        );
+      }
+    }
+
+    /*
+    ========================================
+    EQUIP NEW ITEM
+    ========================================
+    */
+
+    reactDino(
+      "thinking",
+      `🤔 Equipping ${item.name}...`,
+      0
+    );
+
+    const response = await fetch(
+      `${API_URL}/user/${user.username}/shop/equip`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itemId: item.id,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Could not equip item"
       );
-
     }
 
-    finally {
+    /*
+    ========================================
+    SYNC PLAYER WITH MONGODB
+    ========================================
+    */
 
-      setEquipInProgress(false);
+    setPlayer({
+      ...defaultPlayer,
+      ...(data.stats || {}),
+      purchasedItems:
+        data.stats?.purchasedItems || [],
+      equippedItems:
+        data.stats?.equippedItems || {},
+    });
 
-    }
+    reactDino(
+      "happyJumps",
+      `💚 ${item.name} equipped!`
+    );
 
-  };
+  } catch (error) {
+    console.error(
+      "EQUIP SHOP ITEM ERROR:",
+      error
+    );
 
+    reactDino(
+      "confused",
+      `🤔 ${error.message}`
+    );
 
+  } finally {
+    setEquipInProgress(false);
+  }
+};
   /*
   ========================================
   UI
