@@ -328,7 +328,7 @@ function MainLayout() {
     <>
       <ScrollToTop />
 
-      <Navbar />
+      {/* <Navbar /> */}
 
       <CursorGlow />
 
