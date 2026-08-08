@@ -15,6 +15,7 @@ import { pinIcon } from "../components/PinIcon";
 import DinoPopup from "../components/DinoPopup";
 import { useAuth } from "../context/AuthContext";
 import { getPersonalization } from "../utils/personalization";
+import { useNavigate } from "react-router-dom";
 
 import "./Maps.css";
 
@@ -29,6 +30,7 @@ function FlyTo({ lat, lng, zoom }) {
 }
 
 export default function Maps() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const personalization = getPersonalization(user);
 
@@ -94,6 +96,14 @@ const handleClose = useCallback(() => {
           {SITES.length} fossil sites
         </div>
       </header>
+
+      <button
+  className="maps-back-home"
+  onClick={() => navigate("/")}
+>
+  <span className="maps-back-arrow">←</span>
+  <span>Back to Home</span>
+</button>
 
       <MapContainer
         center={[20, 15]}
