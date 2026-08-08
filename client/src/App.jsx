@@ -1,5 +1,5 @@
 
-// import AdminUser
+import AdminUsers from "./pages/AdminUsers";
 import AdminLogs from "./pages/AdminLogs";
 // newestt
 import AdminDiscoveries from "./pages/AdminDiscoveries";
@@ -199,7 +199,7 @@ export default function App() {
   path="discoveries"
   element={<AdminDiscoveries />}
 />
-{/* <Route path="users" element={<AdminUsers />} /> */}
+<Route path="users" element={<AdminUsers />} />   {/* ✅ correct, relative to parent /admin */}
   <Route path="logs" element={<AdminLogs />} />
             </Route>
           </Route>
