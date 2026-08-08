@@ -397,14 +397,11 @@
   border-top-color: rgba(196,163,90,.3) !important;
 }
 
-/* ========================================
-   BACK TO HOME BUTTON
-   ======================================== */
-
 .maps-back-home {
   position: absolute;
   top: 88px;
-  left: 24px;
+  right: 24px; /* moved to the right */
+  left: auto;
 
   z-index: 1000;
 
@@ -418,7 +415,6 @@
   border-radius: 22px;
 
   background: rgba(8, 15, 14, 0.94);
-
   color: #f1eee4;
 
   font-family: inherit;
@@ -442,9 +438,7 @@
 
 .maps-back-home:hover {
   background: rgba(20, 28, 24, 0.97);
-
   border-color: #c4a35a;
-
   transform: translateY(-1px);
 
   box-shadow:
