@@ -2,10 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Bone, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import {
-  Bell,
   CircleUserRound,
   Menu,
   X,
@@ -158,9 +157,11 @@ export default function Navbar() {
               {/* Header */}
               <div className="relative flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-                    <Bone size={18} className="text-[#9fc97f]" />
-                  </div>
+                  <img
+                    src="/logo.png"
+                    alt="Paleora logo"
+                    className="h-16 w-auto object-contain"
+                  />
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.3em] text-[#8ea672]">
                       Paleora
@@ -436,16 +437,12 @@ export default function Navbar() {
               />
             </button>
 
-            <Link
-              to="/"
-              className="
-                flex h-10 w-10 items-center justify-center
-                rounded-xl border border-white/10 bg-white/[0.04]
-                transition-all duration-300
-                hover:border-green-400/40 hover:bg-green-500/10
-              "
-            >
-              <Bone size={20} className="text-[#9fc97f]" />
+            <Link to="/" className="flex items-center">
+              <img
+                src="/logo.png"
+                alt="Paleora logo"
+                className="h-20 w-auto object-contain"
+              />
             </Link>
           </div>
 
@@ -522,17 +519,6 @@ export default function Navbar() {
 
           {/* Right */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              className="
-                group flex h-10 w-10 items-center justify-center
-                rounded-xl border border-white/10 bg-white/[0.04]
-                transition-all duration-300
-                hover:border-green-400/40 hover:bg-green-500/10
-              "
-            >
-              <Bell size={18} className="text-white group-hover:text-green-300" />
-            </button>
-
             <button
               onClick={() => navigate(user ? "/login-profile" : "/login")}
               className="
