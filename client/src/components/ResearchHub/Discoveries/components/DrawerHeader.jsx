@@ -9,27 +9,35 @@ import {
 
 import StatusBadge from "../StatusBadge";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
 
 function resolveEvidenceUrl(file) {
-  if (!file) {
-    return "/images/no-fossil.png";
-  }
+  if (!file) return null;
 
   // Already a complete URL
   if (/^https?:\/\//i.test(file)) {
     return file;
   }
 
-  // Backend returns:
-  // /uploads/discoveries/filename.jpg
-  if (file.startsWith("/")) {
-    return `${API_URL}${file}`;
+  // Normalize Windows paths
+  let path = file.replace(/\\/g, "/");
+
+  // Remove leading slashes
+  path = path.replace(/^\/+/, "");
+
+  // IMPORTANT:
+  // Your backend static uploads route is /uploads,
+  // NOT /api/uploads.
+  if (path.startsWith("api/uploads/")) {
+    path = path.replace(/^api\//, "");
   }
 
-  // Backend returns:
-  // uploads/discoveries/filename.jpg
-  return `${API_URL}/${file.replace(/^\/+/, "")}`;
+  // If it is just a filename, put it in the discoveries folder
+  if (!path.startsWith("uploads/")) {
+    path = `uploads/discoveries/${path}`;
+  }
+
+  return `${API_URL}/${path}`;
 }
 
 export default function DrawerHeader({ discovery }) {
@@ -38,32 +46,55 @@ export default function DrawerHeader({ discovery }) {
 
   const evidenceFile = discovery?.evidence?.[0];
 
-  const image = resolveEvidenceUrl(
-    evidenceFile?.path || evidenceFile?.filename
-  );
+  const rawEvidencePath =
+    evidenceFile?.path ||
+    evidenceFile?.filename ||
+    evidenceFile?.url ||
+    null;
 
+  const image = resolveEvidenceUrl(rawEvidencePath);
+
+  console.log("RAW EVIDENCE PATH:", rawEvidencePath);
   console.log("FINAL IMAGE URL:", image);
 
   return (
     <>
       {/* Hero */}
       <div className="relative h-[420px] w-full overflow-hidden">
-        <motion.img
-          initial={{ scale: 1.08 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.8 }}
-          src={image}
-          alt={discovery?.fossilName || discovery?.species || "Discovery"}
-          className="h-full w-full object-contain"
-          onError={(e) => {
-            console.error("❌ HERO IMAGE FAILED:", e.currentTarget.src);
-            e.currentTarget.src = "/images/no-fossil.png";
-          }}
-        />
+        {image ? (
+          <motion.img
+            initial={{ scale: 1.08 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.8 }}
+            src={image}
+            alt={
+              discovery?.fossilName ||
+              discovery?.species ||
+              "Discovery"
+            }
+            className="h-full w-full object-contain"
+            onError={(e) => {
+              console.error(
+                "❌ HERO IMAGE FAILED:",
+                e.currentTarget.src
+              );
 
-        <div className="absolute inset-0 bg-black/35 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#090705] via-black/20 to-transparent pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
+              // Hide broken image instead of requesting
+              // another nonexistent /images/no-fossil.png
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-[#8f7d60]">
+            No fossil image available
+          </div>
+        )}
+
+        <div className="pointer-events-none absolute inset-0 bg-black/35" />
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#090705] via-black/20 to-transparent" />
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent" />
       </div>
 
       {/* Main information */}
@@ -71,7 +102,9 @@ export default function DrawerHeader({ discovery }) {
         <StatusBadge status={discovery?.status} />
 
         <h1 className="mt-6 text-5xl font-bold leading-tight text-[#f6e5c3]">
-          {discovery?.fossilName || discovery?.species || "Unknown Discovery"}
+          {discovery?.fossilName ||
+            discovery?.species ||
+            "Unknown Discovery"}
         </h1>
 
         <p className="mt-2 text-xl italic text-[#cdb998]">
