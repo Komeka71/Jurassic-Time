@@ -339,11 +339,29 @@ const response = await fetch(
   ========================================
   */
 
-const isEquipped = (item) =>
-  player.equippedItems?.[
-    item.avatarSlot || item.category?.toLowerCase()
-  ] === item.id;
+const isEquipped = (item) => {
+  if (!item || !player.equippedItems) {
+    return false;
+  }
 
+  const equippedItems = player.equippedItems;
+
+  // Handle Map
+  if (equippedItems instanceof Map) {
+    return Array.from(equippedItems.values()).includes(
+      item.id
+    );
+  }
+
+  // Handle normal object
+  if (typeof equippedItems === "object") {
+    return Object.values(equippedItems).includes(
+      item.id
+    );
+  }
+
+  return false;
+};
 
   /*
   ========================================
@@ -701,10 +719,24 @@ const equipItem = async (item) => {
   if (!isPurchased(item.id)) {
     reactDino(
       "confused",
-      "🤔 We should probably own that before wearing it."
+      "🤔 You need to purchase this item first."
     );
     return;
   }
+
+  /*
+  ========================================
+  GET CURRENT EQUIPPED ITEMS
+  ========================================
+  */
+
+  const equipped =
+    player.equippedItems || {};
+
+  const equippedIds =
+    equipped instanceof Map
+      ? Array.from(equipped.values()).filter(Boolean)
+      : Object.values(equipped).filter(Boolean);
 
   /*
   ========================================
@@ -712,7 +744,7 @@ const equipItem = async (item) => {
   ========================================
   */
 
-  if (isEquipped(item)) {
+  if (equippedIds.includes(item.id)) {
     await unequipItem(item);
     return;
   }
@@ -720,35 +752,47 @@ const equipItem = async (item) => {
   try {
     setEquipInProgress(true);
 
-    const currentEquipped =
-      player.equippedItems || {};
-
     /*
     ========================================
-    DETERMINE ITEM SLOT
-    ========================================
-    */
-
-    const itemSlot =
-      item.avatarSlot ||
-      item.category?.toLowerCase();
-
-    /*
-    ========================================
-    SAME SLOT ALREADY OCCUPIED
+    FIND ITEM IN THE SAME AVATAR SLOT
     ========================================
 
     Example:
 
-    Explorer Hat → hat
-    Leaf Hat     → hat
+    Explorer Hat
+      avatarSlot = "hat"
 
-    Equipping Leaf Hat automatically removes
-    Explorer Hat.
+    Leaf Hat
+      avatarSlot = "hat"
+
+    If Explorer Hat is equipped and the user
+    clicks Leaf Hat:
+
+    Explorer Hat → unequip
+    Leaf Hat     → equip
     */
 
-    const sameSlotItemId =
-      currentEquipped[itemSlot];
+    const itemSlot = item.avatarSlot;
+
+    const sameSlotItemId = equippedIds.find(
+      (equippedId) => {
+        const equippedItem = shopItems.find(
+          (shopItem) =>
+            shopItem.id === equippedId
+        );
+
+        return (
+          equippedItem &&
+          equippedItem.avatarSlot === itemSlot
+        );
+      }
+    );
+
+    /*
+    ========================================
+    REMOVE SAME-SLOT ITEM
+    ========================================
+    */
 
     if (sameSlotItemId) {
       const oldItem = shopItems.find(
@@ -764,71 +808,7 @@ const equipItem = async (item) => {
         0
       );
 
-      const unequipResponse = await fetch(
-        `${API_URL}/user/${user.username}/shop/unequip`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            itemId: sameSlotItemId,
-          }),
-        }
-      );
-
-      const unequipData =
-        await unequipResponse.json();
-
-      if (!unequipResponse.ok) {
-        throw new Error(
-          unequipData.message ||
-            "Could not replace equipped item"
-        );
-      }
-    }
-
-    /*
-    ========================================
-    MAX 2 EQUIPPED ITEMS
-    ========================================
-
-    If there are already 2 equipped items
-    and this is a new slot:
-
-    remove the first existing one
-    then equip the new item.
-    */
-
-    const remainingEquipped = {
-      ...currentEquipped,
-    };
-
-    if (sameSlotItemId) {
-      delete remainingEquipped[itemSlot];
-    }
-
-    const equippedEntries =
-      Object.entries(remainingEquipped);
-
-    if (equippedEntries.length >= 2) {
-      const [oldestSlot, oldestItemId] =
-        equippedEntries[0];
-
-      const oldItem = shopItems.find(
-        (shopItem) =>
-          shopItem.id === oldestItemId
-      );
-
-      reactDino(
-        "thinking",
-        `🔄 Making room by removing ${
-          oldItem?.name || "your oldest gear"
-        }...`,
-        0
-      );
-
-      const unequipResponse = await fetch(
+      const response = await fetch(
         `${API_URL}/user/${user.username}/shop/unequip`,
         {
           method: "PATCH",
@@ -837,18 +817,95 @@ const equipItem = async (item) => {
               "application/json",
           },
           body: JSON.stringify({
-            itemId: oldestItemId,
+            itemId: sameSlotItemId,
           }),
         }
       );
 
-      const unequipData =
-        await unequipResponse.json();
+      const data = await response.json();
 
-      if (!unequipResponse.ok) {
+      if (!response.ok) {
         throw new Error(
-          unequipData.message ||
-            "Could not make room for the new item"
+          data.message ||
+            "Could not replace equipped item"
+        );
+      }
+
+      /*
+      Update our local list after removing
+      the same-slot item.
+      */
+
+      const index =
+        equippedIds.indexOf(
+          sameSlotItemId
+        );
+
+      if (index !== -1) {
+        equippedIds.splice(index, 1);
+      }
+    }
+
+    /*
+    ========================================
+    MAX 2 EQUIPPED ITEMS
+    ========================================
+
+    If there are already 2 items after
+    same-slot replacement, remove the
+    first one.
+
+    Example:
+
+    Backpack
+    Leaf Hat
+
+    User equips Scarf
+
+    ↓
+
+    Backpack gets removed
+    Leaf Hat remains
+    Scarf gets equipped
+    */
+
+    if (equippedIds.length >= 2) {
+      const itemToRemove =
+        equippedIds[0];
+
+      const oldItem = shopItems.find(
+        (shopItem) =>
+          shopItem.id === itemToRemove
+      );
+
+      reactDino(
+        "thinking",
+        `🔄 Making room for ${item.name}...`,
+        0
+      );
+
+      const response = await fetch(
+        `${API_URL}/user/${user.username}/shop/unequip`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            itemId: itemToRemove,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            `Could not remove ${
+              oldItem?.name || "equipped item"
+            }`
         );
       }
     }
@@ -890,7 +947,7 @@ const equipItem = async (item) => {
 
     /*
     ========================================
-    SYNC PLAYER
+    SYNC PLAYER FROM BACKEND
     ========================================
     */
 
