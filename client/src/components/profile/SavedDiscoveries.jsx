@@ -15,8 +15,8 @@ import { getDiscoveries } from "../../services/profileService";
 // Set VITE_API_BASE_URL in your .env — never hardcode a host here, since
 // that breaks the moment you're not running against localhost (like on
 // your Vercel deploy).
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 function resolvePhotoUrl(photoUrl) {
   if (!photoUrl) return null;
   // Already absolute (e.g. S3/CDN URL) — use as-is.
