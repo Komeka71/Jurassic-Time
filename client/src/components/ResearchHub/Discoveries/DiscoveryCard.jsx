@@ -99,36 +99,19 @@ const handleLike = async (e) => {
 
 <div className="relative h-[300px] w-full overflow-hidden">
 
-  <img
-    src={
-      discovery.evidence?.[0]?.url ||
-      discovery.evidence?.[0]?.path
-        ? `${import.meta.env.VITE_API_URL}/${(
-            discovery.evidence[0].url ||
-            discovery.evidence[0].path
-          )
-            .replace(/^\/+/, "")
-            .replace(/\\/g, "/")}`
-        : "/images/no-fossil.png"
-    }
-    alt={
-      discovery.name ||
-      discovery.fossilName ||
-      "Fossil discovery"
-    }
-    className="
-      h-full
-      w-full
-      object-cover
-      transition-transform
-      duration-700
-      group-hover:scale-105
-    "
-    onError={(e) => {
-      e.currentTarget.onerror = null;
-      e.currentTarget.src = "/images/no-fossil.png";
-    }}
-  />
+ <img
+  src={discovery.image || "/images/discoveries/default.png"}
+  alt={
+    discovery.name ||
+    discovery.fossilName ||
+    "Fossil discovery"
+  }
+  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+  onError={(e) => {
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = "/images/discoveries/default.png";
+  }}
+/>
 
   {/* Dark Overlay */}
   <div className="pointer-events-none absolute inset-0 bg-black/30" />
