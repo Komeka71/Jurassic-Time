@@ -182,7 +182,7 @@ const image =
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.8 }}
-          src={image}
+          src={resolveEvidenceUrl(file.filename)}
           alt={discovery.fossilName}
           className="h-full w-full object-contain"
         />

@@ -15,9 +15,24 @@ import {
 export default function EvidenceTab({ discovery }) {
   const evidence = discovery.evidence || [];
 const [selectedImage, setSelectedImage] = useState(null);
-const API =
-  import.meta.env.VITE_API_URL ||
-  `${import.meta.env.VITE_API_URL}`;
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+function resolveEvidenceUrl(file) {
+  if (!file) return null;
+
+  // If backend already gives a complete URL
+  if (/^https?:\/\//i.test(file)) {
+    return file;
+  }
+
+  // If backend gives only the filename
+  if (!file.startsWith("/")) {
+    return `${API_URL}/uploads/discoveries/${file}`;
+  }
+
+  // If backend gives /uploads/discoveries/filename
+  return `${API_URL}${file}`;
+}
   const getIcon = (mime = "") => {
     if (mime.startsWith("image"))
       return <Image size={22} className="text-[#ddb878]" />;
