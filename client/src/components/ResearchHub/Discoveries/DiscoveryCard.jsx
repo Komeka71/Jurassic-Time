@@ -95,48 +95,59 @@ const handleLike = async (e) => {
 >
       {/* ================= IMAGE ================= */}
 
-<div className="relative h-60 overflow-hidden">
-        <motion.img
-          src={discovery.image}
-          alt={discovery.name}
-          whileHover={{ scale: 1.12 }}
-          transition={{ duration: 0.6 }}
-          className="h-full w-full object-contain"
-        />
+{/* ================= IMAGE ================= */}
 
-        {/* Dark Overlay */}
+<div className="relative h-[300px] overflow-hidden">
 
-        <div className="absolute inset-0 bg-black/30" />
+  <img
+    src={
+      discovery.evidence?.[0]?.url ||
+      discovery.evidence?.[0]?.path
+        ? `${import.meta.env.VITE_API_URL}/${(
+            discovery.evidence[0].url ||
+            discovery.evidence[0].path
+          )
+            .replace(/^\/+/, "")
+            .replace(/\\/g, "/")}`
+        : "/images/no-fossil.png"
+    }
+    alt={discovery.name || discovery.fossilName || "Fossil discovery"}
+    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+    onError={(e) => {
+      e.currentTarget.onerror = null;
+      e.currentTarget.src = "/images/no-fossil.png";
+    }}
+  />
 
-        {/* Bottom Gradient */}
+  {/* Dark Overlay */}
+  <div className="pointer-events-none absolute inset-0 bg-black/30" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#090705] via-black/20 to-transparent" />
+  {/* Bottom Gradient */}
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#090705] via-black/20 to-transparent" />
 
-        {/* Glass Reflection */}
+  {/* Glass Reflection */}
+  <div
+    className="
+      pointer-events-none
+      absolute
+      inset-0
+      bg-gradient-to-br
+      from-white/15
+      via-transparent
+      to-transparent
+      opacity-40
+    "
+  />
 
-        <div
-          className="
-            absolute
-            inset-0
-            bg-gradient-to-br
-            from-white/15
-            via-transparent
-            to-transparent
-            opacity-40
-            pointer-events-none
-          "
-        />
+  {/* Status */}
+  <div className="absolute left-4 top-4">
+    <StatusBadge
+      status={discovery.status}
+      size="sm"
+    />
+  </div>
 
-        {/* Status */}
-
-        <div className="absolute left-4 top-4">
-          <StatusBadge
-            status={discovery.status}
-            size="sm"
-          />
-        </div>
-
-      </div>
+</div>
 
       {/* ================= CONTENT ================= */}
 
