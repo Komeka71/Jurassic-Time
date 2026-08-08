@@ -1,5 +1,9 @@
+
+
+
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/:path*", "destination": "https://YOUR-BACKEND-URL.onrender.com/api/:path*" },
+    { "source": "/uploads/:path*", "destination": "https://YOUR-BACKEND-URL.onrender.com/uploads/:path*" }
   ]
 }
