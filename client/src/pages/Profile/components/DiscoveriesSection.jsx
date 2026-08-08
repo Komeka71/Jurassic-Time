@@ -1,10 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, ShieldCheck, ShieldQuestion } from "lucide-react";
+import { MapPin, ShieldCheck, ShieldQuestion, Fingerprint } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// Never fall back to localhost here — in production there's no localhost:3000
+// to fall back to, so a missing env var would silently break every image.
+// Set VITE_API_URL in your .env (dev) and in your Vercel project settings (prod).
+const API_URL = import.meta.env.VITE_API_URL || "";
 
-export default function DiscoveriesSection({ discoveries = [] }) {
+function resolvePhotoUrl(photoUrl) {
+  if (!photoUrl) return null;
+  if (/^https?:\/\//i.test(photoUrl)) return photoUrl; // already absolute
+  return `${API_URL}${photoUrl}`;
+}
+
+function DiscoveryMedia({ photoUrl, alt }) {
+  const [failed, setFailed] = useState(false);
+  const resolved = resolvePhotoUrl(photoUrl);
+
+  if (!resolved || failed) {
+    return (
+      <div className="jt-card-media jt-card-media--empty">
+        <Fingerprint size={22} />
+        <span>No photo</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="jt-card-media">
+      <img src={resolved} alt={alt} onError={() => setFailed(true)} />
+    </div>
+  );
+}
+
+export default function DiscoveriesSection({ discoveries = [], onView }) {
   return (
     <div>
       <div className="jt-section-heading">
@@ -22,19 +51,7 @@ export default function DiscoveriesSection({ discoveries = [] }) {
             transition={{ delay: i * 0.04 }}
             whileHover={{ y: -4 }}
           >
-            <div className="jt-card-media">
-              {d.photoUrl ? (
-                <img
-                  src={`${API_URL}${d.photoUrl}`}
-                  alt={d.species}
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              ) : (
-                <span>No photo</span>
-              )}
-            </div>
+            <DiscoveryMedia photoUrl={d.photoUrl} alt={d.species} />
             <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 6 }}>
               <strong>{d.species}</strong>
               <span style={{ fontSize: 12, color: "var(--jt-cream-dim)" }}>{d.era}</span>
@@ -51,7 +68,11 @@ export default function DiscoveriesSection({ discoveries = [] }) {
               <span style={{ fontSize: 11, color: "var(--jt-cream-dim)" }}>
                 {d.date ? new Date(d.date).toLocaleDateString() : "Date unknown"}
               </span>
-              <button className="jt-btn-ghost" style={{ marginTop: 6, fontSize: 12 }}>
+              <button
+                className="jt-btn-ghost"
+                style={{ marginTop: 6, fontSize: 12 }}
+                onClick={() => onView?.(d)}
+              >
                 View
               </button>
             </div>
