@@ -13,6 +13,9 @@ const activityLogSchema = new mongoose.Schema(
         "user.demoted",
         "user.suspended",
         "user.unsuspended",
+        "quiz.question_created",
+        "quiz.question_updated",
+        "quiz.question_deleted",
       ],
     },
     performedBy: {
@@ -26,7 +29,7 @@ const activityLogSchema = new mongoose.Schema(
     },
     targetType: {
       type: String,
-      enum: ["Discovery", "User"],
+      enum: ["Discovery", "User", "Question"],
       required: true,
     },
     details: {

@@ -11,13 +11,6 @@ const STAT_META = [
   { key: "verified", label: "Verified", accent: "emerald" },
 ];
 
-// Placeholder until a real /api/admin/activity endpoint exists.
-const PLACEHOLDER_ACTIVITY = [
-  { text: "Discovery submitted for review", time: "just now" },
-  { text: "New user registered", time: "12m ago" },
-  { text: "Discovery marked verified", time: "1h ago" },
-];
-
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState(null);
@@ -90,25 +83,33 @@ export default function AdminDashboard() {
           </div>
         </section>
 
-        {/* Recent activity — placeholder, see note above */}
+        {/* Recent activity — real data from ActivityLog */}
         <section className="lg:col-span-2 rounded-lg border border-stone-800 bg-stone-900 p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-base">Recent activity</h2>
-            <span className="text-[10px] font-mono text-stone-500 uppercase">
-              placeholder
-            </span>
+            <Link to="/admin/logs" className="text-xs text-stone-500 hover:text-stone-300">
+              View all →
+            </Link>
           </div>
-          <ul className="space-y-3">
-            {PLACEHOLDER_ACTIVITY.map((item, i) => (
-              <li
-                key={i}
-                className="flex items-center justify-between text-sm border-b border-stone-800/60 last:border-0 pb-3 last:pb-0"
-              >
-                <span className="text-stone-100">{item.text}</span>
-                <span className="text-stone-400 text-xs">{item.time}</span>
-              </li>
-            ))}
-          </ul>
+          {stats.recentLogs?.length ? (
+            <ul className="space-y-3">
+              {stats.recentLogs.map((log) => (
+                <li
+                  key={log._id}
+                  className="flex items-center justify-between text-sm border-b border-stone-800/60 last:border-0 pb-3 last:pb-0"
+                >
+                  <span className="text-stone-100">
+                    {log.performedBy?.username || "Admin"} — {log.details}
+                  </span>
+                  <span className="text-stone-400 text-xs">
+                    {new Date(log.createdAt).toLocaleTimeString()}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-stone-400 text-sm">No activity yet.</p>
+          )}
         </section>
       </div>
     </div>

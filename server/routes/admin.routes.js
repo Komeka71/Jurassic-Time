@@ -1,10 +1,7 @@
 // server/routes/admin.routes.js
-
 const express = require("express");
 const router = express.Router();
-
 const { protect, adminOnly } = require("../middleware/authMiddleware");
-
 const {
   getDashboardStats,
   getDiscoveriesForReview,
@@ -14,9 +11,13 @@ const {
   updateUserRole,
   updateUserStatus,
   getActivityLogs,
+  getQuestions,
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
 } = require("../controllers/adminController");
 
-// All admin routes require authentication + admin role
+// Every route below requires: logged in AND role === "admin"
 router.use(protect, adminOnly);
 
 // Dashboard
@@ -32,7 +33,13 @@ router.get("/users", getUsers);
 router.patch("/users/:id/role", updateUserRole);
 router.patch("/users/:id/status", updateUserStatus);
 
-// Activity Logs
+// Quiz questions
+router.get("/questions", getQuestions);
+router.post("/questions", createQuestion);
+router.patch("/questions/:id", updateQuestion);
+router.delete("/questions/:id", deleteQuestion);
+
+// Activity logs
 router.get("/logs", getActivityLogs);
 
 module.exports = router;

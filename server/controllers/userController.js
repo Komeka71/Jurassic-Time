@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const { ONBOARDING_OPTIONS } = require("../models/User");
-
+const UserStats = require("../models/UserStats");
 // const { AGE_GROUPS, PURPOSES, INTERESTS } = ONBOARDING_OPTIONS;
 const { AGE_GROUPS, PURPOSES, INTERESTS, DINO_COLORS } = ONBOARDING_OPTIONS;
 // @route GET /api/users/onboarding-options
@@ -79,8 +79,31 @@ user.companion = {
 };
 
 // @route GET /api/users/profile
-const getProfile = async (req, res) => {
-  res.status(200).json(req.user.toPublicJSON());
+const getProfile = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    const stats = await UserStats.findOne({
+      username: user.username,
+    });
+
+    const profile = user.toPublicJSON();
+
+    res.status(200).json({
+      ...profile,
+
+      equippedItems: stats?.equippedItems
+        ? Object.fromEntries(stats.equippedItems)
+        : {},
+
+      // Keep these available to the profile too
+      coins: stats?.coins ?? user.coins ?? 0,
+      level: stats?.level ?? user.level ?? 1,
+      xp: stats?.xp ?? user.xp ?? 0,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 // @route GET /api/users/stats
 const getStats = async (req, res) => {
