@@ -9,8 +9,14 @@ const API_URL = import.meta.env.VITE_API_URL || "";
 
 function resolvePhotoUrl(photoUrl) {
   if (!photoUrl) return null;
-  if (/^https?:\/\//i.test(photoUrl)) return photoUrl; // already absolute
-  return `${API_URL}${photoUrl}`;
+
+  if (/^https?:\/\//i.test(photoUrl)) {
+    return photoUrl;
+  }
+
+  const baseUrl = API_URL.replace(/\/api\/?$/, "");
+
+  return `${baseUrl}${photoUrl}`;
 }
 function DiscoveryMedia({ photoUrl, alt }) {
   const [failed, setFailed] = useState(false);
