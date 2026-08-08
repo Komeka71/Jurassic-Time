@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const { ONBOARDING_OPTIONS } = require("../models/User");
 
-const { AGE_GROUPS, PURPOSES, INTERESTS } = ONBOARDING_OPTIONS;
+// const { AGE_GROUPS, PURPOSES, INTERESTS } = ONBOARDING_OPTIONS;
 const { AGE_GROUPS, PURPOSES, INTERESTS, DINO_COLORS } = ONBOARDING_OPTIONS;
 // @route GET /api/users/onboarding-options
 const getOnboardingOptions = (req, res) => {
