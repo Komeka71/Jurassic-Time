@@ -1,0 +1,70 @@
+// client/src/pages/AdminLogs.jsx
+import { useEffect, useState } from "react";
+import api from "../api/axios";
+
+const ACTION_LABELS = {
+  "discovery.approved": { label: "Approved discovery", tone: "emerald" },
+  "discovery.rejected": { label: "Rejected discovery", tone: "red" },
+  "user.promoted": { label: "Promoted user", tone: "amber" },
+  "user.demoted": { label: "Demoted user", tone: "stone" },
+  "user.suspended": { label: "Suspended user", tone: "red" },
+  "user.unsuspended": { label: "Unsuspended user", tone: "emerald" },
+};
+
+const TONE_CLASSES = {
+  emerald: "border-emerald-400/30 text-emerald-400",
+  red: "border-red-400/30 text-red-400",
+  amber: "border-amber-400/30 text-amber-400",
+  stone: "border-stone-700 text-stone-400",
+};
+
+export default function AdminLogs() {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    api
+      .get("/admin/logs")
+      .then((res) => setLogs(res.data.logs))
+      .catch(() => setError("Could not load activity logs."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <div className="space-y-4 max-w-4xl">
+      <h1 className="text-2xl font-semibold text-stone-100">Activity Logs</h1>
+
+      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {loading && <p className="text-stone-400 text-sm">Loading…</p>}
+
+      {!loading && logs.length === 0 && (
+        <p className="text-stone-400 text-sm">No admin actions recorded yet.</p>
+      )}
+
+      {!loading && logs.length > 0 && (
+        <div className="rounded-lg border border-stone-800 bg-stone-900 divide-y divide-stone-800/60">
+          {logs.map((log) => {
+            const meta = ACTION_LABELS[log.action] || { label: log.action, tone: "stone" };
+            return (
+              <div key={log._id} className="flex items-center justify-between px-4 py-3 gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span
+                    className={`shrink-0 text-xs font-mono px-2 py-0.5 rounded-full border ${TONE_CLASSES[meta.tone]}`}
+                  >
+                    {meta.label}
+                  </span>
+                  <span className="text-sm text-stone-300 truncate">{log.details}</span>
+                </div>
+                <div className="shrink-0 text-right text-xs text-stone-500">
+                  <p>{log.performedBy?.username || "Unknown admin"}</p>
+                  <p>{new Date(log.createdAt).toLocaleString()}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}

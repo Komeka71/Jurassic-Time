@@ -54,11 +54,19 @@ const signup = async (req, res, next) => {
       },
     });
 
-    await sendEmail({
-      to: user.email,
-      subject: "Your Paleora verification code",
-      html: otpEmailTemplate(otp, user.username),
-    });
+    // Don't let a flaky email provider turn a successful signup into a 500.
+    // The user record already exists at this point - if we throw here, the
+    // client sees a failure but a retry will hit "account already exists"
+    // with no way to get a fresh OTP. Fail soft and let them use resend.
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Your Paleora verification code",
+        html: otpEmailTemplate(otp, user.username),
+      });
+    } catch (emailError) {
+      console.error("Signup succeeded but OTP email failed to send:", emailError);
+    }
 
     res.status(201).json({
       message: "Account created. Check your email for a verification code.",
@@ -112,16 +120,23 @@ const verifyOtp = async (req, res, next) => {
 
     await user.save();
 
-    await sendEmail({
-      to: user.email,
-      subject: "Welcome to Paleora 🦖",
-      html: welcomeEmailTemplate(user.username),
-    });
+    // Same reasoning as signup: verification already succeeded, so a
+    // welcome-email hiccup shouldn't turn this into a failed request.
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Welcome to Paleora 🦖",
+        html: welcomeEmailTemplate(user.username),
+      });
+    } catch (emailError) {
+      console.error("Verification succeeded but welcome email failed to send:", emailError);
+    }
 
-    generateToken(res, user._id);
+    const token = generateToken(user._id);
 
     res.status(200).json({
       ...user.toPublicJSON(),
+      token,
       justVerified: true,
     });
   } catch (error) {
@@ -201,9 +216,12 @@ const login = async (req, res, next) => {
       });
     }
 
-    generateToken(res, user._id);
+    const token = generateToken(user._id);
 
-    res.status(200).json(user.toPublicJSON());
+    res.status(200).json({
+      ...user.toPublicJSON(),
+      token,
+    });
   } catch (error) {
     next(error);
   }
@@ -211,11 +229,6 @@ const login = async (req, res, next) => {
 
 // @route POST /api/auth/logout
 const logout = (req, res) => {
-  res.cookie("jwt", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-
   res.status(200).json({
     message: "Logged out.",
   });

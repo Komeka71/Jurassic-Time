@@ -22,7 +22,8 @@ import { getUserProgress } from "../utils/userProgress";
 //   completeLevel,
 // } from "../utils/playerProgress";
 
-const API_URL = "http://localhost:5173";
+// >>>>>>> 437461b8231e83b90eb3d3cc010ec8a954a988bc
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Quiz() {
   const location = useLocation();
@@ -463,30 +464,26 @@ playEffect("wrong");
         )
       );
 
-const response = await fetch(
-  `${API_URL}/api/quiz/submit`,
-  {
-    method: "POST",
+const response = await fetch(`${API_URL}/quiz/submit`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+  },
+  body: JSON.stringify({
+    topic,
+    difficulty,
+    answers,
+    score: accuracy,
+    totalQuestions: questions.length,
+    correctAnswers,
+    timeTaken,
+  }),
+});
 
-    credentials: "include",
+const data = await response.json();
 
-    headers: {
-      "Content-Type": "application/json",
-    },
-
-    body: JSON.stringify({
-      topic,
-      difficulty,
-      answers,
-      score: accuracy,
-      totalQuestions: questions.length,
-      correctAnswers,
-      timeTaken,
-    }),
-  }
-);
-
-      const data = await response.json();
+      // const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
@@ -728,20 +725,18 @@ if (!isGuest) {
   // ============================
  if (!isGuest) {
   try {
-    const res = await fetch(
-      `${API_URL}/api/daily/${USERNAME}/progress`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          expeditions: 1,
-          questions: questions.length,
-          xp: correctAnswers * 20,
-        }),
-      }
-    );
+const res = await fetch(`${API_URL}/daily/${USERNAME}/progress`, {
+  method: "PATCH",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+  },
+  body: JSON.stringify({
+    expeditions: 1,
+    questions: questions.length,
+    xp: correctAnswers * 20,
+  }),
+});
 
     const data = await res.json();
     console.log("Daily Mission Updated:", data);

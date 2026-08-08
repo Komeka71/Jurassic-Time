@@ -27,7 +27,7 @@ export default function ArchiveStats() {
   async function fetchStats() {
     try {
       const { data } = await axios.get(
-        `${API}/api/discoveries`
+        `${API}/discoveries`
       );
 
       const discoveries = data.discoveries;

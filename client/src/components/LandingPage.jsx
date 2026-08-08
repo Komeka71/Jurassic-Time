@@ -17,6 +17,8 @@ import QuizPreview from "../components/QuizPreview/QuizPreview";
 import ResearchPreview from "../components/landing/ResearchPreview/ResearchPreview";
 import MiniGamesPreview from "../components/landing/MiniGamesPreview";
 import { useNavigate } from "react-router-dom";
+import MuseumIntro from "./museum/MuseumIntro";
+
 
 import HybridLabPreview from "../components/home/HybridLabPreview";
 
@@ -58,12 +60,6 @@ const sectionOrder = personalization.homepage.order;
         />
       );
 
-  //     case "hybridLab":
-  // return (
-  //   <HybridLabPreview
-  //     key="hybridLab"
-  //   />
-  // );
 
     case "games":
       return <MiniGamesPreview key="games" />;
@@ -72,6 +68,8 @@ const sectionOrder = personalization.homepage.order;
       return null;
   }
 })}
+<MuseumIntro/>
+
 <HybridLabPreview/>
 {/* <Explore /> */}
       {/* <DailyChallenge />

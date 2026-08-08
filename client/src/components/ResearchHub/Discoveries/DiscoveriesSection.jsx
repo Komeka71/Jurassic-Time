@@ -30,7 +30,7 @@ async function fetchDiscoveries() {
   `${import.meta.env.VITE_API_URL}`; //ll
 
 const { data } = await axios.get(
-  `${API}/api/discoveries/latest`
+  `${API}/discoveries/latest`
 );
     setDiscoveries(
       data.discoveries.map(mapDiscovery)
