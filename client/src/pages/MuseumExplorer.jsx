@@ -46,7 +46,7 @@
 
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MuseumIntro from "../components/museum/MuseumIntro.jsx";
+// import MuseumIntro from "../components/museum/MuseumIntro.jsx";
 import MuseumHero from "../components/museum/MuseumHero.jsx";
 import FeaturedMuseum from "../components/museum/FeaturedMuseum.jsx";
 import MuseumGrid from "../components/museum/MuseumGrid.jsx";
@@ -82,15 +82,7 @@ export default function MuseumExplorer() {
   return (
     <main className="bg-bone">
       {/* Cinematic splash — plays once on entry, then the functional search hero takes over */}
-      <MuseumIntro
-        primaryCta={{
-          label: "Explore Archive",
-          onClick: () => {
-            document.getElementById("museum-search-hero")?.scrollIntoView({ behavior: "smooth" });
-          },
-        }}
-        secondaryCta={{ label: "Virtual Tour", onClick: () => setTourOpen(true) }}
-      />
+      
 
       <div id="museum-search-hero">
         <MuseumHero query={query} onQueryChange={setQuery} featuredHeroImage={featured.heroImage} />
