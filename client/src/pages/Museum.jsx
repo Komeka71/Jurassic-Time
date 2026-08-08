@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import MuseumHero from "../components/features/museum/MuseumIntro";
-// import VirtualTourModal from "../components/features/museum/VirtualTourModal"; // if/when you build it
+import MuseumHero from "../components/museum/MuseumIntro";
 
 export default function Museum() {
   const navigate = useNavigate();
@@ -10,13 +9,24 @@ export default function Museum() {
   return (
     <>
       <MuseumHero
-        primaryCta={{ label: "Explore Archive", onClick: () => navigate("/museum/archive") }}
-        secondaryCta={{ label: "Virtual Tour", onClick: () => setTourOpen(true) }}
+        primaryCta={{
+          label: "Explore Archive",
+          onClick: () => navigate("/museum/archive"),
+        }}
+        secondaryCta={{
+          label: "Virtual Tour",
+          onClick: () => setTourOpen(true),
+        }}
       />
 
-      {/* {tourOpen && <VirtualTourModal onClose={() => setTourOpen(false)} />} */}
+      {/* Virtual Tour - enable when modal is ready */}
+      {/* {tourOpen && (
+        <VirtualTourModal
+          onClose={() => setTourOpen(false)}
+        />
+      )} */}
 
-      {/* Rest of the museum page — exhibit grid, halls, etc. */}
+      {/* Rest of the museum page */}
     </>
   );
 }
