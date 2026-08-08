@@ -339,10 +339,10 @@ const response = await fetch(
   ========================================
   */
 
-  const isEquipped = (item) =>
-    player.equippedItems?.[
-      item.category?.toLowerCase()
-    ] === item.id;
+const isEquipped = (item) =>
+  player.equippedItems?.[
+    item.avatarSlot || item.category?.toLowerCase()
+  ] === item.id;
 
 
   /*
@@ -1052,10 +1052,12 @@ const response = await fetch(
           >
 
             <ShopDino
-              mood={dinoMood}
-
-              message={dinoMessage}
-            />
+  mood={dinoMood}
+  message={dinoMessage}
+  companionId={user?.companion?.companionId}
+  companionName={user?.companion?.name}
+  equippedItems={player.equippedItems}
+/>
 
           </div>
 

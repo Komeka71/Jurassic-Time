@@ -36,6 +36,7 @@ const shopItems = [
     rarity: "Rare",
     levelRequired: 1,
     featured: true,
+    avatarSlot: "bag",
   },
 
   {
@@ -49,6 +50,7 @@ const shopItems = [
     rarity: "Common",
     levelRequired: 1,
     featured: false,
+    avatarSlot: "hat",
   },
 
   {
@@ -62,6 +64,7 @@ const shopItems = [
     rarity: "Rare",
     levelRequired: 4,
     featured: true,
+    avatarSlot: "scarf",
   },
 
   {
@@ -75,6 +78,7 @@ const shopItems = [
     rarity: "Epic",
     levelRequired: 3,
     featured: true,
+    avatarSlot: "cape",
   },
 
   {
@@ -88,6 +92,7 @@ const shopItems = [
     rarity: "Epic",
     levelRequired: 5,
     featured: true,
+    avatarSlot: "goggles",
   },
 
   {

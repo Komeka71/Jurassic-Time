@@ -2,13 +2,14 @@ const User = require("../models/User");
 const { ONBOARDING_OPTIONS } = require("../models/User");
 
 const { AGE_GROUPS, PURPOSES, INTERESTS } = ONBOARDING_OPTIONS;
-
+const { AGE_GROUPS, PURPOSES, INTERESTS, DINO_COLORS } = ONBOARDING_OPTIONS;
 // @route GET /api/users/onboarding-options
 const getOnboardingOptions = (req, res) => {
   res.status(200).json({
     ageGroups: AGE_GROUPS,
     purposes: PURPOSES,
     interests: INTERESTS,
+    companions: DINO_COLORS,
   });
 };
 
@@ -48,11 +49,10 @@ const completeOnboarding = async (req, res, next) => {
       throw new Error(`"${invalidInterest}" isn't a recognized interest.`);
     }
 
-    if (!companionId || !["male", "female"].includes(companionGender)) {
-      res.status(400);
-      throw new Error("Please pick a companion and a skin.");
-    }
-
+if (!DINO_COLORS.includes(companionId)) {
+  res.status(400);
+  throw new Error("Please choose a valid dinosaur color.");
+}
     const user = await User.findById(req.user._id);
 if (!user) {
   res.status(404);
@@ -63,12 +63,10 @@ if (!user) {
       purpose,
       interests,
     };
-
-    user.companion = {
-      companionId,
-      name: companionName?.trim() || companionId,
-      gender: companionGender,
-    };
+user.companion = {
+  companionId,
+  name: companionName?.trim() || companionId,
+};
 
     user.hasOnboarded = true;
 
@@ -213,9 +211,9 @@ if (typeof bio === "string") {
       user.companion.companionId = companionId;
       user.companion.name = companionName?.trim() || companionId;
 
-      if (companionGender) {
-        user.companion.gender = companionGender;
-      }
+      // if (companionGender) {
+      //   user.companion.gender = companionGender;
+      // }
     }
 
   if (typeof photoUrl === "string" && photoUrl.trim()) {

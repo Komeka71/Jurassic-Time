@@ -10,7 +10,7 @@ const INTERESTS = [
   "fossils/geology",
   "extinction science",
 ];
-
+const DINO_COLORS = ["green", "yellow", "pink"];
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -281,4 +281,5 @@ module.exports.ONBOARDING_OPTIONS = {
   AGE_GROUPS,
   PURPOSES,
   INTERESTS,
+  DINO_COLORS: ["green", "yellow", "pink"],
 };
