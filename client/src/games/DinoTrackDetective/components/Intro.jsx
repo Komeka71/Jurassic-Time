@@ -1,8 +1,13 @@
 import React from 'react';
-
+import HomeButton from '../../../components/Homebtn';
+import { useNavigate } from 'react-router-dom';
 export default function Intro({ onBegin, totalTrails }) {
+   const navigate = useNavigate();
+
   return (
     <div className="dtd-intro">
+      <HomeButton onClick={() => navigate('/')} />
+
       <div className="dtd-intro__frame">
         <p className="dtd-intro__eyebrow">Natural History Museum — Interactive Exhibit</p>
         <h1 className="dtd-intro__title">Track Identification Lab</h1>

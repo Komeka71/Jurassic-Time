@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './EraSorting.css';
 import { ERAS, DINOSAURS, pickRoster } from './dinosaurs';
+import HomeButton from '../../components/Homebtn.jsx'; // adjust this path to match where Homebtn.jsx actually lives relative to this file
+import { useNavigate } from 'react-router-dom';
 
 // -----------------------------------------------------------------------
 // Config
@@ -323,7 +325,14 @@ function DropZone({ era, placedDinos, isPulsing, isDragTarget, onDragOver, onDro
 // -----------------------------------------------------------------------
 // Main component
 // -----------------------------------------------------------------------
-export default function EraSorting({ onNavigateHome, onNavigateGames }) {
+// ...keep your other imports
+
+export default function EraSorting() {
+  const navigate = useNavigate();
+
+  const onNavigateGames = () => {
+    navigate('/#mini-games');
+  };
   // phase: 'intro' | 'playing' | 'timesup' | 'won' | 'timeout'
   const [phase, setPhase] = useState('intro');
   const [introClosing, setIntroClosing] = useState(false);
@@ -543,14 +552,12 @@ export default function EraSorting({ onNavigateHome, onNavigateGames }) {
     <div className="es-root">
       <AmbientScene />
 
+      {/* Global home button — replaces the old inline "Back to Home" link */}
+<HomeButton onClick={() => navigate('/')} />
+
       {/* Navigation */}
       <nav className="es-nav">
-        <button className="es-nav__link" onClick={onNavigateHome}>
-          <span className="es-nav__arrow">←</span> Back to Home
-        </button>
-        <button className="es-nav__link" onClick={onNavigateGames}>
-          Mini Games <span className="es-nav__arrow">→</span>
-        </button>
+        
       </nav>
 
       {/* Header */}
@@ -564,6 +571,7 @@ export default function EraSorting({ onNavigateHome, onNavigateGames }) {
       {/* HUD */}
       <div className="es-hud">
         <div className="es-hud__left">
+          
           <button
             className="es-chip es-chip--hint"
             onClick={useHint}

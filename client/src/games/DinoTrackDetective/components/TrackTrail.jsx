@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import '../DinoTrackDetective.css';
 import ArtworkImage from '../../../shared/components/ArtworkImage.jsx';
+import HomeButton from '../../../components/Homebtn.jsx';
+import { useNavigate } from 'react-router-dom';
 
 // ---------------------------------------------------------------------------
 // Deterministic pseudo-random generator (seeded so a given trail never
@@ -176,7 +178,7 @@ function ProceduralTrail({ fp, dinoId }) {
     >
       <defs>
         <radialGradient id="groundLight" cx="30%" cy="55%" r="75%">
-          <stop offset="0%" stopColor="#5a4a34" />
+          <stop offset="0%" stopColor="#6e6d6c" />
           <stop offset="55%" stopColor="#332a1f" />
           <stop offset="100%" stopColor="#171310" />
         </radialGradient>
@@ -223,10 +225,13 @@ function ProceduralTrail({ fp, dinoId }) {
 }
 
 export default function TrackTrail({ dino, trailNumber, totalTrails }) {
+  const navigate = useNavigate();
   const { footprint: fp } = dino;
 
   return (
     <div className="track-trail">
+      <HomeButton onClick={() => navigate('/')} />
+      
       <div className="track-trail__frame">
         <div className="track-trail__header">
           <div className="track-trail__badge" aria-hidden="true">

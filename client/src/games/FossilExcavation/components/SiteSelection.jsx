@@ -1,10 +1,15 @@
 import React from "react";
 import { SITES } from "../data";
 import { Stepper, Stars, SiteBackdrop } from "./Shared";
-
+import HomeButton from "../../../components/Homebtn";
+import { useNavigate } from "react-router-dom";
 export default function SiteSelection({ discoveredCount, totalSpecies, onEnter, onOpenCollection }) {
+  const navigate = useNavigate();
+
   return (
     <div className="screen site-select">
+<HomeButton onClick={() => navigate('/')} />
+
       <div className="hero">
         <h1 className="wordmark">Fossil Excavation</h1>
         <p className="hero-sub">Uncover ancient fossils buried beneath the earth.</p>

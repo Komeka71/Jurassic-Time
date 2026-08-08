@@ -1,15 +1,10 @@
+import { useEffect } from "react";
 import Navbar from "../components/landing/Navbar";
 import Hero from "../components/landing/Hero";
-// import Explore from "../components/landing/Explore";
 import Timeline from "../components/landing/Timeline";
-// import DailyChallenge from "../components/landing/DailyChallenge";
 import MapPreview from "../components/map/MapPreview";
-// import Games from "../components/landing/Games";
 import { useAuth } from "../context/AuthContext";
-// import { getHomepageSections } from "../utils/homepageLayout";
 import { getPersonalization } from "../utils/personalization";
-// import { useAuth } from "../context/AuthContext";
-// import Footer from "../components/landing/Footer";
 import CursorGlow from "../components/landing/CursorGlow";
 import DinoCompanion from "../components/landing/DinoCompanion";
 import DinoGuide from "../components/Hero/DinoGuide";
@@ -18,66 +13,76 @@ import ResearchPreview from "../components/landing/ResearchPreview/ResearchPrevi
 import MiniGamesPreview from "../components/landing/MiniGamesPreview";
 import { useNavigate } from "react-router-dom";
 import MuseumIntro from "./museum/MuseumIntro";
-
-
 import HybridLabPreview from "../components/home/HybridLabPreview";
 
 export default function LandingPage() {
   const navigate = useNavigate();
-const { user } = useAuth();
+  const { user } = useAuth();
 
-// const { user } = useAuth();
+  const personalization = getPersonalization(user);
+  const sectionOrder = personalization.homepage.order;
 
-const personalization = getPersonalization(user);
+  // Scroll to a requested section after coming back from another page.
+  useEffect(() => {
+    if (window.location.hash === "#mini-games") {
+      const timer = setTimeout(() => {
+        document.getElementById("mini-games")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 150);
 
-const sectionOrder = personalization.homepage.order;
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
-    <main className="bg-[#08110b] text-white overflow-x-hidden cursor-none">
-
+    <>
       {/* Global Cursor */}
       <CursorGlow />
-{/* <DinoCompanion/> */}
+
+      {/* Navbar */}
       <Navbar />
-{sectionOrder.map((section) => {
-  switch (section) {
-    case "hero":
-      return <Hero key="hero" />;
 
-    case "timeline":
-      return <Timeline key="timeline" />;
+      <main>
+        {sectionOrder.map((section) => {
+          switch (section) {
+            case "hero":
+              return <Hero key="hero" />;
 
-    case "map":
-      return <MapPreview key="map" />;
+            case "timeline":
+              return <Timeline key="timeline" />;
 
-    case "quiz":
-      return <QuizPreview key="quiz" />;
+            case "map":
+              return <MapPreview key="map" />;
 
-    case "research":
-      return (
-        <ResearchPreview
-          key="research"
-          onEnter={() => navigate("/research")}
-        />
-      );
+            case "quiz":
+              return <QuizPreview key="quiz" />;
 
+            case "research":
+              return (
+                <ResearchPreview
+                  key="research"
+                  onEnter={() => navigate("/research")}
+                />
+              );
 
-    case "games":
-      return <MiniGamesPreview key="games" />;
+            case "games":
+              return (
+                <div
+                  key="games"
+                  id="mini-games"
+                  style={{ scrollMarginTop: "80px" }}
+                >
+                  <MiniGamesPreview />
+                </div>
+              );
 
-    default:
-      return null;
-  }
-})}
-<MuseumIntro/>
-
-<HybridLabPreview/>
-{/* <Explore /> */}
-      {/* <DailyChallenge />
-      <Games />
-      <Community />
-      <Genetics />
-      <Footer /> */}
-
-    </main>
+            default:
+              return null;
+          }
+        })}
+      </main>
+    </>
   );
 }

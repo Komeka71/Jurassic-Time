@@ -43,7 +43,6 @@
 //     </main>
 //   );
 // }
-
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import MuseumIntro from "../components/museum/MuseumIntro.jsx";
@@ -53,6 +52,7 @@ import MuseumGrid from "../components/museum/MuseumGrid.jsx";
 // import MuseumCategories from "../components/museum/MuseumCategories.jsx";
 import WorldMap from "../components/museum/WorldMap.jsx";
 import MuseumFooter from "../components/museum/MuseumFooter.jsx";
+import HomeButton from "../components/Homebtn.jsx";
 import { museums, categories } from "../data/museums.js";
 import "../styles/museum.css";
 
@@ -81,8 +81,9 @@ export default function MuseumExplorer() {
 
   return (
     <main className="bg-bone">
+      <HomeButton onClick={() => navigate("/")} />
+
       {/* Cinematic splash — plays once on entry, then the functional search hero takes over */}
-      
 
       <div id="museum-search-hero">
         <MuseumHero query={query} onQueryChange={setQuery} featuredHeroImage={featured.heroImage} />

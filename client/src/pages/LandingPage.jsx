@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import EraCard from '../components/EraCard.jsx'
 import { eras } from '../data/eras.js'
 import './LandingPage.css'
+import HomeButton from '../components/Homebtn.jsx';
 
 // Eras with a built timeline route — every era now has one.
 const ERA_ROUTES = {
@@ -49,6 +50,7 @@ function LandingPage() {
 
   return (
     <div className="landing">
+      <HomeButton onClick={() => navigate("/")} />
       <div className="landing__media" aria-hidden="true">
         {/* Background video is provided separately and dropped in at
             /public/video/space-loop.mp4 (or swap the src below). */}
@@ -78,7 +80,7 @@ function LandingPage() {
               animate="visible"
             >
               <p className="landing__eyebrow">A Museum Without Walls</p>
-              <h1 className="landing__title">Jurassic Museum</h1>
+              <h1 className="landing__title">Paleora Timeline</h1>
               <p className="landing__subtitle">
                 Step across 186 million years of prehistoric life. Choose an
                 era to begin.

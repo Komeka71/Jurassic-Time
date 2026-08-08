@@ -24,7 +24,7 @@ const navItems = [
   { title: "Museum", to: "/museum", icon: Compass },
   { title: "Quiz", to: "/home", icon: Binoculars },
   { title: "Hybrid Lab", to: "/dna-lab", icon: FlaskConical },
-  { title: "Mini Games", to: "/games", icon: Gamepad2 },
+{ title: "Mini Games", to: "/#mini-games", icon: Gamepad2 },
 ];
 
 export default function Navbar() {
@@ -33,6 +33,46 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+const handleMiniGamesClick = () => {
+  if (location.pathname === "/") {
+    const element = document.getElementById("mini-games");
+
+    if (element) {
+      const start = window.scrollY;
+      const target =
+        element.getBoundingClientRect().top + window.scrollY - 80;
+
+      const distance = target - start;
+      const duration = 1600; // milliseconds — increase for slower scroll
+      let startTime = null;
+
+      const animateScroll = (currentTime) => {
+        if (!startTime) startTime = currentTime;
+
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Smooth ease-in-out
+        const eased =
+          progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        window.scrollTo(0, start + distance * eased);
+
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll);
+        }
+      };
+
+      requestAnimationFrame(animateScroll);
+    }
+  } else {
+    navigate("/#mini-games");
+  }
+
+  setMenuOpen(false);
+};
   const { user, logout } = useAuth();
 
   // Auto-close the mobile drawer on any route change, so its
@@ -163,51 +203,83 @@ export default function Navbar() {
                 {navItems.map((item) => {
                   const Icon = item.icon;
 
-                  return (
-                    <NavLink
-                      key={item.title}
-                      to={item.to}
-                      onClick={() => setMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `
-                        group
-                        flex
-                        items-center
-                        justify-between
+              return item.title === "Mini Games" ? (
+  <button
+    key={item.title}
+    onClick={handleMiniGamesClick}
+    className="
+      group
+      flex
+      w-full
+      items-center
+      justify-between
+      rounded-2xl
+      px-5
+      py-5
+      text-white/75
+      transition-all
+      duration-300
+      hover:bg-white/[0.05]
+      hover:text-white
+    "
+  >
+    <div className="flex items-center gap-3">
+      <Icon
+        size={20}
+        className="text-[#9fc97f] transition-transform duration-300 group-hover:scale-110"
+      />
 
-                        rounded-2xl
+      <span className="text-[17px] font-medium">
+        {item.title}
+      </span>
+    </div>
 
-                        px-5
-                        py-5
+    <ChevronRight
+      size={18}
+      className="opacity-0 transition-all duration-300 group-hover:translate-x-2 group-hover:opacity-100"
+    />
+  </button>
+) : (
+  <NavLink
+    key={item.title}
+    to={item.to}
+    onClick={() => setMenuOpen(false)}
+    className={({ isActive }) =>
+      `
+      group
+      flex
+      items-center
+      justify-between
+      rounded-2xl
+      px-5
+      py-5
+      transition-all
+      duration-300
+      ${
+        isActive
+          ? "border border-green-400/30 bg-green-500/10 text-green-300 shadow-[0_0_20px_rgba(34,197,94,.12)]"
+          : "text-white/75 hover:bg-white/[0.05] hover:text-white"
+      }
+      `
+    }
+  >
+    <div className="flex items-center gap-3">
+      <Icon
+        size={20}
+        className="text-[#9fc97f] transition-transform duration-300 group-hover:scale-110"
+      />
 
-                        transition-all
-                        duration-300
+      <span className="text-[17px] font-medium">
+        {item.title}
+      </span>
+    </div>
 
-                        ${
-                          isActive
-                            ? "border border-green-400/30 bg-green-500/10 text-green-300 shadow-[0_0_20px_rgba(34,197,94,.12)]"
-                            : "text-white/75 hover:bg-white/[0.05] hover:text-white"
-                        }
-                        `
-                      }
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon
-                          size={20}
-                          className="text-[#9fc97f] transition-transform duration-300 group-hover:scale-110"
-                        />
-
-                        <span className="text-[17px] font-medium">
-                          {item.title}
-                        </span>
-                      </div>
-
-                      <ChevronRight
-                        size={18}
-                        className="opacity-0 transition-all duration-300 group-hover:translate-x-2 group-hover:opacity-100"
-                      />
-                    </NavLink>
-                  );
+    <ChevronRight
+      size={18}
+      className="opacity-0 transition-all duration-300 group-hover:translate-x-2 group-hover:opacity-100"
+    />
+  </NavLink>
+);
                 })}
               </nav>
 
@@ -446,30 +518,54 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden xl:flex flex-1 items-center justify-between gap-8 px-8">
             <nav className="flex items-center gap-3">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.title}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `
-                    rounded-full
-                    px-4
-                    py-2
-                    text-sm
-                    font-medium
-                    transition-all
-                    duration-300
-                    ${
-                      isActive
-                        ? "bg-green-500/20 border border-green-400/40 text-green-300 shadow-[0_0_20px_rgba(34,197,94,.2)]"
-                        : "border border-transparent text-white/70 hover:border-white/10 hover:bg-white/[0.04] hover:text-white"
-                    }
-                    `
-                  }
-                >
-                  {item.title}
-                </NavLink>
-              ))}
+             {navItems.map((item) =>
+  item.title === "Mini Games" ? (
+    <button
+      key={item.title}
+      onClick={handleMiniGamesClick}
+      className="
+        rounded-full
+        px-4
+        py-2
+        text-sm
+        font-medium
+        transition-all
+        duration-300
+        border
+        border-transparent
+        text-white/70
+        hover:border-white/10
+        hover:bg-white/[0.04]
+        hover:text-white
+      "
+    >
+      {item.title}
+    </button>
+  ) : (
+    <NavLink
+      key={item.title}
+      to={item.to}
+      className={({ isActive }) =>
+        `
+        rounded-full
+        px-4
+        py-2
+        text-sm
+        font-medium
+        transition-all
+        duration-300
+        ${
+          isActive
+            ? "bg-green-500/20 border border-green-400/40 text-green-300 shadow-[0_0_20px_rgba(34,197,94,.2)]"
+            : "border border-transparent text-white/70 hover:border-white/10 hover:bg-white/[0.04] hover:text-white"
+        }
+        `
+      }
+    >
+      {item.title}
+    </NavLink>
+  )
+)}
 
               {user?.role === "admin" && (
                 <NavLink
