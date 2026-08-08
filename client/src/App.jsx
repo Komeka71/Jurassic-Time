@@ -7,8 +7,8 @@
 // import NotFoundPage from "./pages/NotFoundPage";
 // import React, { useState } from "react";
 
-// // Loader
-// import LoaderPage from "./components/LoaderPage";
+// Loader
+import LoaderPage from "./components/LoaderPage";
 
 // // Global
 // import CursorGlow from "./components/landing/CursorGlow";
@@ -345,6 +345,12 @@ function MainLayout() {
 ========================================================= */
 
 export default function App() {
+    const [loading, setLoading] = useState(true);
+
+  if (loading) {
+    return <LoaderPage onComplete={() => setLoading(false)} />;
+  }
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,5 +1,5 @@
 const shopItems = [
-  {
+ {
     id: "explorer-hat",
     name: "Explorer Hat",
     category: "gear",
@@ -10,8 +10,8 @@ const shopItems = [
     rarity: "Common",
     levelRequired: 1,
     featured: false,
+    avatarSlot: "hat",
   },
-
   {
     id: "fossil-brush",
     name: "Fossil Brush",

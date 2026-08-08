@@ -561,8 +561,128 @@ const response = await fetch(
 
   /*
   ========================================
+  UNEQUIP ITEM
+  ========================================
+  */
+
+  const unequipItem = async (item) => {
+
+    if (!user) {
+
+      reactDino(
+        "confused",
+        "🔒 Login to manage your equipped items."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !item ||
+      equipInProgress ||
+      loadingPlayer
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      setEquipInProgress(true);
+
+
+      reactDino(
+        "thinking",
+        `🤔 Taking off ${item.name}...`,
+        0
+      );
+
+
+      const response = await fetch(
+        `${API_URL}/user/${user.username}/shop/unequip`,
+        {
+          method: "PATCH",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            itemId: item.id,
+          }),
+        }
+      );
+
+
+      const data = await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Could not unequip item"
+        );
+
+      }
+
+
+      setPlayer({
+        ...defaultPlayer,
+
+        ...(data.stats || {}),
+
+        purchasedItems:
+          data.stats?.purchasedItems || [],
+
+        equippedItems:
+          data.stats?.equippedItems || {},
+      });
+
+
+      reactDino(
+        "happy",
+        `👋 ${item.name} put away safely.`
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "UNEQUIP SHOP ITEM ERROR:",
+        error
+      );
+
+
+      reactDino(
+        "confused",
+        `🤔 I couldn't unequip that. ${error.message}`
+      );
+
+    }
+
+    finally {
+
+      setEquipInProgress(false);
+
+    }
+
+  };
+
+
+  /*
+  ========================================
   EQUIP ITEM
   ========================================
+
+  Acts as a toggle: if the item is already
+  equipped, this unequips it instead.
   */
 
   const equipItem = async (item) => {
@@ -598,13 +718,15 @@ if (!user) {
     }
 
 
+    /*
+    ========================================
+    TOGGLE: ALREADY EQUIPPED -> UNEQUIP
+    ========================================
+    */
+
     if (isEquipped(item)) {
 
-      reactDino(
-        "happy",
-        `💚 ${item.name} is already equipped!`
-      );
-
+      unequipItem(item);
 
       return;
 
@@ -700,7 +822,7 @@ const response = await fetch(
 
       reactDino(
         "confused",
-        `🤔 I couldn't equip that. ${error.message}`
+        `🤔 ${error.message}`
       );
 
     }
