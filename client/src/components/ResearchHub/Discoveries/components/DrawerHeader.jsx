@@ -9,30 +9,33 @@ import {
 
 import StatusBadge from "../StatusBadge";
 
-const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+// API endpoint may be:
+// https://paleora.onrender.com
+// OR
+// https://paleora.onrender.com/api
+//
+// Uploaded files are served from /uploads, NOT /api/uploads.
+const API_URL = (import.meta.env.VITE_API_URL || "")
+  .replace(/\/api\/?$/, "")
+  .replace(/\/+$/, "");
 
 function resolveEvidenceUrl(file) {
   if (!file) return null;
 
-  // Already a complete URL
+  // Already absolute
   if (/^https?:\/\//i.test(file)) {
     return file;
   }
 
-  // Normalize Windows paths
   let path = file.replace(/\\/g, "/");
 
-  // Remove leading slashes
+  // Remove leading slash
   path = path.replace(/^\/+/, "");
 
-  // IMPORTANT:
-  // Your backend static uploads route is /uploads,
-  // NOT /api/uploads.
-  if (path.startsWith("api/uploads/")) {
-    path = path.replace(/^api\//, "");
-  }
+  // Remove accidental api/ prefix
+  path = path.replace(/^api\//, "");
 
-  // If it is just a filename, put it in the discoveries folder
+  // If only a filename was supplied
   if (!path.startsWith("uploads/")) {
     path = `uploads/discoveries/${path}`;
   }
@@ -59,7 +62,7 @@ export default function DrawerHeader({ discovery }) {
 
   return (
     <>
-      {/* Hero */}
+      {/* HERO */}
       <div className="relative h-[420px] w-full overflow-hidden">
         {image ? (
           <motion.img
@@ -79,13 +82,11 @@ export default function DrawerHeader({ discovery }) {
                 e.currentTarget.src
               );
 
-              // Hide broken image instead of requesting
-              // another nonexistent /images/no-fossil.png
               e.currentTarget.style.display = "none";
             }}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-[#8f7d60]">
+          <div className="flex h-full items-center justify-center text-[#8f7d60]">
             No fossil image available
           </div>
         )}
@@ -97,7 +98,7 @@ export default function DrawerHeader({ discovery }) {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent" />
       </div>
 
-      {/* Main information */}
+      {/* INFO */}
       <div className="px-8 pt-8 pb-6">
         <StatusBadge status={discovery?.status} />
 
@@ -115,7 +116,7 @@ export default function DrawerHeader({ discovery }) {
           Archive {discovery?.archiveId || "—"}
         </p>
 
-        {/* Metadata Strip */}
+        {/* METADATA */}
         <div className="mt-8 flex flex-wrap gap-4">
           <div className="flex items-center gap-2 rounded-full border border-[#8b6a3d]/30 bg-[#1b140f] px-5 py-3">
             <MapPin size={17} className="text-[#ddb878]" />
@@ -144,9 +145,8 @@ export default function DrawerHeader({ discovery }) {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* STATS */}
         <div className="mt-8 grid grid-cols-3 gap-4">
-          {/* Likes */}
           <div className="rounded-2xl border border-[#8b6a3d]/25 bg-[#1b140f] py-5 text-center">
             <ThumbsUp className="mx-auto mb-2 text-[#ddb878]" />
 
@@ -159,7 +159,6 @@ export default function DrawerHeader({ discovery }) {
             </p>
           </div>
 
-          {/* Comments */}
           <div className="rounded-2xl border border-[#8b6a3d]/25 bg-[#1b140f] py-5 text-center">
             <MessageCircle className="mx-auto mb-2 text-[#ddb878]" />
 
@@ -172,7 +171,6 @@ export default function DrawerHeader({ discovery }) {
             </p>
           </div>
 
-          {/* Evidence */}
           <div className="rounded-2xl border border-[#8b6a3d]/25 bg-[#1b140f] py-5 text-center">
             <Dna className="mx-auto mb-2 text-[#ddb878]" />
 
