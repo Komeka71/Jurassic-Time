@@ -92,32 +92,34 @@ aiVerification: {
     type: Number,
     default: 0,
   },
-breakdown: {
-  imageQuality: {
-    type: Number,
-    default: 0,
+
+  breakdown: {
+    imageQuality: {
+      type: Number,
+      default: 0,
+    },
+
+    fossilDetection: {
+      type: Number,
+      default: 0,
+    },
+
+    speciesMatch: {
+      type: Number,
+      default: 0,
+    },
+
+    geologicalConsistency: {
+      type: Number,
+      default: 0,
+    },
+
+    preservationScore: {
+      type: Number,
+      default: 0,
+    },
   },
 
-  fossilDetection: {
-    type: Number,
-    default: 0,
-  },
-
-  speciesMatch: {
-    type: Number,
-    default: 0,
-  },
-
-  geologicalConsistency: {
-    type: Number,
-    default: 0,
-  },
-
-  preservationScore: {
-    type: Number,
-    default: 0,
-  },
-},
   checks: {
     speciesClassification: {
       type: Boolean,
@@ -139,32 +141,7 @@ breakdown: {
       default: false,
     },
   },
-breakdown: {
-  imageQuality: {
-    type: Number,
-    default: 0,
-  },
 
-  fossilDetection: {
-    type: Number,
-    default: 0,
-  },
-
-  speciesMatch: {
-    type: Number,
-    default: 0,
-  },
-
-  geologicalConsistency: {
-    type: Number,
-    default: 0,
-  },
-
-  preservationScore: {
-    type: Number,
-    default: 0,
-  },
-},
   report: {
     type: String,
     default: "",
