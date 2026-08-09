@@ -43,7 +43,7 @@ export default function MissionCard({ mission, index, onEnter }) {
 
   return (
     <div
-      className={`relative flex flex-col items-center ${hovered ? "z-30" : "z-10"}`}
+      className={`relative flex flex-col items-center ${hovered ? "z-40" : "z-10"}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -120,7 +120,7 @@ export default function MissionCard({ mission, index, onEnter }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute top-full mt-3 w-64 rounded-2xl border border-white/15 bg-black/70 p-4 shadow-2xl backdrop-blur-xl"
+            className="absolute top-full z-50 mt-3 w-64 rounded-2xl border border-white/15 bg-black/70 p-4 shadow-2xl backdrop-blur-xl"
           >
             <span className="text-[11px] font-semibold uppercase tracking-wide text-white/50">
               {mission.subtitle}
