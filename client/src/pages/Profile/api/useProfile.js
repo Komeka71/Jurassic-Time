@@ -56,6 +56,11 @@ const profile = raw && {
     companionId: raw.companion?.companionId,
     companionName: raw.companion?.name,
     equippedItems: raw.equippedItems || {},
+    ageGroup: raw.preferences?.ageGroup,
+    purpose: raw.preferences?.purpose,
+    interests: raw.preferences?.interests || [],
+    fullName: raw.fullName || "",
+    bio: raw.bio || "",
     rank: `Level ${raw.level} Explorer`,
     level: raw.level,
     xp: raw.xp,
@@ -91,7 +96,6 @@ const profile = raw && {
     account: raw.account,
     expedition: raw.expedition || [],
   };
-
   const updateProfile = useCallback(async (patch) => {
     const updated = await profileApi.updateProfile(patch);
     setRaw((prev) => (prev ? { ...prev, ...updated } : prev));

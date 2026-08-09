@@ -76,7 +76,7 @@ exports.getDashboard = async (req, res) => {
 
     res.json({
       // Identity (from auth User)
-      username: user.username,
+    username: user.username,
       email: user.email,
       avatarUrl: user.photo?.url || "",
       verified: !!user.photo?.verified,
@@ -85,6 +85,9 @@ exports.getDashboard = async (req, res) => {
       points: user.points || 0,
       quizStats: user.quizStats || { maxScore: 0, maxStreak: 0 },
       preferences: user.preferences || {},
+      companion: user.companion || {},
+      fullName: user.fullName || "",
+      bio: user.bio || "",
 
       // Game progress (from UserStats)
       level: stats.level || 1,
