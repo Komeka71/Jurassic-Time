@@ -357,11 +357,11 @@ md:pt-5
               hover:text-white
             "
           >
-            <span className="tracking-wide">
+            {/* <span className="tracking-wide">
               View Complete Anatomy
-            </span>
+            </span> */}
 
-            <ChevronRight size={20} />
+            {/* <ChevronRight size={20} /> */}
           </motion.button>
         )}
       </div>
