@@ -1,4 +1,4 @@
-import { allDinosaurs } from '../../data/allDinosaurs.js'
+import api from '../../api/axios.js'
 import { registerSearchCollection } from '../searchService.js'
 
 /**
@@ -17,7 +17,13 @@ registerSearchCollection({
   id: 'dinosaurs',
   label: 'Dinosaurs',
   searchFields: ['name', 'scientificName', 'era'],
-  getItems: () => allDinosaurs,
+  
+ 
+  getItems: async () => {
+    const { data } = await api.get('/v1/dinosaurs')
+    return data.data
+  },
+
   toResult: (dinosaur) => ({
     id: `dinosaurs:${dinosaur.id}`,
     type: 'dinosaurs',
