@@ -14,7 +14,7 @@ const LEDGER_ITEMS = [
 export default function MuseumIntro({
   videoSrc = "/videos/museum-hero.mp4",
   posterSrc = "/images/museum-hero-poster.jpg",
-  eyebrow = "JURASSIC TIME",
+  eyebrow = " ",
   subEyebrow = "MUSEUM ARCHIVE",
   title = ["WHERE TIME", "LEFT ITS MARK."],
   description = "Step through the archive of Earth's deep past — walk reconstructed halls, examine verified fossil evidence, and trace the species that ruled before us.",
