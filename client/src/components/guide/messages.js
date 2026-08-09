@@ -397,6 +397,87 @@ hybridLab: {
       "Try the Virtual Tour!",
       "The Archive is this way.",
     ],
+
+  },
+  dinoTrackDetective: {
+    idle: [
+      "🦶 Every footprint tells a story.",
+      "The sediment remembers who walked here.",
+      "Look closely at the toe spacing.",
+      "No skeletons here — just the tracks.",
+    ],
+
+    lookingAround: [
+      "That stride looks unusually wide...",
+      "Claw marks or padded toes? Look carefully.",
+      "This trail feels fresh... geologically speaking.",
+    ],
+
+    thinking: [
+      "Biped or quadruped — which is it?",
+      "Toe count is the first clue.",
+      "Hmm, let's compare it to the archive.",
+    ],
+
+    pointingRight: [
+      "Pick your answer, Detective!",
+      "Trust your observation.",
+    ],
+
+    happy: [
+      "Sharp eyes, Detective!",
+      "That's the kind of evidence real paleontologists look for.",
+    ],
+
+    celebrate: [
+      "Another trail cracked!",
+      "The archive is proud of you.",
+    ],
+
+    sad: [
+      "Not this time — but every clue helps.",
+      "Even museum experts get it wrong sometimes.",
+    ],
+  },
+  eraSorting: {
+    idle: [
+      "🕰️ Triassic, Jurassic, or Cretaceous?",
+      "Each era shaped different species.",
+      "The museum records need sorting!",
+      "Time is ticking, Explorer.",
+    ],
+
+    lookingAround: [
+      "That silhouette looks Jurassic to me...",
+      "Hmm, check the terrain clues.",
+      "Something about that shape seems older.",
+    ],
+
+    thinking: [
+      "Which era does this one belong to?",
+      "Drag it carefully now.",
+      "Trust your paleontology instincts.",
+    ],
+
+    pointingRight: [
+      "Drop it in the right era!",
+      "The zones are waiting.",
+    ],
+
+    happy: [
+      "Correct era!",
+      "The museum records thank you.",
+    ],
+
+    celebrate: [
+      "Perfect sorting, Explorer!",
+      "Every record restored!",
+    ],
+
+    sad: [
+      "Not quite the right era.",
+      "Close — but check the range again.",
+    ],
   },
   camp: {
     idle: [

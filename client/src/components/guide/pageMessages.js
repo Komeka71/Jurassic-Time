@@ -84,6 +84,16 @@ hybridLab: [
     "🦴 Step through and explore Earth's deep past.",
     "🎬 Try the Virtual Tour for a guided walk.",
   ],
+  dinoTrackDetective: [
+    "🦶 Welcome to the Track Identification Lab.",
+    "🔍 Study the footprints before you answer.",
+    "🧭 No timers here — take your time, Detective.",
+  ],
+  eraSorting: [
+    "🕰️ Welcome to Era Sorting!",
+    "🦕 Drag each dinosaur to its correct era.",
+    "⏳ Ninety seconds on the clock — go!",
+  ],
 };
 
 export function getPageMessage(page = "default") {
