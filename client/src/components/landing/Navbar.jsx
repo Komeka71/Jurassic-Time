@@ -103,7 +103,7 @@ export default function Navbar() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.55 }}
-      className={`${isHome ? "fixed" : "sticky"} top-0 left-0 right-0 z-50`}
+      className={`${isHome ? "fixed" : "sticky"} top-0 left-0 right-0 z-9999`}
     >
       <div className="relative z-[9999] border-b border-green-500/10 bg-black/20 backdrop-blur-3xl">
         {/* Backdrop — covers the full viewport, including behind the top bar */}
