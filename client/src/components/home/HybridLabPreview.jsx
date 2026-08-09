@@ -47,9 +47,12 @@ export default function HybridLabPreview({
   };
 
   return (
+    // NOTE: removed `overflow-hidden` from the section and added extra
+    // bottom padding (pb-32 / lg:pb-40) so the DinoGuide has room to sit
+    // fully below the lab panel without being clipped by the section edge.
     <section
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden bg-[#030706] text-white"
+      className="relative min-h-[130vh] lg:min-h-screen pb-32 lg:pb-40 bg-[#030706] text-white"
     >
       {/* =========================================================
           BACKGROUND VIDEO
@@ -71,19 +74,21 @@ export default function HybridLabPreview({
 
       {/* =========================================================
           VIDEO DARKENING
+          (opacities reduced across the board so the video actually
+          reads through the overlay instead of going near-black)
       ========================================================= */}
 
       {/* Main cinematic dark overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-[#020504]/70" />
+      <div className="pointer-events-none absolute inset-0 bg-[#020504]/35" />
 
       {/* Stronger darkness on the left for text */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/95 via-[#020504]/80 to-[#020504]/45" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/70 via-[#020504]/45 to-[#020504]/15" />
 
       {/* Stronger darkness toward bottom */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020504]/95 via-transparent to-[#020504]/50" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020504]/60 via-transparent to-[#020504]/25" />
 
       {/* Slight green/cyan atmosphere */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-950/20 via-transparent to-cyan-950/20" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-950/10 via-transparent to-cyan-950/10" />
 
       {/* =========================================================
           AMBIENT LIGHT
@@ -479,28 +484,31 @@ export default function HybridLabPreview({
       {/* =========================================================
           DINO GUIDE
           IMPORTANT:
-          OUTSIDE THE LAB PANEL
-          ANCHORED TO THE SECTION'S BOTTOM-RIGHT
+          - Section no longer clips overflow, and has extra bottom
+            padding, so the guide sits fully in view below the lab
+            panel instead of being cut off by the section edge.
+          - Positioned relative to the section bottom, pulled up
+            slightly less aggressively than before.
       ========================================================= */}
 
 <div
   className="
     pointer-events-auto
     absolute
-    bottom-[-25px]
-    right-[-45px]
+    bottom-0
+    right-[-20px]
     z-[60]
     scale-[0.72]
     origin-bottom-right
     sm:scale-[0.78]
-    md:right-[-50px]
-    md:bottom-[-30px]
+    md:right-[-25px]
+    md:bottom-2
     md:scale-[0.85]
-    lg:right-[-60px]
-    lg:bottom-[-35px]
+    lg:right-[-30px]
+    lg:bottom-4
     lg:scale-[0.9]
-    xl:right-[-70px]
-    xl:bottom-[-40px]
+    xl:right-[-40px]
+    xl:bottom-6
   "
 >
   <DinoGuide section="hybridLab" />
