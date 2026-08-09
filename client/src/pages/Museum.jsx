@@ -32,10 +32,26 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Museum.css";
+import { useState, useEffect } from "react";
+import MuseumIntro from "../components/museum/MuseumIntro";
+import { useGuide } from "../context/GuideContext"; // adjust path to match actual location relative to this file
 
 const Museum = () => {
   const navigate = useNavigate();
+  const [tourOpen, setTourOpen] = useState(false);
+  const { setCurrentPage } = useGuide();
+
+  useEffect(() => {
+    setCurrentPage("museumIntro");
+  }, [setCurrentPage]);
+
+  const handleExplore = () => {
+    navigate("/museum/archive");
+  };
+
+  const handleTour = () => {
+    setTourOpen(true);
+  };
 
   return (
     <main className="museum-page">

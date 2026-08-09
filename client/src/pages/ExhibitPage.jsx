@@ -1,11 +1,21 @@
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getExhibitBySlug } from "../data/museums.js";
 import MuseumFooter from "../components/museum/MuseumFooter.jsx";
+import HomeButton from "../components/Homebtn.jsx";
+import DinoGuide from "../components/guide/DinoGuide"; // adjust path to match actual location relative to this file
+import { useGuide } from "../context/GuideContext"; // adjust path to match actual location relative to this file
 
 export default function ExhibitPage() {
   const { slug, exhibitSlug } = useParams();
+  const navigate = useNavigate();
   const exhibit = getExhibitBySlug(slug, exhibitSlug);
+  const { setCurrentPage, tourActive } = useGuide();
+
+  useEffect(() => {
+    setCurrentPage("museum");
+  }, [setCurrentPage, slug, exhibitSlug]);
 
   if (!exhibit) {
     return <Navigate to={`/museum/${slug}`} replace />;
@@ -15,6 +25,8 @@ export default function ExhibitPage() {
 
   return (
     <main className="bg-bone">
+      <HomeButton onClick={() => navigate("/")} />
+
       <section className="fossil-photo relative flex h-[60vh] min-h-[420px] w-full items-end overflow-hidden">
         <motion.img
           initial={{ scale: 1.06, opacity: 0.7 }}
@@ -85,6 +97,25 @@ export default function ExhibitPage() {
       </section>
 
       <MuseumFooter />
+
+      {/* DinoGuide — bottom-right by default; flips to bottom-left
+          while the Virtual Tour overlay is active elsewhere, so it never
+          collides with the tour's audio panel (which docks bottom-right). */}
+      <div
+        className={`
+          fixed
+          bottom-5
+          ${tourActive ? "left-5 md:left-8" : "right-5 md:right-8"}
+          z-[9999]
+          scale-[0.65]
+          md:scale-[0.7]
+          ${tourActive ? "origin-bottom-left" : "origin-bottom-right"}
+          transition-all
+          duration-300
+        `}
+      >
+        <DinoGuide section="museum" />
+      </div>
     </main>
   );
 }

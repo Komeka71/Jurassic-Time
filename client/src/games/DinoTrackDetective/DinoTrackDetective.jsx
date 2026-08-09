@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './DinoTrackDetective.css';
 import { trails } from './data.js';
 import Intro from './components/Intro.jsx';
@@ -7,6 +7,8 @@ import QuestionPanel from './components/QuestionPanel.jsx';
 import MuseumAI from './components/MuseumAI.jsx';
 import ResultCard from './components/ResultCard.jsx';
 import Completion from './components/Completion.jsx';
+import DinoGuide from '../../components/guide/DinoGuide'; // adjust path to match actual location relative to this file
+import { useGuide } from '../../context/GuideContext'; // adjust path to match actual location relative to this file
 
 // Game phases:
 //   'intro'      museum welcome screen
@@ -29,6 +31,11 @@ export default function DinoTrackDetective() {
   const [outcome, setOutcome] = useState(null); // 'correct' | 'incorrect'
   const [correctCount, setCorrectCount] = useState(0);
   const [learnMoreNote, setLearnMoreNote] = useState(false);
+  const { setCurrentPage, setLastAction } = useGuide();
+
+  useEffect(() => {
+    setCurrentPage('dinoTrackDetective');
+  }, [setCurrentPage]);
 
   const currentDino = trails[trailIndex];
   const isLastTrail = trailIndex === trails.length - 1;
@@ -41,15 +48,17 @@ export default function DinoTrackDetective() {
       setSelectedAnswer(name);
       setOutcome(isCorrect ? 'correct' : 'incorrect');
       if (isCorrect) setCorrectCount((c) => c + 1);
+      setLastAction(isCorrect ? 'trackCorrect' : 'trackIncorrect');
       setPhase(PHASES.ANALYSIS);
     },
-    [currentDino]
+    [currentDino, setLastAction]
   );
 
   const handleAnalysisComplete = useCallback(() => setPhase(PHASES.RESULT), []);
 
   const handleNext = useCallback(() => {
     if (isLastTrail) {
+      setLastAction('trackInvestigationComplete');
       setPhase(PHASES.COMPLETION);
       return;
     }
@@ -58,7 +67,7 @@ export default function DinoTrackDetective() {
     setOutcome(null);
     setLearnMoreNote(false);
     setPhase(PHASES.QUESTION);
-  }, [isLastTrail]);
+  }, [isLastTrail, setLastAction]);
 
   const handleRestart = useCallback(() => {
     setTrailIndex(0);
@@ -76,10 +85,29 @@ export default function DinoTrackDetective() {
     setTimeout(() => setLearnMoreNote(false), 2200);
   }, []);
 
+  const dinoGuideNode = (
+    <div
+      className="
+        fixed
+        bottom-5
+        right-5
+        md:bottom-6
+        md:right-8
+        z-[9999]
+        scale-[1.05]
+        md:scale-[0.9]
+        origin-bottom-right
+      "
+    >
+      <DinoGuide section="dinoTrackDetective" />
+    </div>
+  );
+
   if (phase === PHASES.INTRO) {
     return (
       <div className="dtd">
         <Intro onBegin={handleBegin} totalTrails={trails.length} />
+        {dinoGuideNode}
       </div>
     );
   }
@@ -88,6 +116,7 @@ export default function DinoTrackDetective() {
     return (
       <div className="dtd">
         <Completion trails={trails} correctCount={correctCount} onRestart={handleRestart} />
+        {dinoGuideNode}
       </div>
     );
   }
@@ -139,6 +168,7 @@ export default function DinoTrackDetective() {
           )}
         </div>
       </div>
+      {dinoGuideNode}
     </div>
   );
 }

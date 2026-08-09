@@ -19,7 +19,53 @@ const actionMessages = {
     message:
       "Interesting discovery! Let's examine this fossil more closely.",
   },
+  eraSortingCorrect: {
+    mood: "happy",
+    message: "Right era! Nicely sorted.",
+  },
 
+  eraSortingWrong: {
+    mood: "shushing",
+    message: "Wrong era — check the range and try again.",
+  },
+
+  eraSortingWon: {
+    mood: "celebrate",
+    message: "Every specimen sorted perfectly!",
+  },
+
+  eraSortingTimeout: {
+    mood: "sad",
+    message: "Time ran out — but now you know where they belong.",
+  },
+  fossilFound: {
+    mood: "happy",
+    message: "You found something! Let's take a closer look.",
+  },
+
+  excavationEmpty: {
+    mood: "thinking",
+    message: "Nothing there — but the next marker might hide something.",
+  },
+
+  fossilIdentified: {
+    mood: "celebrate",
+    message: "Species identified! Another one for the collection.",
+  },
+trackCorrect: {
+    mood: "happy",
+    message: "Great eye! That's exactly the right track.",
+  },
+
+  trackIncorrect: {
+    mood: "thinking",
+    message: "Close, but not quite — let's look again.",
+  },
+
+  trackInvestigationComplete: {
+    mood: "celebrate",
+    message: "Case closed! Every trail identified.",
+  },
   // NEW
   overviewViewed: {
     mood: "thinking",

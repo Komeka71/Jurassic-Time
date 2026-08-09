@@ -345,6 +345,180 @@ hybridLab: {
       "That's classified equipment, Explorer!",
     ],
   },
+  museum: {
+    idle: [
+      "🏛️ So many halls, so little time.",
+      "Every specimen here has a story.",
+      "This collection took decades to build.",
+      "I could spend all day in these galleries.",
+    ],
+
+    lookingAround: [
+      "That skeleton looks freshly excavated.",
+      "I wonder how long that mount took to build.",
+      "Something in this hall feels ancient.",
+    ],
+
+    thinking: [
+      "Which gallery should we visit first?",
+      "So many museums, so many stories...",
+      "I wonder what's in the archive today.",
+    ],
+
+    pointingRight: [
+      "Try the audio guide for this one!",
+      "That exhibit is worth a closer look.",
+      "Don't skip the virtual tour!",
+    ],
+
+    happy: [
+      "Great choice of museum!",
+      "This collection is one of my favorites.",
+    ],
+
+    celebrate: [
+      "You've explored the whole gallery!",
+      "Another museum, fully explored!",
+    ],
+  },
+  // messages.js — inside sectionMessages
+  museumIntro: {
+    idle: [
+      "Welcome to the Deep Time Collection.",
+      "Every record here is verified.",
+      "The archive goes back millions of years.",
+      "Step inside when you're ready.",
+    ],
+    thinking: [
+      "Archive or Virtual Tour — where to first?",
+      "So much history behind these doors...",
+    ],
+    pointingRight: [
+      "Try the Virtual Tour!",
+      "The Archive is this way.",
+    ],
+
+  },
+  dinoTrackDetective: {
+    idle: [
+      "🦶 Every footprint tells a story.",
+      "The sediment remembers who walked here.",
+      "Look closely at the toe spacing.",
+      "No skeletons here — just the tracks.",
+    ],
+
+    lookingAround: [
+      "That stride looks unusually wide...",
+      "Claw marks or padded toes? Look carefully.",
+      "This trail feels fresh... geologically speaking.",
+    ],
+
+    thinking: [
+      "Biped or quadruped — which is it?",
+      "Toe count is the first clue.",
+      "Hmm, let's compare it to the archive.",
+    ],
+
+    pointingRight: [
+      "Pick your answer, Detective!",
+      "Trust your observation.",
+    ],
+
+    happy: [
+      "Sharp eyes, Detective!",
+      "That's the kind of evidence real paleontologists look for.",
+    ],
+
+    celebrate: [
+      "Another trail cracked!",
+      "The archive is proud of you.",
+    ],
+
+    sad: [
+      "Not this time — but every clue helps.",
+      "Even museum experts get it wrong sometimes.",
+    ],
+  },
+  eraSorting: {
+    idle: [
+      "🕰️ Triassic, Jurassic, or Cretaceous?",
+      "Each era shaped different species.",
+      "The museum records need sorting!",
+      "Time is ticking, Explorer.",
+    ],
+
+    lookingAround: [
+      "That silhouette looks Jurassic to me...",
+      "Hmm, check the terrain clues.",
+      "Something about that shape seems older.",
+    ],
+
+    thinking: [
+      "Which era does this one belong to?",
+      "Drag it carefully now.",
+      "Trust your paleontology instincts.",
+    ],
+
+    pointingRight: [
+      "Drop it in the right era!",
+      "The zones are waiting.",
+    ],
+
+    happy: [
+      "Correct era!",
+      "The museum records thank you.",
+    ],
+
+    celebrate: [
+      "Perfect sorting, Explorer!",
+      "Every record restored!",
+    ],
+
+    sad: [
+      "Not quite the right era.",
+      "Close — but check the range again.",
+    ],
+  },
+  fossilExcavation: {
+    idle: [
+      "🪨 Somewhere under this dirt, history is waiting.",
+      "Brush carefully — fossils are fragile.",
+      "Every dig site holds different secrets.",
+      "Patience makes the best paleontologist.",
+    ],
+
+    lookingAround: [
+      "That marker looks promising...",
+      "I have a feeling about this spot.",
+      "Something's buried near here.",
+    ],
+
+    thinking: [
+      "Which marker should we try?",
+      "Careful excavation beats rushing.",
+      "I wonder what's beneath the surface.",
+    ],
+
+    pointingRight: [
+      "Try that marker!",
+      "Dig there, Explorer!",
+    ],
+
+    happy: [
+      "Nice find!",
+      "The museum will want to see this.",
+    ],
+
+    celebrate: [
+      "Fossil identified! Excellent work.",
+      "Another species for the collection!",
+    ],
+
+    sad: [
+      "Empty this time — try another marker.",
+      "No fossil here, but don't give up.",
+    ],
+  },
   camp: {
     idle: [
       "Welcome back to camp.",

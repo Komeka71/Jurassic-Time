@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './EraSorting.css';
 import { ERAS, DINOSAURS, pickRoster } from './dinosaurs';
-import HomeButton from '../../components/Homebtn.jsx'; // adjust this path to match where Homebtn.jsx actually lives relative to this file
+import HomeButton from '../../components/Homebtn.jsx';
+import DinoGuide from '../../components/guide/DinoGuide'; // adjust path to match actual location relative to this file
+import { useGuide } from '../../context/GuideContext'; // adjust path to match actual location relative to this file
 import { useNavigate } from 'react-router-dom';
 
 // -----------------------------------------------------------------------
@@ -9,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 // -----------------------------------------------------------------------
 const GAME_SECONDS = 90;
 const HINT_COUNT = 3;
-const AUTO_PLACE_STAGGER_MS = 260; // delay between each auto-placed dino at timeout
-const TIMESUP_PAUSE_MS = 2000; // pause on the "Time's Up!" overlay before auto-sorting begins
-const FEEDBACK_MS = 650; // how long the shake / "try again" note stays visible
+const AUTO_PLACE_STAGGER_MS = 260;
+const TIMESUP_PAUSE_MS = 2000;
+const FEEDBACK_MS = 650;
 
 function formatTime(totalSeconds) {
   const m = Math.floor(totalSeconds / 60)
@@ -24,9 +26,7 @@ function formatTime(totalSeconds) {
 }
 
 // -----------------------------------------------------------------------
-// Stylized dinosaur silhouette icons (no external art assets required).
-// Each is a simple, elegant single-path shape used consistently across
-// the collectible cards — think museum signage, not a photo.
+// Stylized dinosaur silhouette icons
 // -----------------------------------------------------------------------
 function DinoSilhouette({ shape, className }) {
   const paths = {
@@ -56,8 +56,7 @@ function DinoSilhouette({ shape, className }) {
 }
 
 // -----------------------------------------------------------------------
-// Ambient scene: layered fog, drifting clouds, and floating light motes.
-// Purely decorative, purely CSS-driven.
+// Ambient scene
 // -----------------------------------------------------------------------
 function AmbientScene() {
   return (
@@ -148,8 +147,7 @@ function IntroOverlay({ onStart, closing }) {
 }
 
 // -----------------------------------------------------------------------
-// Brief "Time's Up!" transition — shown for a beat before the remaining
-// dinosaurs auto-sort, so the moment reads as educational, not punishing.
+// Time's Up overlay
 // -----------------------------------------------------------------------
 function TimesUpOverlay() {
   return (
@@ -164,7 +162,7 @@ function TimesUpOverlay() {
 }
 
 // -----------------------------------------------------------------------
-// End screen (win or timeout)
+// End screen
 // -----------------------------------------------------------------------
 function EndScreen({ status, score, total, timeRemaining, roster, placements, onRestart, onBackToGames }) {
   const isWin = status === 'won';
@@ -273,7 +271,7 @@ function DinoCard({ dino, isSelected, feedback, draggable, onSelect, onDragStart
 }
 
 // -----------------------------------------------------------------------
-// Drop zone (one per era)
+// Drop zone
 // -----------------------------------------------------------------------
 function DropZone({ era, placedDinos, isPulsing, isDragTarget, onDragOver, onDrop, onClick }) {
   return (
@@ -325,31 +323,32 @@ function DropZone({ era, placedDinos, isPulsing, isDragTarget, onDragOver, onDro
 // -----------------------------------------------------------------------
 // Main component
 // -----------------------------------------------------------------------
-// ...keep your other imports
-
 export default function EraSorting() {
   const navigate = useNavigate();
+  const { setCurrentPage, setLastAction } = useGuide();
+
+  useEffect(() => {
+    setCurrentPage('eraSorting');
+  }, [setCurrentPage]);
 
   const onNavigateGames = () => {
     navigate('/#mini-games');
   };
-  // phase: 'intro' | 'playing' | 'timesup' | 'won' | 'timeout'
+
   const [phase, setPhase] = useState('intro');
   const [introClosing, setIntroClosing] = useState(false);
 
-  // roster: this playthrough's random 10-dinosaur selection, redrawn on restart.
   const [roster, setRoster] = useState(() => pickRoster());
   const [order, setOrder] = useState(() => roster.map((d) => d.id));
-  // placements: { [dinoId]: { era: 'triassic', correct: true } }
   const [placements, setPlacements] = useState({});
   const [selectedId, setSelectedId] = useState(null);
   const [dragOverEra, setDragOverEra] = useState(null);
-  const [cardFeedback, setCardFeedback] = useState({}); // dinoId -> 'wrong' | 'hint'
+  const [cardFeedback, setCardFeedback] = useState({});
 
   const [secondsLeft, setSecondsLeft] = useState(GAME_SECONDS);
   const [hintsLeft, setHintsLeft] = useState(HINT_COUNT);
-  const [hintZone, setHintZone] = useState(null); // era id currently pulsing from a hint
-  const [locked, setLocked] = useState(false); // true while auto-resolving at timeout
+  const [hintZone, setHintZone] = useState(null);
+  const [locked, setLocked] = useState(false);
 
   const timerRef = useRef(null);
   const feedbackTimers = useRef({});
@@ -365,7 +364,6 @@ export default function EraSorting() {
     [order, placements]
   );
 
-  // --- Timer ---
   useEffect(() => {
     if (phase !== 'playing') return undefined;
     timerRef.current = setInterval(() => {
@@ -380,23 +378,15 @@ export default function EraSorting() {
     return () => clearInterval(timerRef.current);
   }, [phase]);
 
-  // --- Win detection ---
-  // `!locked` matters here: while the timeout auto-sort is running, phase is
-  // briefly 'playing' again so the board is visible, and score naturally
-  // reaches roster.length once the last card lands. Without this guard that
-  // would trigger the win screen instead of the intended timeout recap.
   useEffect(() => {
     if (phase === 'playing' && !locked && score === roster.length) {
       clearInterval(timerRef.current);
+      setLastAction('eraSortingWon');
       setPhase('won');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, phase, roster, locked]);
 
-  // --- Timeout: show a "Time's Up!" beat, then auto-place remaining with a
-  //     stagger, then show the recap. Keeps the moment educational, not abrupt.
-  //     Guarded by a ref (not just `phase`) because this effect itself changes
-  //     `phase` mid-sequence — depending on `phase` alone would cause the
-  //     effect to re-fire and cancel its own pending timers. ---
   const timeoutStartedRef = useRef(false);
   const pendingTimersRef = useRef([]);
 
@@ -407,7 +397,7 @@ export default function EraSorting() {
       setPhase('timesup');
 
       const pauseTimer = setTimeout(() => {
-        setPhase('playing'); // reveal the board so the auto-sort is visible, not hidden behind the overlay
+        setPhase('playing');
         const missing = order.filter((id) => !placements[id]);
         missing.forEach((id, i) => {
           const t = setTimeout(() => {
@@ -421,6 +411,7 @@ export default function EraSorting() {
         const totalDelay = missing.length * AUTO_PLACE_STAGGER_MS + 500;
         const finalTimer = setTimeout(() => {
           setLocked(false);
+          setLastAction('eraSortingTimeout');
           setPhase('timeout');
         }, totalDelay);
         pendingTimersRef.current.push(finalTimer);
@@ -431,7 +422,6 @@ export default function EraSorting() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondsLeft, phase]);
 
-  // cleanup any pending timers on unmount
   useEffect(() => {
     return () => {
       Object.values(feedbackTimers.current).forEach(clearTimeout);
@@ -458,16 +448,17 @@ export default function EraSorting() {
       if (dino.era === eraId) {
         setPlacements((prev) => ({ ...prev, [dinoId]: { era: eraId, correct: true } }));
         setHintZone(null);
+        setLastAction('eraSortingCorrect');
       } else {
         flashFeedback(dinoId, 'wrong');
+        setLastAction('eraSortingWrong');
       }
       setSelectedId(null);
       setDragOverEra(null);
     },
-    [dinoById, locked, placements, flashFeedback]
+    [dinoById, locked, placements, flashFeedback, setLastAction]
   );
 
-  // --- Drag handlers (desktop) ---
   const handleDragStart = (e, dinoId) => {
     if (locked) return;
     e.dataTransfer.setData('text/plain', dinoId);
@@ -475,7 +466,6 @@ export default function EraSorting() {
   };
   const handleDragEnd = () => setDragOverEra(null);
 
-  // --- Tap-to-select fallback (touch / accessibility friendly) ---
   const handleSelect = (dinoId) => {
     if (locked || placements[dinoId]) return;
     setSelectedId((prev) => (prev === dinoId ? null : dinoId));
@@ -490,9 +480,6 @@ export default function EraSorting() {
     if (dinoId) attemptPlacement(dinoId, eraId);
   };
 
-  // Lets a regular vertical mouse wheel scroll the single-row card tray
-  // horizontally — only when the tray actually overflows, so the page's
-  // normal vertical scroll is left alone otherwise.
   const handleTrayWheel = (e) => {
     const el = trayRef.current;
     if (!el || el.scrollWidth <= el.clientWidth) return;
@@ -502,7 +489,6 @@ export default function EraSorting() {
     }
   };
 
-  // --- Hint ---
   const useHint = () => {
     if (hintsLeft <= 0 || locked || remainingIds.length === 0) return;
     const targetId = remainingIds[Math.floor(Math.random() * remainingIds.length)];
@@ -513,7 +499,6 @@ export default function EraSorting() {
     setTimeout(() => setHintZone(null), 2200);
   };
 
-  // --- Lifecycle actions ---
   const startGame = () => {
     setIntroClosing(true);
     setTimeout(() => {
@@ -552,15 +537,10 @@ export default function EraSorting() {
     <div className="es-root">
       <AmbientScene />
 
-      {/* Global home button — replaces the old inline "Back to Home" link */}
-<HomeButton onClick={() => navigate('/')} />
+      <HomeButton onClick={() => navigate('/')} />
 
-      {/* Navigation */}
-      <nav className="es-nav">
-        
-      </nav>
+      <nav className="es-nav"></nav>
 
-      {/* Header */}
       <header className="es-header">
         <h1 className="es-header__title">Era Sorting</h1>
         <p className="es-header__subtitle">
@@ -568,10 +548,8 @@ export default function EraSorting() {
         </p>
       </header>
 
-      {/* HUD */}
       <div className="es-hud">
         <div className="es-hud__left">
-          
           <button
             className="es-chip es-chip--hint"
             onClick={useHint}
@@ -592,7 +570,6 @@ export default function EraSorting() {
         </div>
       </div>
 
-      {/* Drop zones */}
       <main className="es-board">
         {ERAS.map((era) => (
           <DropZone
@@ -608,7 +585,6 @@ export default function EraSorting() {
         ))}
       </main>
 
-      {/* Card tray */}
       <div className="es-tray">
         <div className="es-tray__scroller" ref={trayRef} onWheel={handleTrayWheel}>
           {order
@@ -631,7 +607,6 @@ export default function EraSorting() {
         </div>
       </div>
 
-      {/* Overlays */}
       {phase === 'intro' && <IntroOverlay onStart={startGame} closing={introClosing} />}
       {phase === 'timesup' && <TimesUpOverlay />}
       {(phase === 'won' || phase === 'timeout') && (
@@ -646,6 +621,24 @@ export default function EraSorting() {
           onBackToGames={onNavigateGames}
         />
       )}
+{(phase === 'intro' || phase === 'playing') && (
+  <div
+    className="
+      fixed
+      bottom-2
+      right-4
+      md:bottom-3
+      md:right-6
+      z-[9999]
+      scale-[0.55]
+      md:scale-[0.65]
+      origin-bottom-right
+      pointer-events-none
+    "
+  >
+    <DinoGuide section="eraSorting" />
+  </div>
+)}
     </div>
   );
 }

@@ -72,6 +72,33 @@ hybridLab: [
     "👋 Welcome back!",
     "🦖 Ready for another adventure?",
   ],
+  museum: [
+    "🏛️ Welcome to the Museum Explorer!",
+    "🦴 Every hall holds a different era of Earth's history.",
+    "🎧 Try the audio guide for the full experience.",
+    "🗺️ Pick a museum and start exploring.",
+  ],
+  // pageMessages.js
+  museumIntro: [
+    "🏛️ Welcome to the Museum Archive.",
+    "🦴 Step through and explore Earth's deep past.",
+    "🎬 Try the Virtual Tour for a guided walk.",
+  ],
+  dinoTrackDetective: [
+    "🦶 Welcome to the Track Identification Lab.",
+    "🔍 Study the footprints before you answer.",
+    "🧭 No timers here — take your time, Detective.",
+  ],
+  eraSorting: [
+    "🕰️ Welcome to Era Sorting!",
+    "🦕 Drag each dinosaur to its correct era.",
+    "⏳ Ninety seconds on the clock — go!",
+  ],
+  fossilExcavation: [
+    "🪨 Welcome to Fossil Excavation!",
+    "🖌️ Brush carefully to reveal what's buried.",
+    "🗺️ Choose a dig site and start exploring.",
+  ],
 };
 
 export function getPageMessage(page = "default") {

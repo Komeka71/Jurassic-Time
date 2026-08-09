@@ -1,5 +1,6 @@
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { museums, getMuseumBySlug } from "../data/museums.js";
 import Collections from "../components/museum/Collections.jsx";
 import FeaturedExhibits from "../components/museum/FeaturedExhibits.jsx";
@@ -13,6 +14,9 @@ import MuseumSpotlight from "../components/museum/MuseumSpotlight.jsx";
 import VirtualTour from "../components/museum/VirtualTour.jsx";
 import AudioGuide from "../components/museum/AudioGuide.jsx";
 import { AudioGuideProvider } from "../components/museum/AudioGuideContext.jsx";
+import HomeButton from "../components/Homebtn.jsx";
+import DinoGuide from "../components/guide/DinoGuide";
+import { useGuide } from "../context/GuideContext";
 
 const AUDIO_SUBTITLES = {
   "royal-tyrrell": "Walking Through Deep Time",
@@ -37,32 +41,29 @@ const SECTIONS = [
 const MUSEUM_FACTS = {
   "royal-tyrrell":
     "The Canadian Badlands continue to reveal new dinosaur fossils almost every year.",
-
   "field-museum":
     "SUE is one of the largest and most complete Tyrannosaurus rex skeletons ever discovered.",
-
   smithsonian:
     "The Smithsonian's fossil hall presents over 700 fossil specimens spanning Earth's history.",
-
   "nhm-london":
     "The Natural History Museum houses more than 80 million scientific specimens.",
-
   fukui:
     "Fukui Prefecture has produced many of Japan's most important dinosaur discoveries.",
-
   zigong:
     "The Zigong Dinosaur Museum was built directly above an active fossil excavation site.",
-
   raiyoli:
     "Raiyoli is one of the world's largest dinosaur nesting grounds, with hundreds of fossilized eggs discovered."
 };
-/**
- * MuseumPage is fully data-driven: it takes no museum-specific logic,
- * only a slug from the route, and renders whichever museum object matches.
- */
+
 export default function MuseumPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const museum = getMuseumBySlug(slug);
+  const { setCurrentPage, tourActive } = useGuide();
+
+  useEffect(() => {
+    setCurrentPage("museum");
+  }, [setCurrentPage, slug]);
 
   if (!museum) {
     return <Navigate to="/" replace />;
@@ -71,7 +72,9 @@ export default function MuseumPage() {
   const related = museums.filter((m) => m.slug !== museum.slug).slice(0, 3);
 
   return (
-    <main className="bg-bone">
+    <main className="relative bg-bone">
+      <HomeButton onClick={() => navigate("/")} />
+
       <CoreSampleRail sections={SECTIONS} />
       {/* Hero */}
       <MuseumSpotlight>
@@ -151,6 +154,25 @@ export default function MuseumPage() {
         <AudioGuide museumName={museum.name} subtitle="Official Museum Audio Guide" />
       </AudioGuideProvider>
       <MuseumFooter />
+
+      {/* DinoGuide — bottom-right by default; flips to bottom-left while
+          the Virtual Tour overlay is open, so it never sits on top of
+          the tour's audio-guide card (which docks bottom-right). */}
+      <div
+        className={`
+          fixed
+          bottom-5
+          ${tourActive ? "left-5 md:left-8" : "right-5 md:right-8"}
+          z-[9999]
+          scale-[0.65]
+          md:scale-[0.7]
+          ${tourActive ? "origin-bottom-left" : "origin-bottom-right"}
+          transition-all
+          duration-300
+        `}
+      >
+        <DinoGuide section="museum" />
+      </div>
     </main>
   );
 }
