@@ -55,16 +55,16 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-4 max-w-5xl">
-      <h1 className="text-2xl font-semibold text-green-50">User Management</h1>
+      <h1 className="text-2xl font-semibold text-stone-100">User Management</h1>
 
       {error && <p className="text-red-400 text-sm">{error}</p>}
-      {loading && <p className="text-emerald-400 text-sm">Loading…</p>}
+      {loading && <p className="text-stone-400 text-sm">Loading…</p>}
 
       {!loading && (
-        <div className="rounded-lg border border-emerald-900 bg-emerald-950 overflow-hidden">
+        <div className="rounded-lg border border-stone-800 bg-stone-900 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-emerald-900 text-left text-emerald-400">
+              <tr className="border-b border-stone-800 text-left text-stone-400">
                 <th className="px-4 py-3 font-medium">Username</th>
                 <th className="px-4 py-3 font-medium">Email</th>
                 <th className="px-4 py-3 font-medium">Role</th>
@@ -78,20 +78,20 @@ export default function AdminUsers() {
                 const userId = u.id || u._id;
                 const isSelf = userId === currentUser?.id;
                 return (
-                  <tr key={userId} className="border-b border-emerald-900/60 last:border-0">
-                    <td className="px-4 py-3 text-green-50">
+                  <tr key={userId} className="border-b border-stone-800/60 last:border-0">
+                    <td className="px-4 py-3 text-stone-100">
                       {u.username}
                       {isSelf && (
-                        <span className="ml-2 text-[10px] text-emerald-600">(you)</span>
+                        <span className="ml-2 text-[10px] text-stone-500">(you)</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-emerald-400">{u.email}</td>
+                    <td className="px-4 py-3 text-stone-400">{u.email}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`text-xs font-mono px-2 py-0.5 rounded-full border ${
                           u.role === "admin"
-                            ? "border-lime-400/30 text-lime-400"
-                            : "border-emerald-800 text-emerald-400"
+                            ? "border-emerald-400/30 text-emerald-400"
+                            : "border-stone-700 text-stone-400"
                         }`}
                       >
                         {u.role}
@@ -108,7 +108,7 @@ export default function AdminUsers() {
                         {u.status || "active"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-emerald-400">
+                    <td className="px-4 py-3 text-stone-400">
                       {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"}
                     </td>
                     <td className="px-4 py-3">
@@ -117,7 +117,7 @@ export default function AdminUsers() {
                           <button
                             disabled={actingId === userId || isSelf}
                             onClick={() => changeRole(userId, "user")}
-                            className="text-xs px-2.5 py-1 rounded-md border border-emerald-800 text-emerald-300 hover:bg-emerald-900 transition-colors disabled:opacity-40"
+                            className="text-xs px-2.5 py-1 rounded-md border border-stone-700 text-stone-300 hover:bg-stone-800 transition-colors disabled:opacity-40"
                           >
                             Demote
                           </button>
@@ -125,7 +125,7 @@ export default function AdminUsers() {
                           <button
                             disabled={actingId === userId}
                             onClick={() => changeRole(userId, "admin")}
-                            className="text-xs px-2.5 py-1 rounded-md border border-lime-400/30 text-lime-400 hover:bg-lime-400/10 transition-colors disabled:opacity-40"
+                            className="text-xs px-2.5 py-1 rounded-md border border-emerald-400/30 text-emerald-400 hover:bg-emerald-400/10 transition-colors disabled:opacity-40"
                           >
                             Promote
                           </button>
