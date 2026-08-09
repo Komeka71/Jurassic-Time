@@ -40,13 +40,15 @@ export default function AdminLayout() {
           open ? "w-56" : "w-16"
         } shrink-0 border-r border-stone-800 bg-stone-900 transition-all duration-200 flex flex-col`}
       >
-        <div className="h-16 flex items-center justify-between px-4 border-b border-stone-800">
-          {open && (
-            <span className="font-display text-lg tracking-tight text-emerald-400">
-              Paleora
-            </span>
-          )}
-          <button
+    <div className="h-16 flex items-center justify-between px-4 border-b border-stone-800">
+  {open && (
+    <img
+      src="/logo.png"
+      alt="Paleora"
+      className="h-8 w-auto object-contain"
+    />
+  )}
+  <button
             onClick={() => setOpen((v) => !v)}
             className="p-1.5 rounded-md text-stone-400 hover:text-emerald-400 hover:bg-stone-800 transition-colors"
             aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
