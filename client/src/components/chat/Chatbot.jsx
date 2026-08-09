@@ -144,9 +144,14 @@ function appendAssistantMessage(setMessages, text) {
   });
 }
 
-export default function Chatbot({ personalization, page, userName }) {
+export default function Chatbot({
+  personalization,
+  page,
+  userName,
+  buttonPosition = "bottom-right",
+}) {
   const [open, setOpen] = useState(false);
-  const { currentPage, currentDinosaur, lastAction } = useGuide();
+  const { currentPage, currentDinosaur, lastAction, quizActive } = useGuide();
 
   // A page can pass its own identity explicitly so the guide's very first
   // welcome message never has to guess from shared context before that
@@ -250,6 +255,14 @@ export default function Chatbot({ personalization, page, userName }) {
           page: effectivePage,
           userName,
 
+          // True only while the user is actively answering a quiz question
+          // (i.e. before the reward chest/summary screen appears). Drives a
+          // hard server-side lock so Paleo can never leak or hint at an
+          // answer, regardless of how the question is phrased.
+          quizActive: effectivePage?.startsWith("quiz")
+            ? !!quizActive
+            : false,
+
           purpose:
             personalization?.purpose || personalization?.preferences?.purpose,
 
@@ -330,11 +343,15 @@ export default function Chatbot({ personalization, page, userName }) {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="
+          className={`
             fixed
-            bottom-8
-            right-8
             z-50
+
+            ${
+              buttonPosition === "top-right"
+                ? "top-5 right-5 md:top-6 md:right-8"
+                : "bottom-8 right-8"
+            }
 
             w-14
             h-14
@@ -359,7 +376,7 @@ export default function Chatbot({ personalization, page, userName }) {
 
             transition-all
             duration-300
-          "
+          `}
         >
           <MessageCircleMore
             size={26}
@@ -393,28 +410,42 @@ export default function Chatbot({ personalization, page, userName }) {
               stiffness: 320,
               damping: 28,
             }}
-            className="
+            className={`
               fixed
-              bottom-4
-left-1/2
--translate-x-1/2
 
-md:bottom-6
+              ${
+                buttonPosition === "top-right"
+                  ? `
+                    top-20
+                    md:top-24
+                    right-4
+                    md:right-8
+                    left-auto
+                    translate-x-0
+                  `
+                  : `
+                    bottom-4
+                    left-1/2
+                    -translate-x-1/2
 
-xl:right-6
-xl:left-auto
-xl:translate-x-0
-xl:bottom-24
+                    md:bottom-6
+
+                    xl:right-6
+                    xl:left-auto
+                    xl:translate-x-0
+                    xl:bottom-24
+                  `
+              }
 
               w-[calc(100vw-2rem)]
-max-w-[440px]
+              max-w-[440px]
 
-h-[75vh]
-max-h-[620px]
-rounded-[30px]
-lg:rounded-[34px]
+              h-[75vh]
+              max-h-[620px]
+              rounded-[30px]
+              lg:rounded-[34px]
               bg-[#0B1113]/88
-             backdrop-blur-2xl
+              backdrop-blur-2xl
               border
               border-white/10
 
@@ -426,7 +457,7 @@ lg:rounded-[34px]
 
               flex
               flex-col
-            "
+            `}
           >
             <ChatHeader onClose={() => setOpen(false)} />
 
