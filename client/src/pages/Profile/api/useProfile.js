@@ -49,14 +49,17 @@ export function useProfile() {
 
   useEffect(() => { refresh(); }, [refresh]);
 
-  const profile = raw && {
+const profile = raw && {
     username: raw.username,
     email: raw.email,
     avatarUrl: raw.avatarUrl,
+    companionId: raw.companion?.companionId,
+    companionName: raw.companion?.name,
+    equippedItems: raw.equippedItems || {},
     rank: `Level ${raw.level} Explorer`,
     level: raw.level,
     xp: raw.xp,
-    xpToNext: (raw.level || 1) * 250, // matches the xpPerLevel=250 constant used elsewhere in your app
+    xpToNext: (raw.level || 1) * 250,
     coins: raw.coins,
     dailyStreak: raw.dailyStreak,
     currentBadge: raw.badges?.[raw.badges.length - 1] || "New Recruit",
@@ -78,7 +81,7 @@ export function useProfile() {
       date: q.date,
       difficulty: q.difficulty || "-",
       topic: q.topic || "-",
-      accuracy: q.score, // your frontend already sends accuracy % as `score`
+      accuracy: q.score,
       xpEarned: q.xpEarned ?? "-",
       coinsEarned: q.coinsEarned ?? "-",
       timeTaken: q.timeTaken ? `${q.timeTaken}s` : "-",

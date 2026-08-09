@@ -19,7 +19,12 @@ const pageMessages = {
     "🦴 Explore where legendary fossils were discovered.",
     "📍 Click the Earth to enter the interactive map.",
   ],
-
+hybridLab: [
+    "🔒 Restricted access. Proceed carefully.",
+    "🧬 Welcome to the fusion of two extinct worlds.",
+    "⚠️ Some experiments here... will they survive?",
+    "🦖 Ready to create something that hasn't existed in millions of years?",
+  ],
   quiz: [
     "📚 Read the question carefully!",
     "🤔 Think before selecting your answer.",

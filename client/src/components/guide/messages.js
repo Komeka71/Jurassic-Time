@@ -293,7 +293,58 @@ const sectionMessages = {
       "Every expedition made you stronger.",
     ],
   },
+hybridLab: {
+    idle: [
+      "🔒 Restricted access beyond this point.",
+      "I smell fossils nearby...",
+      "The DNA archives never sleep.",
+      "This lab holds secrets older than time.",
+      "Careful... some experiments are still active.",
+    ],
 
+    lookingAround: [
+      "Did you hear that hum from the reactor?",
+      "Something's stirring in containment.",
+      "I think a sample just moved...",
+      "The scanners are picking up something new.",
+    ],
+
+    thinking: [
+      "What happens when you fuse two extinct species?",
+      "Ancient DNA... modern science...",
+      "I wonder what's behind clearance level 6.",
+      "Some of these hybrids shouldn't exist. Yet here we are.",
+    ],
+
+    pointingRight: [
+      "Enter if you dare, Explorer.",
+      "The portal is stable. Mostly.",
+      "Step through — clearance granted.",
+      "This way to the DNA sequencer.",
+    ],
+
+    happy: [
+      "Fusion complete! Let's see what we made.",
+      "Another hybrid successfully stabilized!",
+      "Science just got a lot more interesting.",
+    ],
+
+    celebrate: [
+      "🧬 A new hybrid organism has survived!",
+      "Incredible! It's stable and thriving!",
+      "You just made paleontology history.",
+    ],
+
+    sad: [
+      "The specimen... didn't survive the fusion.",
+      "Not every experiment succeeds. Try again?",
+    ],
+
+    angry: [
+      "Whoa — careful near the containment field!",
+      "That's classified equipment, Explorer!",
+    ],
+  },
   camp: {
     idle: [
       "Welcome back to camp.",

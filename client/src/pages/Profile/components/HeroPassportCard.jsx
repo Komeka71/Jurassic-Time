@@ -1,14 +1,30 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { BadgeCheck, Coins, Flame } from "lucide-react";
-
+import Avatar from "../../../components/Avatar";
 function xpPercent(xp, xpToNext) {
   if (!xpToNext) return 0;
   return Math.min(100, Math.round((xp / xpToNext) * 100));
 }
 
 export default function HeroPassportCard({ profile, onEdit }) {
-  const { username, email, avatarUrl, rank, level, xp, xpToNext, coins, dailyStreak, currentBadge, verified, joinDate, online } = profile;
+  const {
+    username,
+    email,
+    companionId,
+    companionName,
+    equippedItems,
+    rank,
+    level,
+    xp,
+    xpToNext,
+    coins,
+    dailyStreak,
+    currentBadge,
+    verified,
+    joinDate,
+    online,
+  } = profile;
 
   return (
     <motion.div
@@ -30,11 +46,25 @@ export default function HeroPassportCard({ profile, onEdit }) {
                 background: "linear-gradient(135deg, var(--jt-amber), var(--jt-teal))",
               }}
             >
-              <img
-                src={avatarUrl || "/default-avatar.png"}
-                alt={username}
-                style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover", background: "var(--jt-moss)" }}
-              />
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  background: "var(--jt-moss)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Avatar
+                  companionId={companionId}
+                  companionName={companionName || username}
+                  equippedItems={equippedItems}
+                  size="100%"
+                />
+              </div>
             </div>
             <span
               title={online ? "Online" : "Offline"}
@@ -49,7 +79,6 @@ export default function HeroPassportCard({ profile, onEdit }) {
                 border: "3px solid var(--jt-bg-2)",
               }}
             />
-    
           </div>
 
           {/* Identity */}
@@ -88,7 +117,15 @@ export default function HeroPassportCard({ profile, onEdit }) {
               <MiniStat icon={<Coins size={16} color="var(--jt-amber-2)" />} value={coins} />
               <MiniStat icon={<Flame size={16} color="#f97316" />} value={`${dailyStreak}d`} />
             </div>
-            
+
+            <button
+              type="button"
+              onClick={onEdit}
+              className="jt-btn-amber"
+              style={{ fontSize: 13, padding: "6px 14px" }}
+            >
+              Edit Profile
+            </button>
           </div>
         </div>
       </div>

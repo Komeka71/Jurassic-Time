@@ -6,8 +6,7 @@ import DinoGuide from "../guide/DinoGuide";
 import { useGuide } from "../../context/GuideContext";
 
 // Pull these from wherever your real research stats live (API, context,
-// props). Replace this with your actual data source — nothing below is
-// meant to stay hardcoded.
+// props). Replace this with your actual data source.
 const DEFAULT_STATS = [
   { label: "DNA ARCHIVES", value: "340+" },
   { label: "SPECIMENS", value: "128" },
@@ -23,11 +22,7 @@ export default function HybridLabPreview({
 
   const sectionRef = useRef(null);
   const [portalHover, setPortalHover] = useState(false);
-  const [imageOk, setImageOk] = useState(true);
 
-  // Re-claim "hybridLab" as the active page whenever this section is
-  // actually the one in view — same IntersectionObserver pattern Hero
-  // uses, so the guide doesn't get stuck on whatever section came before.
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return undefined;
@@ -69,7 +64,6 @@ export default function HybridLabPreview({
       <div className="absolute inset-0 bg-gradient-to-r from-[#050705] via-[#050705]/85 to-[#050705]/40" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#050705] via-transparent to-[#050705]/60" />
 
-      {/* Ambient glow — nature hiding tech */}
       <div className="absolute right-[-200px] top-[10%] h-[600px] w-[600px] rounded-full bg-cyan-400/10 blur-[160px]" />
       <div className="absolute left-[-150px] bottom-[-100px] h-[500px] w-[500px] rounded-full bg-emerald-600/10 blur-[150px]" />
 
@@ -112,7 +106,7 @@ export default function HybridLabPreview({
             </button>
           </div>
 
-          {/* Research indicators — subtle, not a dashboard */}
+          {/* Research indicators — bottom-left is now free for these */}
           <div className="mt-12 flex flex-wrap gap-8">
             {stats.map((s) => (
               <div key={s.label}>
@@ -125,7 +119,7 @@ export default function HybridLabPreview({
           </div>
         </motion.div>
 
-        {/* RIGHT — portal scene (not a card) */}
+        {/* RIGHT — portal scene (CSS/SVG only, no image dependency) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -136,7 +130,7 @@ export default function HybridLabPreview({
           onMouseLeave={() => setPortalHover(false)}
         >
           <div className="relative mx-auto aspect-square w-full max-w-[560px]">
-            {/* Fallback / atmosphere layer — always renders */}
+            {/* Atmosphere */}
             <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.18),transparent_65%)] blur-2xl" />
             <div
               className={`absolute inset-6 rounded-full border transition-all duration-500 ${
@@ -146,39 +140,28 @@ export default function HybridLabPreview({
               }`}
             />
 
-            {imageOk ? (
-              <motion.img
-                src="/assets/hybrid-lab/entrance/lab-door.png"
-                alt="Hybrid Lab entrance"
-                onError={() => setImageOk(false)}
-                animate={{ scale: portalHover ? 1.03 : 1 }}
+            {/* Portal core — pure CSS/SVG, no <img> */}
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-[conic-gradient(from_180deg,rgba(6,20,14,0.9),rgba(4,10,8,0.95),rgba(6,20,14,0.9))]">
+              <motion.svg
+                animate={{
+                  opacity: portalHover ? 1 : 0.75,
+                  scale: portalHover ? 1.05 : 1,
+                }}
                 transition={{ duration: 0.4 }}
-                className="absolute inset-0 h-full w-full rounded-full object-cover"
-              />
-            ) : (
-              // CSS-only fallback: DNA glyph over a jungle-toned gradient
-              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-[conic-gradient(from_180deg,rgba(6,20,14,0.9),rgba(4,10,8,0.95),rgba(6,20,14,0.9))]">
-                <motion.svg
-                  animate={{
-                    opacity: portalHover ? 1 : 0.75,
-                    scale: portalHover ? 1.05 : 1,
-                  }}
-                  transition={{ duration: 0.4 }}
-                  width="120"
-                  height="160"
-                  viewBox="0 0 120 160"
-                  className="drop-shadow-[0_0_25px_rgba(34,211,238,.6)]"
-                >
-                  <path
-                    d="M20 10 Q60 40 20 70 Q60 100 20 130 M100 10 Q60 40 100 70 Q60 100 100 130"
-                    stroke="#67e8f9"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
-              </div>
-            )}
+                width="120"
+                height="160"
+                viewBox="0 0 120 160"
+                className="drop-shadow-[0_0_25px_rgba(34,211,238,.6)]"
+              >
+                <path
+                  d="M20 10 Q60 40 20 70 Q60 100 20 130 M100 10 Q60 40 100 70 Q60 100 100 130"
+                  stroke="#67e8f9"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+              </motion.svg>
+            </div>
 
             {/* Scanner sweep */}
             <motion.div
@@ -204,24 +187,25 @@ export default function HybridLabPreview({
                 Genetics Research Lab
               </p>
             </div>
+
+            {/* ================= DINO GUIDE — moved here, bottom-right of the portal ================= */}
+            <div
+              className="
+                absolute
+                -bottom-10
+                -right-6
+                md:-bottom-12
+                md:-right-10
+                z-40
+                scale-[0.85]
+                md:scale-[0.95]
+                origin-bottom-right
+              "
+            >
+              <DinoGuide section="hybridLab" />
+            </div>
           </div>
         </motion.div>
-      </div>
-
-      {/* ================= DINO GUIDE ================= */}
-      <div
-        className="
-          absolute
-          bottom-4
-          left-4
-          md:bottom-6
-          md:left-8
-          z-40
-          scale-[0.9]
-          origin-bottom-left
-        "
-      >
-        <DinoGuide section="hybridLab" />
       </div>
     </section>
   );
