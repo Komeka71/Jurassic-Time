@@ -602,7 +602,7 @@ export default function App() {
               path="users"
               element={<AdminUsers />}
             />
-
+ <Route path="quiz" element={<AdminQuiz />} /> 
             <Route
               path="logs"
               element={<AdminLogs />}

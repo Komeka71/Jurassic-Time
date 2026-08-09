@@ -79,11 +79,9 @@ export default function HybridLabPreview({
       ========================================================= */}
 
       {/* Main cinematic dark overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-[#020504]/50" />
-
+<div className="pointer-events-none absolute inset-0 bg-[#020504]/65" />
       {/* Stronger darkness on the left for text */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/85 via-[#020504]/60 to-[#020504]/25" />
-
+<div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/90 via-[#020504]/72 to-[#020504]/38" />
       {/* Stronger darkness toward bottom */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020504]/75 via-transparent to-[#020504]/35" />
 
@@ -490,25 +488,31 @@ export default function HybridLabPreview({
           - Positioned relative to the section bottom, pulled up
             slightly less aggressively than before.
       ========================================================= */}
-
 <div
   className="
     pointer-events-auto
     absolute
-    bottom-8
-    right-8
+    bottom-16
+    right-12
     z-[60]
-    scale-[0.72]
+    scale-[0.68]
     origin-bottom-right
-    sm:scale-[0.78]
-    md:right-12
-    md:bottom-10
-    md:scale-[0.85]
-    lg:right-16
-    lg:bottom-12
-    lg:scale-[0.9]
-    xl:right-20
-    xl:bottom-14
+
+    sm:right-16
+    sm:bottom-16
+    sm:scale-[0.74]
+
+    md:right-20
+    md:bottom-18
+    md:scale-[0.80]
+
+    lg:right-24
+    lg:bottom-20
+    lg:scale-[0.84]
+
+    xl:right-28
+    xl:bottom-22
+    xl:scale-[0.86]
   "
 >
   <DinoGuide section="hybridLab" />
