@@ -1,3 +1,5 @@
+const { ApiError } = require("../utils/ApiError.js");
+
 // Catches requests to routes that don't exist
 const notFound = (req, res, next) => {
   const error = new Error(`Route not found: ${req.originalUrl}`);
@@ -5,8 +7,17 @@ const notFound = (req, res, next) => {
   next(error);
 };
 
-// Central error handler.
+// Central error handler — handles both legacy plain-Error/Mongoose errors
+// (main) and ApiError instances (Timeline).
 const errorHandler = (err, req, res, next) => {
+  // Timeline-style operational errors
+  if (err instanceof ApiError) {
+    const body = { success: false, message: err.message };
+    if (err.details) body.errors = err.details;
+    if (process.env.NODE_ENV !== "production") body.stack = err.stack;
+    return res.status(err.statusCode).json(body);
+  }
+
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message || "Something went wrong on our end.";
 
@@ -24,7 +35,7 @@ const errorHandler = (err, req, res, next) => {
       .join(", ");
   }
 
-  // Duplicate key (username/email already exists)
+  // Duplicate key (username/email/slug already exists)
   if (err.code === 11000) {
     statusCode = 400;
     const field = Object.keys(err.keyValue)[0];
@@ -32,6 +43,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   res.status(statusCode).json({
+    success: false,
     message,
     stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
   });
