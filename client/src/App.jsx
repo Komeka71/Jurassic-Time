@@ -310,6 +310,8 @@ import AdminRoute from "./components/admin/AdminRoute";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
+import AdminQuiz from "./pages/AdminQuiz.jsx";
+
 import AdminLogs from "./pages/AdminLogs";
 import AdminDiscoveries from "./pages/AdminDiscoveries";
 
