@@ -33,33 +33,32 @@ export default function AdminLayout() {
   const { user, logout } = useAuth();
 
   return (
-    <div className="flex min-h-screen bg-stone-950 text-stone-100 font-sans">
+    <div className="flex min-h-screen bg-green-950 text-green-50 font-sans">
       {/* Sidebar */}
       <aside
         className={`${
           open ? "w-56" : "w-16"
-        } shrink-0 border-r border-stone-800 bg-stone-900 transition-all duration-200 flex flex-col`}
+        } shrink-0 border-r border-emerald-900 bg-emerald-950 transition-all duration-200 flex flex-col`}
       >
-        <div className="h-16 flex items-center justify-between px-4 border-b border-stone-800">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-emerald-900">
           {open && (
-            <span className="font-display text-lg tracking-tight text-amber-400">
+            <span className="font-display text-lg tracking-tight text-lime-400">
               Paleora
             </span>
           )}
           <button
             onClick={() => setOpen((v) => !v)}
-            className="p-1.5 rounded-md text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors"
+            className="p-1.5 rounded-md text-emerald-400 hover:text-lime-300 hover:bg-emerald-900 transition-colors"
             aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
           >
             <SidebarIcon open={open} />
           </button>
         </div>
 
-        {/* Home button */}
         <div className="px-2 pt-2">
           <Link
             to="/"
-            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors ${
+            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm text-emerald-400 hover:text-lime-300 hover:bg-emerald-900 transition-colors ${
               open ? "" : "justify-center"
             }`}
           >
@@ -77,14 +76,14 @@ export default function AdminLayout() {
               className={({ isActive }) =>
                 `flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? "bg-amber-400/10 text-amber-400"
-                    : "text-stone-400 hover:text-stone-100 hover:bg-stone-800"
+                    ? "bg-lime-400/10 text-lime-400"
+                    : "text-emerald-400 hover:text-lime-300 hover:bg-emerald-900"
                 }`
               }
             >
               <span className={open ? "" : "sr-only"}>{l.label}</span>
               {open && (
-                <span className="font-mono text-[10px] tracking-wider text-stone-500">
+                <span className="font-mono text-[10px] tracking-wider text-emerald-600">
                   {l.tag}
                 </span>
               )}
@@ -92,10 +91,10 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <div className="border-t border-stone-800 p-3">
+        <div className="border-t border-emerald-900 p-3">
           <Link
             to="/"
-            className={`block text-xs text-stone-400 hover:text-stone-100 transition-colors ${
+            className={`block text-xs text-emerald-500 hover:text-lime-300 transition-colors ${
               open ? "" : "text-center"
             }`}
           >
@@ -107,18 +106,18 @@ export default function AdminLayout() {
       {/* Main column */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar */}
-        <header className="h-16 border-b border-stone-800 bg-stone-900/60 backdrop-blur flex items-center justify-between px-6">
-          <h1 className="font-display text-base text-stone-100">
+        <header className="h-16 border-b border-emerald-900 bg-emerald-950/60 backdrop-blur flex items-center justify-between px-6">
+          <h1 className="font-display text-base text-green-50">
             Admin Control Center
           </h1>
           <div className="flex items-center gap-3">
-            <span className="text-xs px-2 py-1 rounded-full border border-amber-400/30 text-amber-400 font-mono uppercase tracking-wide">
+            <span className="text-xs px-2 py-1 rounded-full border border-lime-400/30 text-lime-400 font-mono uppercase tracking-wide">
               {user?.role}
             </span>
-            <span className="text-sm text-stone-400">{user?.username}</span>
+            <span className="text-sm text-emerald-400">{user?.username}</span>
             <button
               onClick={logout}
-              className="text-sm text-stone-400 hover:text-orange-400 transition-colors"
+              className="text-sm text-emerald-400 hover:text-orange-400 transition-colors"
             >
               Log out
             </button>

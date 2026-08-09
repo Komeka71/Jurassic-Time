@@ -4,12 +4,11 @@
 
 // neww
 // server/controllers/adminController.js
-
 const User = require("../models/User");
 const Discovery = require("../models/Discovery");
 const ActivityLog = require("../models/ActivityLog");
-const logActivity = require("../utils/logActivity");
 const Question = require("../models/Question");
+const logActivity = require("../utils/logActivity");
 // @route GET /api/admin/stats
 const getDashboardStats = async (req, res) => {
   try {
@@ -19,6 +18,7 @@ const getDashboardStats = async (req, res) => {
       discoveryCount,
       underReview,
       verified,
+      questionCount,
       recentLogs,
     ] = await Promise.all([
       User.countDocuments(),
@@ -26,10 +26,8 @@ const getDashboardStats = async (req, res) => {
       Discovery.countDocuments(),
       Discovery.countDocuments({ status: "under-review" }),
       Discovery.countDocuments({ status: "verified" }),
-      ActivityLog.find()
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .populate("performedBy", "username"),
+      Question.countDocuments(),
+      ActivityLog.find().sort({ createdAt: -1 }).limit(5).populate("performedBy", "username"),
     ]);
 
     res.json({
@@ -40,16 +38,13 @@ const getDashboardStats = async (req, res) => {
         discoveryCount,
         underReview,
         verified,
+        questionCount,
         recentLogs,
       },
     });
   } catch (err) {
     console.error("[admin.getDashboardStats]", err);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to load stats",
-    });
+    res.status(500).json({ success: false, message: "Failed to load stats" });
   }
 };
 
