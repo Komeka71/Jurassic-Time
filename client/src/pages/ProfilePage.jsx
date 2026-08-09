@@ -1,5 +1,6 @@
 // pages/ProfilePage.jsx
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "../components/profile/ProfileSidebar";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import ProfileStats from "../components/profile/ProfileStats";
@@ -12,10 +13,12 @@ import InventorySection from "../components/profile/InventorySection";
 import RecentActivity from "../components/profile/RecentActivity";
 // import SettingsPreview from "../components/profile/SettingsPreview";
 import { getProfile } from "../services/profileService";
+import HomeButton from "../components/Homebtn.jsx";
 
 
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("overview");
@@ -32,6 +35,8 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen bg-stone-950 px-4 py-8 md:px-8">
+      <HomeButton onClick={() => navigate("/")} position="right" />
+
       <div className="mx-auto flex max-w-7xl gap-6">
         <ProfileSidebar activeSection={activeSection} onNavigate={setActiveSection} />
 
