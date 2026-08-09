@@ -19,6 +19,15 @@ function SidebarIcon({ open }) {
   );
 }
 
+function HomeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <path d="M3 12l9-9 9 9" />
+      <path d="M5 10v10h14V10" />
+    </svg>
+  );
+}
+
 export default function AdminLayout() {
   const [open, setOpen] = useState(true);
   const { user, logout } = useAuth();
@@ -44,6 +53,19 @@ export default function AdminLayout() {
           >
             <SidebarIcon open={open} />
           </button>
+        </div>
+
+        {/* Home button */}
+        <div className="px-2 pt-2">
+          <Link
+            to="/"
+            className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors ${
+              open ? "" : "justify-center"
+            }`}
+          >
+            <HomeIcon />
+            {open && <span>Home</span>}
+          </Link>
         </div>
 
         <nav className="flex-1 py-3 px-2 space-y-1">
