@@ -1,7 +1,12 @@
 export function getPersonalization(user) {
   const preferences = user?.preferences || {};
   const purpose = (preferences.purpose || "learning").toLowerCase();
-  const interest = (preferences.interests || "carnivores").toLowerCase();
+  // const interest = (preferences.interests || "carnivores").toLowerCase();
+  const interest = (
+  Array.isArray(preferences.interests) && preferences.interests.length > 0
+    ? preferences.interests[0]
+    : "carnivores"
+).toLowerCase();
   const companion = user?.companion?.type || "velociraptor";
   const ageGroup = preferences.ageGroup || "Teen";
 
