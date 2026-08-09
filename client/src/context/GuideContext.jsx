@@ -16,17 +16,15 @@ function isMobileViewport() {
 }
 
 function getInitialGuideHidden() {
+  // Mobile always starts hidden, every load — no exceptions, no
+  // localStorage lookup. The user can still tap the toggle to reveal
+  // it for that session.
+  if (isMobileViewport()) return true;
+
+  // Desktop/tablet: respect whatever was saved from last time,
+  // defaulting to visible if nothing's been saved yet.
   const stored = localStorage.getItem("guideHidden");
-
-  // User has an explicit saved preference (from a previous toggle) —
-  // always respect it, regardless of device.
-  if (stored !== null) {
-    return stored === "true";
-  }
-
-  // No preference saved yet (first-ever visit): default hidden on
-  // mobile, visible everywhere else.
-  return isMobileViewport();
+  return stored === "true";
 }
 
 export function GuideProvider({ children }) {
@@ -84,7 +82,10 @@ export function GuideProvider({ children }) {
     ]
   );
 
+  // Only persist to localStorage on non-mobile — mobile's hidden state
+  // is intentionally session-only and always resets on reload.
   useEffect(() => {
+    if (isMobileViewport()) return;
     localStorage.setItem(
       "guideHidden",
       String(guideHidden)
