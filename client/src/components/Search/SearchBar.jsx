@@ -121,7 +121,18 @@ function SearchBar() {
       ref={containerRef}
     >
       <div className="search-bar__field">
-        <span className="search-bar__icon" aria-hidden="true">
+        <span
+          className="search-bar__icon"
+          role="button"
+          tabIndex={-1}
+          aria-label="Focus search"
+          onMouseDown={(event) => {
+            // mousedown (not click), same reasoning as suggestion
+            // selection below — fires before the input blurs.
+            event.preventDefault()
+            inputRef.current?.focus()
+          }}
+        >
           🔍
         </span>
         <input

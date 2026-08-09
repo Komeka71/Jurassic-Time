@@ -67,3 +67,27 @@ export async function search(query, { collectionIds } = {}) {
 
   return resultsByCollection.flat()
 }
+
+/**
+ * Every item across every registered collection, unfiltered — the
+ * "browse everything" counterpart to search(). Used to populate Search
+ * with a full list before any query is typed, instead of leaving the
+ * page blank. Reuses each collection's own getItems()/toResult() so it
+ * automatically covers whatever collections exist (dinosaurs today;
+ * eras, mini games, etc. later) with zero per-collection special-casing
+ * here or in any caller.
+ */
+export async function getAllItems({ collectionIds } = {}) {
+  const targets = collectionIds
+    ? collectionIds.map((id) => collections.get(id)).filter(Boolean)
+    : getSearchCollections()
+
+  const resultsByCollection = await Promise.all(
+    targets.map(async (collection) => {
+      const items = await collection.getItems()
+      return items.map((item) => collection.toResult(item))
+    }),
+  )
+
+  return resultsByCollection.flat()
+}

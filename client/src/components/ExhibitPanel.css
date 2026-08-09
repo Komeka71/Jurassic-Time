@@ -76,22 +76,23 @@
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 32px clamp(28px, 3vw, 44px) 40px;
+  padding: 32px clamp(28px, 3vw, 44px) 44px;
 }
 
 /* --------------------------------------------------------------- */
-/* Hero row — cinematic artwork on the left, identity on the right   */
+/* Hero row — specimen photograph on the left, identity + intro on   */
+/* the right                                                          */
 /* --------------------------------------------------------------- */
 
 .exhibit-panel__hero-row {
   display: flex;
   align-items: stretch;
   gap: 32px;
-  min-height: 300px;
+  min-height: 280px;
 }
 
 .exhibit-panel__hero-image {
-  flex: 0 0 42%;
+  flex: 0 0 40%;
   border-radius: 20px;
   background-size: cover;
   background-position: center;
@@ -112,9 +113,19 @@
   padding-top: 4px;
 }
 
+.exhibit-panel__eyebrow {
+  margin: 0 0 8px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
 .exhibit-panel__name {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  font-size: clamp(2.1rem, 3.2vw, 2.9rem);
   font-weight: 600;
   color: var(--color-text-primary);
   margin: 0;
@@ -188,7 +199,7 @@
 }
 
 /* --------------------------------------------------------------- */
-/* Species chips                                                    */
+/* Species tags — restrained, archival-plaque look, not badge-heavy  */
 /* --------------------------------------------------------------- */
 
 .exhibit-panel__chips {
@@ -201,120 +212,138 @@
 .exhibit-panel__chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
+  padding: 6px 13px;
   border: 1px solid var(--era-chip-border);
   border-radius: 999px;
   background: var(--era-chip-background);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--era-chip-text);
 }
 
+.exhibit-panel__intro {
+  margin: 18px 0 0;
+  max-width: 54ch;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
 /* --------------------------------------------------------------- */
-/* Museum information board — 2x2 glass "plaque" cards                */
+/* Horizontal stats bar — one bar, thin dividers between entries,    */
+/* not individual cards. Data-driven from dinosaur.facts, so the      */
+/* number of columns simply varies per species.                       */
 /* --------------------------------------------------------------- */
 
-.exhibit-panel__grid {
+.exhibit-panel__statbar {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 30px;
+  padding: 18px clamp(18px, 2vw, 26px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(4, 8, 18, 0.35);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.exhibit-panel__statbar::-webkit-scrollbar {
+  display: none;
+}
+
+.exhibit-panel__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 0 auto;
+  min-width: 108px;
+  padding: 0 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.exhibit-panel__stat:first-child {
+  border-left: none;
+  padding-left: 2px;
+}
+
+.exhibit-panel__stat-value {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.exhibit-panel__stat-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+/* --------------------------------------------------------------- */
+/* Research content | Gallery + Did You Know                          */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: 1.7fr 1fr;
+  gap: clamp(28px, 3vw, 44px);
   margin-top: 32px;
 }
 
-.exhibit-panel__card {
-  padding: 22px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  background: rgba(4, 8, 18, 0.35);
-  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.55);
-}
-
-/* Museum Highlight gets a distinct era-tinted treatment so it stands
-   out as the curated "don't miss this" card. */
-.exhibit-panel__card--highlight {
-  background: var(--era-chip-background);
-  border-color: var(--era-chip-border);
-}
-
-.exhibit-panel__card-heading {
+.exhibit-panel__research {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+}
+
+.exhibit-panel__section-heading {
   font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--era-primary);
-  margin: 0 0 14px;
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .exhibit-panel__text {
   margin: 0;
   font-family: var(--font-body);
   font-size: 0.95rem;
-  line-height: 1.65;
+  line-height: 1.75;
   color: var(--color-text-secondary);
 }
 
-.exhibit-panel__facts {
+.exhibit-panel__aside {
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  margin: 0;
-}
-
-.exhibit-panel__fact {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 11px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.exhibit-panel__fact dt {
-  font-family: var(--font-body);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-}
-
-.exhibit-panel__fact dd {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  text-align: right;
+  gap: 24px;
+  min-width: 0;
 }
 
 /* --------------------------------------------------------------- */
-/* Gallery — full width, 3 preview thumbnails + a "+N / View All"    */
-/* tile when more images exist                                       */
+/* Gallery — one large preview, up to two smaller previews, subtle   */
+/* dot indicators, and a "View all" action                            */
 /* --------------------------------------------------------------- */
 
-.exhibit-panel__gallery-section {
-  margin-top: 28px;
-}
-
-.exhibit-panel__gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-}
-
-.exhibit-panel__gallery-item {
-  aspect-ratio: 1;
+.exhibit-panel__gallery-primary {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   border: none;
   padding: 0;
-  border-radius: 14px;
+  border-radius: 16px;
   background-size: cover;
   background-position: center;
   background-color: rgba(255, 255, 255, 0.04);
@@ -322,45 +351,103 @@
   transition: transform var(--duration-fast) var(--ease-cinematic);
 }
 
-.exhibit-panel__gallery-item:hover {
-  transform: scale(1.04);
+.exhibit-panel__gallery-primary:hover {
+  transform: scale(1.015);
 }
 
-.exhibit-panel__gallery-more {
+.exhibit-panel__gallery-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.exhibit-panel__gallery-thumb {
+  aspect-ratio: 1;
+  border: none;
+  padding: 0;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-cinematic);
+}
+
+.exhibit-panel__gallery-thumb:hover {
+  transform: scale(1.05);
+}
+
+.exhibit-panel__gallery-thumb--more {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  aspect-ratio: 1;
   border: 1px solid var(--era-primary-dim);
-  border-radius: 14px;
   background: var(--era-chip-background);
-  cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-cinematic);
-}
-
-.exhibit-panel__gallery-more:hover {
-  background: var(--era-primary-dim);
-}
-
-.exhibit-panel__gallery-more-count {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.exhibit-panel__gallery-more-label {
   font-family: var(--font-body);
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--era-primary);
 }
 
-/* Placeholder fullscreen gallery overlay */
+.exhibit-panel__gallery-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.exhibit-panel__gallery-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.exhibit-panel__gallery-dot--active {
+  background: var(--era-primary);
+}
+
+.exhibit-panel__gallery-viewall {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--era-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.exhibit-panel__gallery-viewall:hover {
+  color: var(--color-text-primary);
+}
+
+/* --------------------------------------------------------------- */
+/* Did You Know — a small, subtle archival note                       */
+/* --------------------------------------------------------------- */
+
+.exhibit-panel__didyouknow {
+  padding: 18px 20px;
+  border: 1px solid var(--era-chip-border);
+  border-radius: 14px;
+  background: var(--era-chip-background);
+}
+
+.exhibit-panel__didyouknow .exhibit-panel__section-heading {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 8px;
+}
+
+/* --------------------------------------------------------------- */
+/* Fullscreen photo lightbox                                          */
+/* --------------------------------------------------------------- */
+
 .exhibit-panel__lightbox {
   position: fixed;
   inset: 0;
@@ -376,49 +463,64 @@
 
 .exhibit-panel__lightbox-card {
   position: relative;
-  width: min(420px, 100%);
-  padding: 32px 28px;
+  width: min(720px, 100%);
+  padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   background: linear-gradient(
     165deg,
-    rgba(27, 39, 69, 0.9) 0%,
-    rgba(8, 13, 26, 0.9) 100%
+    rgba(27, 39, 69, 0.92) 0%,
+    rgba(8, 13, 26, 0.92) 100%
   );
   text-align: center;
 }
 
+.exhibit-panel__lightbox-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
 .exhibit-panel__lightbox-text {
-  margin: 8px 0 0;
+  margin: 14px 0 0;
   font-family: var(--font-body);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   line-height: 1.6;
   color: var(--color-text-secondary);
 }
 
 /* --------------------------------------------------------------- */
-/* Tablet: same structure, just narrower — the hero image gets a     */
-/* slightly smaller share so the text column stays comfortable       */
+/* Tablet: narrower single research column stays two-up with the      */
+/* aside; only the ratio tightens                                     */
 /* --------------------------------------------------------------- */
 
 @media (max-width: 1000px) {
   .exhibit-panel__hero-image {
-    flex-basis: 38%;
+    flex-basis: 36%;
   }
 
-  .exhibit-panel__grid {
-    gap: 16px;
+  .exhibit-panel__body {
+    grid-template-columns: 1fr;
   }
 
-  .exhibit-panel__card {
-    padding: 18px 20px;
+  .exhibit-panel__aside {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .exhibit-panel__aside > * {
+    flex: 1 1 260px;
   }
 }
 
 /* --------------------------------------------------------------- */
 /* Mobile: the existing bottom-sheet drawer approach, unchanged in   */
 /* spirit — full-width sheet anchored to the bottom edge, everything */
-/* stacked in a single column. Never the large desktop layout.       */
+/* stacked in a single column, stats bar scrolling horizontally      */
+/* instead of wrapping.                                               */
 /* --------------------------------------------------------------- */
 
 @media (max-width: 768px) {
@@ -430,7 +532,7 @@
   .exhibit-panel {
     width: 100%;
     height: auto;
-    max-height: 85vh;
+    max-height: 88vh;
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -24px 64px -32px rgba(0, 0, 0, 0.6);
   }
@@ -461,12 +563,23 @@
   }
 
   .exhibit-panel__name {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
   }
 
-  .exhibit-panel__grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .exhibit-panel__statbar {
+    margin-top: 22px;
+  }
+
+  .exhibit-panel__stat {
+    min-width: 92px;
+  }
+
+  .exhibit-panel__body {
     margin-top: 24px;
+    gap: 24px;
+  }
+
+  .exhibit-panel__aside {
+    flex-direction: column;
   }
 }

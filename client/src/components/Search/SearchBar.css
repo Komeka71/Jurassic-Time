@@ -25,6 +25,7 @@
   flex-shrink: 0;
   font-size: 0.9rem;
   color: var(--color-text-tertiary);
+  cursor: pointer;
 }
 
 .search-bar__field:focus-within .search-bar__icon {
