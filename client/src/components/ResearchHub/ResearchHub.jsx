@@ -5,7 +5,7 @@ import SubmitJournal from "./SubmitJournal/SubmitJournal";
 import VerificationPipeline from "./Verification/VerificationPipeline";
 import DiscoveriesSection from "./Discoveries/DiscoveriesSection";
 import ResearchNetwork from "./Network/ResearchNetwork";
-import FloatingNavigation from "./FloatingNavigation";
+// import FloatingNavigation from "./FloatingNavigation";
 // import ActivityFeed from "./Activity/ActivityFeed";
 // import Leaderboard from "./Leaderboard/Leaderboard";
 // import WeeklyChallenge from "./WeeklyChallenge/WeeklyChallenge";
@@ -134,7 +134,7 @@ export default function ResearchHub() {
 
   return (
     <section className="relative overflow-hidden bg-[#090806]">
-      <FloatingNavigation />
+      {/* <FloatingNavigation /> */}
 
       {/* HERO */}
       <div ref={heroRef}>

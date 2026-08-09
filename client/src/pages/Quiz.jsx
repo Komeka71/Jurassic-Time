@@ -10,8 +10,10 @@ import RewardPopup from "../components/RewardPopup";
 import ExpeditionComplete from "../components/ExpeditionComplete";
 import TreasureChest from "../components/TreasureChest";
 import SideMenu from "../components/SideMenu";
+import Chatbot from "../components/chat/Chatbot";
 import { useAudio } from "../context/AudioContext";
 import { useAuth } from "../context/AuthContext";
+import { useGuide } from "../context/GuideContext";
 import { getQuestions } from "../api/quizApi";
 import { getUserProgress } from "../utils/userProgress";
 // import {
@@ -186,6 +188,25 @@ const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   */
 
   const quizStartedAt = useRef(Date.now());
+
+  /*
+  ========================================
+  GUIDE / CHATBOT QUIZ LOCK
+  ========================================
+
+  While the user is actively answering a question (i.e. before the reward
+  chest/summary appears), quizActive is set true in GuideContext so the
+  Chatbot can lock Paleo out of quiz-answer content on the backend. It's
+  reset to false once the chest shows, and again on unmount so leaving the
+  page never leaves a stale lock behind.
+  */
+
+  const { setQuizActive } = useGuide();
+
+  useEffect(() => {
+    setQuizActive(!showChest);
+    return () => setQuizActive(false);
+  }, [showChest, setQuizActive]);
 
   /*
   ========================================
@@ -1093,6 +1114,9 @@ console.log("expedition complete");
 
         </div>
       </div>
+
+      {/* PALEO CHATBOT */}
+      <Chatbot page="quiz" />
     </AnimatedBackground>
   );
 }
