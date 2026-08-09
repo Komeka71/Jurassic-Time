@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useProfile } from "./api/useProfile";
 
 import HeroPassportCard from "./components/HeroPassportCard";
@@ -16,6 +17,7 @@ import EditProfileModal from "./components/EditProfileModal";
 import AccountInfo from "./components/AccountInfo";
 import SectionNav from "./components/SectionNav";
 import JungleBackdrop from "./components/JungleBackdrop";
+import HomeButton from "../../components/Homebtn.jsx"; // adjust path to match where Homebtn.jsx actually lives relative to this file
 import "./profile.css";
 
 const SECTIONS = [
@@ -32,6 +34,7 @@ const SECTIONS = [
 ];
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const { profile, loading, error, refresh, updateProfile, claimMission } = useProfile();
   const [editOpen, setEditOpen] = useState(false);
   const [active, setActive] = useState("overview");
@@ -76,6 +79,8 @@ export default function ProfilePage() {
   return (
     <div className="jt-profile-root">
       <JungleBackdrop />
+
+      <HomeButton onClick={() => navigate("/")} position="right" />
 
       <div className="jt-profile-layout">
         <SectionNav sections={SECTIONS} active={active} onSelect={scrollTo} />
