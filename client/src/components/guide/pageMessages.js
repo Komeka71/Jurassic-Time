@@ -94,6 +94,11 @@ hybridLab: [
     "🦕 Drag each dinosaur to its correct era.",
     "⏳ Ninety seconds on the clock — go!",
   ],
+  fossilExcavation: [
+    "🪨 Welcome to Fossil Excavation!",
+    "🖌️ Brush carefully to reveal what's buried.",
+    "🗺️ Choose a dig site and start exploring.",
+  ],
 };
 
 export function getPageMessage(page = "default") {

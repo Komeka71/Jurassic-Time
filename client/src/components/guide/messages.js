@@ -479,6 +479,46 @@ hybridLab: {
       "Close — but check the range again.",
     ],
   },
+  fossilExcavation: {
+    idle: [
+      "🪨 Somewhere under this dirt, history is waiting.",
+      "Brush carefully — fossils are fragile.",
+      "Every dig site holds different secrets.",
+      "Patience makes the best paleontologist.",
+    ],
+
+    lookingAround: [
+      "That marker looks promising...",
+      "I have a feeling about this spot.",
+      "Something's buried near here.",
+    ],
+
+    thinking: [
+      "Which marker should we try?",
+      "Careful excavation beats rushing.",
+      "I wonder what's beneath the surface.",
+    ],
+
+    pointingRight: [
+      "Try that marker!",
+      "Dig there, Explorer!",
+    ],
+
+    happy: [
+      "Nice find!",
+      "The museum will want to see this.",
+    ],
+
+    celebrate: [
+      "Fossil identified! Excellent work.",
+      "Another species for the collection!",
+    ],
+
+    sad: [
+      "Empty this time — try another marker.",
+      "No fossil here, but don't give up.",
+    ],
+  },
   camp: {
     idle: [
       "Welcome back to camp.",

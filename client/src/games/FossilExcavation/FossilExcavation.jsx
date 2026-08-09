@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import "./FossilExcavation.css";
 import { SITES, SPECIES, shuffle, pickFossilFor, randomEmptyMessage } from "./data";
 import SiteSelection from "./components/SiteSelection";
@@ -8,6 +8,8 @@ import ScanSequence from "./components/ScanSequence";
 import MuseumCard from "./components/MuseumCard";
 import Collection from "./components/Collection";
 import { Stepper } from "./components/Shared";
+import DinoGuide from "../../components/guide/DinoGuide"; // adjust path to match actual location relative to this file
+import { useGuide } from "../../context/GuideContext"; // adjust path to match actual location relative to this file
 
 /* Small in-flow interstitial for a resolved "empty" excavation. */
 function EmptyResultModal({ message, onContinue }) {
@@ -28,10 +30,15 @@ export default function FossilExcavation() {
   const [siteId, setSiteId] = useState(null);
   const [spots, setSpots] = useState([]);
   const [tried, setTried] = useState(new Set());
-  const [outcome, setOutcome] = useState(null); // active excavation outcome
+  const [outcome, setOutcome] = useState(null);
   const [emptyMsg, setEmptyMsg] = useState(null);
   const [activeSpecies, setActiveSpecies] = useState(null);
   const [discovered, setDiscovered] = useState(new Set());
+  const { setCurrentPage, setLastAction } = useGuide();
+
+  useEffect(() => {
+    setCurrentPage("fossilExcavation");
+  }, [setCurrentPage]);
 
   const enterSite = (id) => {
     const fossilSpecies = pickFossilFor(id, discovered);
@@ -63,15 +70,20 @@ export default function FossilExcavation() {
     setScreen("excavate");
   };
 
-  const onFossilRevealed = useCallback(() => setScreen("scanning"), []);
+  const onFossilRevealed = useCallback(() => {
+    setLastAction("fossilFound");
+    setScreen("scanning");
+  }, [setLastAction]);
 
   const onEmptyResolved = useCallback((message) => {
     setEmptyMsg(message);
+    setLastAction("excavationEmpty");
     setScreen("explore");
-  }, []);
+  }, [setLastAction]);
 
   const onScanComplete = () => {
     setDiscovered((prev) => new Set(prev).add(activeSpecies));
+    setLastAction("fossilIdentified");
     setScreen("identify");
   };
 
@@ -125,6 +137,26 @@ export default function FossilExcavation() {
       {screen === "collection" && <Collection discovered={discovered} onBack={backToSites} />}
 
       {emptyMsg && <EmptyResultModal message={emptyMsg} onContinue={() => setEmptyMsg(null)} />}
+
+      {/* DinoGuide — hidden during the ScanSequence screen so it doesn't
+          compete with that focused animation; visible everywhere else. */}
+      {screen !== "scanning" && (
+        <div
+          className="
+            fixed
+            bottom-5
+            right-5
+            md:bottom-6
+            md:right-8
+            z-[9999]
+            scale-[0.6]
+            md:scale-[0.7]
+            origin-bottom-right
+          "
+        >
+          <DinoGuide section="fossilExcavation" />
+        </div>
+      )}
     </div>
   );
 }

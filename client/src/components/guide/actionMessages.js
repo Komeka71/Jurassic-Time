@@ -38,6 +38,20 @@ const actionMessages = {
     mood: "sad",
     message: "Time ran out — but now you know where they belong.",
   },
+  fossilFound: {
+    mood: "happy",
+    message: "You found something! Let's take a closer look.",
+  },
+
+  excavationEmpty: {
+    mood: "thinking",
+    message: "Nothing there — but the next marker might hide something.",
+  },
+
+  fossilIdentified: {
+    mood: "celebrate",
+    message: "Species identified! Another one for the collection.",
+  },
 trackCorrect: {
     mood: "happy",
     message: "Great eye! That's exactly the right track.",
