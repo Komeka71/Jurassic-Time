@@ -495,7 +495,7 @@ export default function HybridLabPreview({
     bottom-24
     right-12
     z-[60]
-    scale-[0.9]
+    scale-[1.05]
     origin-bottom-right
 
     sm:right-16
