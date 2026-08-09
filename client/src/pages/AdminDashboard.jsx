@@ -12,6 +12,24 @@ const STAT_META = [
   { key: "questionCount", label: "Questions" },
 ];
 
+function BarRow({ label, value, total, color }) {
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+  return (
+    <div>
+      <div className="flex items-center justify-between text-sm mb-1">
+        <span className="text-stone-300">{label}</span>
+        <span className="text-stone-400 font-mono text-xs">{value}</span>
+      </div>
+      <div className="h-2 rounded-full bg-stone-800 overflow-hidden">
+        <div
+          className={`h-full rounded-full ${color}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState(null);
@@ -57,6 +75,51 @@ export default function AdminDashboard() {
           </div>
         ))}
       </section>
+
+      {/* Breakdown bars */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section className="rounded-lg border border-stone-800 bg-stone-900 p-5 space-y-4">
+          <h2 className="font-display text-base text-stone-100">Discoveries by status</h2>
+          <div className="space-y-3">
+            <BarRow
+              label="Under review"
+              value={stats.underReview}
+              total={stats.discoveryCount}
+              color="bg-amber-400"
+            />
+            <BarRow
+              label="Verified"
+              value={stats.verified}
+              total={stats.discoveryCount}
+              color="bg-emerald-400"
+            />
+            <BarRow
+              label="Rejected"
+              value={stats.rejected}
+              total={stats.discoveryCount}
+              color="bg-red-400"
+            />
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-stone-800 bg-stone-900 p-5 space-y-4">
+          <h2 className="font-display text-base text-stone-100">Users by role</h2>
+          <div className="space-y-3">
+            <BarRow
+              label="Users"
+              value={stats.userCount - stats.adminCount}
+              total={stats.userCount}
+              color="bg-stone-400"
+            />
+            <BarRow
+              label="Admins"
+              value={stats.adminCount}
+              total={stats.userCount}
+              color="bg-emerald-400"
+            />
+          </div>
+        </section>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Quick actions */}

@@ -18,6 +18,7 @@ const getDashboardStats = async (req, res) => {
       discoveryCount,
       underReview,
       verified,
+      rejected,
       questionCount,
       recentLogs,
     ] = await Promise.all([
@@ -26,6 +27,7 @@ const getDashboardStats = async (req, res) => {
       Discovery.countDocuments(),
       Discovery.countDocuments({ status: "under-review" }),
       Discovery.countDocuments({ status: "verified" }),
+      Discovery.countDocuments({ status: "rejected" }),
       Question.countDocuments(),
       ActivityLog.find().sort({ createdAt: -1 }).limit(5).populate("performedBy", "username"),
     ]);
@@ -38,6 +40,7 @@ const getDashboardStats = async (req, res) => {
         discoveryCount,
         underReview,
         verified,
+        rejected,
         questionCount,
         recentLogs,
       },
