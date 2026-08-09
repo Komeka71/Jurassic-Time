@@ -1,7 +1,7 @@
 export function getPersonalization(user) {
   const preferences = user?.preferences || {};
-  const purpose = preferences.purpose || "Learning";
-  const interest = preferences.interests || "Carnivores";
+  const purpose = (preferences.purpose || "learning").toLowerCase();
+  const interest = (preferences.interests || "carnivores").toLowerCase();
   const companion = user?.companion?.type || "velociraptor";
   const ageGroup = preferences.ageGroup || "Teen";
 
@@ -26,15 +26,19 @@ export function getPersonalization(user) {
 
   /* ---------------- Purpose ----------------
 
-  homepage.order pinned "hero" first for every case, exactly as before.
-  The remaining order now matches the latest spec, including "museum"
-  and "hybridLab" as normal reorderable sections alongside everything
-  else — same as the rest of this list, they render through Home.jsx's
-  sectionOrder.map() loop, not in a fixed position.
+  preferences.purpose is stored lowercase (see PURPOSES in models/User.js:
+  "learning" | "research" | "fun" | "teaching") — this switch now matches
+  that exactly, rather than checking capitalized strings that never
+  matched a real value and silently fell through to default.
+
+  homepage.order pins "hero" first for every case. "museum" and
+  "hybridLab" are normal reorderable sections alongside everything
+  else — they render through Home.jsx's sectionOrder.map() loop, not
+  in a fixed position.
   */
 
   switch (purpose) {
-    case "Fun":
+    case "fun":
       config.homepage.order = [
         "hero",
         "games",
@@ -50,7 +54,7 @@ export function getPersonalization(user) {
         "Play, earn XP and unlock new dinosaurs.";
       break;
 
-    case "Research":
+    case "research":
       config.homepage.order = [
         "hero",
         "timeline",
@@ -65,7 +69,7 @@ export function getPersonalization(user) {
         "Explore fossils and scientific discoveries.";
       break;
 
-    case "Teaching":
+    case "teaching":
       config.homepage.order = [
         "hero",
         "timeline",
@@ -80,7 +84,7 @@ export function getPersonalization(user) {
         "Curated exhibits ready for your classroom.";
       break;
 
-    case "Learning":
+    case "learning":
     default:
       config.homepage.order = [
         "hero",
@@ -96,22 +100,28 @@ export function getPersonalization(user) {
         "Continue discovering prehistoric life.";
   }
 
-  /* ---------------- Interest ---------------- */
+  /* ---------------- Interest ----------------
+
+  preferences.interests is stored lowercase (see INTERESTS in
+  models/User.js: "carnivores" | "flying reptiles" | "marine reptiles" |
+  "fossils/geology" | "extinction science") — matched exactly here,
+  including the slash in "fossils/geology" (not "&").
+  */
 
   switch (interest) {
-    case "Marine reptiles":
+    case "marine reptiles":
       config.hero.dinosaur = "mosasaurus";
       break;
 
-    case "Flying reptiles":
+    case "flying reptiles":
       config.hero.dinosaur = "brachiosaurus";
       break;
 
-    case "Fossils & geology":
+    case "fossils/geology":
       config.hero.dinosaur = "triceratops";
       break;
 
-    case "Extinction science":
+    case "extinction science":
       config.hero.dinosaur = "brachiosaurus";
       break;
 
