@@ -218,19 +218,18 @@ export default function Profile() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div className="profile-header">
-            <motion.div
-              className="profile-photo profile-photo--amber"
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.15, ease: "backOut" }}
-            >
-              {companion?.emoji[user.companion.gender] || "🦴"}
-              {user.photo.verified && (
-                <span className="verified-badge" title="Photo verified by an admin">
-                  ✓
-                </span>
-              )}
-            </motion.div>
+         <motion.div
+  className="profile-photo profile-photo--amber"
+  initial={{ scale: 0.6, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{
+    duration: 0.5,
+    delay: 0.15,
+    ease: "backOut",
+  }}
+>
+  {companion?.emoji?.[user.companion?.gender] || "🦴"}
+</motion.div>
             <div>
               <h2 className="profile-name" style={{ marginBottom: 2 }}>
                 {user.username}
