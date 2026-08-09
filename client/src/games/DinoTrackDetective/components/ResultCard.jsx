@@ -59,13 +59,13 @@ export default function ResultCard({
             {isLastTrail ? 'Finish Investigation' : 'Next Trail'}
           </button>
 
-          <button
+          {/* <button
             type="button"
             className="btn btn--secondary"
             onClick={onLearnMore}
           >
             Learn More
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
