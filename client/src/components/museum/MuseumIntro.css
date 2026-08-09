@@ -1,7 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap");
-
 /* =========================================================
    TOKENS
+
+   NOTE ON FONTS:
+   This file used to @import "Cormorant Garamond" locally and use
+   it for .mi-title. That made the Museum hero use a different
+   serif than every other page (which uses the global "Cinzel"
+   title font via .title-font / --font-display, set in index.css).
+   Removed the local font import — .mi-title now uses the same
+   title-font/body-font stack as the rest of the app so headings
+   match across Home, Map, Museum, etc.
 ========================================================= */
 
 .museum-intro {
@@ -21,7 +28,9 @@
   background: var(--mi-ink);
   color: var(--mi-bone);
 
-  font-family: "Inter", system-ui, sans-serif;
+  /* Global body font (Plus Jakarta Sans / Inter stack) instead of a
+     locally-imported "Inter" that could drift from the app default. */
+  font-family: var(--font-body, "Inter", system-ui, sans-serif);
 
   display: flex;
   flex-direction: column;
@@ -119,7 +128,7 @@
 }
 
 .mi-brand-text {
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body, "Inter", sans-serif);
 
   font-size: 12px;
   font-weight: 600;
@@ -275,7 +284,7 @@
 }
 
 .mi-kicker {
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body, "Inter", sans-serif);
 
   font-size: 12px;
   font-weight: 500;
@@ -292,9 +301,12 @@
 .mi-title {
   margin: 0 0 22px;
 
-  font-family: "Cormorant Garamond", serif;
+  /* Was locally-imported "Cormorant Garamond" — now uses the same
+     display font as every other page's headings (Cinzel, via
+     --font-display in the global stylesheet). */
+  font-family: var(--font-display, "Cinzel", serif);
 
-  font-weight: 500;
+  font-weight: 600;
 
   font-size: clamp(2.6rem, 7vw, 5rem);
 
@@ -315,6 +327,8 @@
 }
 
 .mi-description {
+  font-family: var(--font-body, "Inter", sans-serif);
+
   font-size: 15.5px;
 
   line-height: 1.65;
@@ -372,7 +386,7 @@
 
   border-radius: 999px;
 
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body, "Inter", sans-serif);
 
   font-size: 13px;
   font-weight: 600;
@@ -420,7 +434,7 @@
 
   color: var(--mi-bone);
 
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body, "Inter", sans-serif);
 
   font-size: 13px;
   font-weight: 600;
@@ -519,6 +533,8 @@
 }
 
 .mi-scroll-label {
+  font-family: var(--font-body, "Inter", sans-serif);
+
   font-size: 10px;
 
   font-weight: 600;
