@@ -11,7 +11,7 @@ export default function ExhibitPage() {
   const { slug, exhibitSlug } = useParams();
   const navigate = useNavigate();
   const exhibit = getExhibitBySlug(slug, exhibitSlug);
-  const { setCurrentPage } = useGuide();
+  const { setCurrentPage, tourActive } = useGuide();
 
   useEffect(() => {
     setCurrentPage("museum");
@@ -98,20 +98,21 @@ export default function ExhibitPage() {
 
       <MuseumFooter />
 
-      {/* DinoGuide — bottom-right, smaller scale, persists across the
-          whole scroll (fixed), same treatment as MuseumPage/MuseumExplorer. */}
+      {/* DinoGuide — bottom-right by default; flips to bottom-left
+          while the Virtual Tour overlay is active elsewhere, so it never
+          collides with the tour's audio panel (which docks bottom-right). */}
       <div
-        className="
+        className={`
           fixed
           bottom-5
-          right-5
-          md:bottom-6
-          md:right-8
+          ${tourActive ? "left-5 md:left-8" : "right-5 md:right-8"}
           z-[9999]
           scale-[0.65]
           md:scale-[0.7]
-          origin-bottom-right
-        "
+          ${tourActive ? "origin-bottom-left" : "origin-bottom-right"}
+          transition-all
+          duration-300
+        `}
       >
         <DinoGuide section="museum" />
       </div>
