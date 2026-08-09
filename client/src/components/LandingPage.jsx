@@ -159,12 +159,19 @@ export default function LandingPage() {
               );
 
             case "museum":
-              return (
-                <MuseumIntro
-                  key="museum"
-                  onEnter={() => navigate("/museum")}
-                />
-              );
+  return (
+    <MuseumIntro
+      key="museum"
+      primaryCta={{
+        label: "Explore Archive",
+        onClick: () => navigate("/museum"),
+      }}
+      secondaryCta={{
+        label: "Virtual Tour",
+        onClick: () => navigate("/museum/field-museum"),
+      }}
+    />
+  );
 
             case "hybridLab":
               return <HybridLabPreview key="hybridLab" />;
