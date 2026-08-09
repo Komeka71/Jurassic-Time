@@ -1,0 +1,33 @@
+.search-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.search-filters__chip {
+  padding: 7px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(8, 13, 26, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-cinematic),
+    background var(--duration-fast) var(--ease-cinematic),
+    color var(--duration-fast) var(--ease-cinematic);
+}
+
+.search-filters__chip:hover {
+  border-color: var(--era-primary-dim);
+}
+
+.search-filters__chip--active {
+  border-color: var(--era-primary-dim);
+  background: var(--era-primary-dim);
+  color: var(--color-text-primary);
+}

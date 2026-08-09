@@ -1,0 +1,420 @@
+/* ============ Page background ============ */
+
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #eef2ec;
+}
+
+/* ============ Card: white base, image blob on the left ============ */
+
+.auth-card {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-width: none;
+  aspect-ratio: auto;
+  min-height: unset;
+  border-radius: 0;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: none;
+  display: flex;
+}
+
+/* ---- Left image panel, organic blob edge bulging into the white ---- */
+
+.auth-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 54%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+  background: #182619; /* shows briefly while the photo loads */
+  /* Curve stays well clear of the form panel's left edge at every height —
+     no more overlap between the photo's bulge and the text. */
+  border-radius: 0 30% 34% 0 / 0 52% 48% 0;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+}
+
+.auth-image__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.auth-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 10, 7, 0.15) 0%, rgba(6, 10, 7, 0.62) 100%);
+}
+
+.auth-logo {
+  position: absolute;
+  top: 30px;
+  left: 34px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f3ecd9;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+.auth-logo__icon {
+  font-size: 1.2rem;
+}
+
+.auth-headline {
+  position: absolute;
+  left: 34px;
+  bottom: 44px;
+  z-index: 3;
+  max-width: 78%;
+}
+.auth-headline h2 {
+  font-family: var(--font-display);
+  color: #f3ecd9;
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0 0 10px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+.auth-headline p {
+  color: rgba(243, 236, 217, 0.85);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 260px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- Right: plain white panel ---- */
+
+.auth-panel {
+  margin-left: auto;
+  width: 46%;
+  height: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 64px 48px 80px;
+  position: relative;
+}
+
+.auth-vnav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 26px;
+  margin-bottom: auto;
+  padding-bottom: 4px;
+}
+.auth-vnav a {
+  color: #8a978a;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-family: var(--font-body);
+  padding-bottom: 4px;
+}
+.auth-vnav a.active {
+  color: #1f3620;
+  font-weight: 600;
+  border-bottom: 2px solid #4c7a4f;
+}
+
+.auth-panel__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.glass-card__eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #4c7a4f;
+  border: 1px solid rgba(76, 122, 79, 0.4);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+.glass-card__title {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: #1f3620;
+  margin: 0 0 8px;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.glass-card__subtitle {
+  color: #6f7c6f;
+  font-size: 0.92rem;
+  margin: 0 0 28px;
+  line-height: 1.55;
+  max-width: 320px;
+}
+
+.glass-card .field {
+  margin-bottom: 22px;
+  max-width: 320px;
+}
+.glass-card .field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a978a;
+  margin-bottom: 7px;
+}
+.glass-card .field input {
+  width: 100%;
+  /* Slightly taller vertical padding so the tappable area clears the
+     ~44px touch-target guideline on phones, without changing the look. */
+  padding: 11px 2px 13px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid #d8ded6;
+  border-radius: 0;
+  color: #1f3620;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+.glass-card .field input::placeholder {
+  color: #b2bcb0;
+}
+.glass-card .field input:focus {
+  outline: none;
+  border-bottom-color: #4c7a4f;
+}
+.glass-card .field-error {
+  color: #b3503f;
+  font-size: 0.76rem;
+  margin-top: 6px;
+}
+
+.glass-card .form-error-banner {
+  background: #fbeae6;
+  border: 1px solid #e3b6ab;
+  color: #9a4634;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 18px;
+  max-width: 320px;
+}
+
+.glass-card button.primary {
+  width: fit-content;
+  min-width: 150px;
+  min-height: 44px;
+  background: linear-gradient(135deg, #5c8a5f, #35502f);
+  color: #ffffff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 10px 22px rgba(53, 80, 47, 0.3);
+}
+.glass-card button.primary:hover {
+  transform: translateY(-1px);
+}
+.glass-card button.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.glass-card button.ghost {
+  background: #ffffff;
+  border: 1px solid #d8ded6;
+  color: #1f3620;
+  padding: 11px 22px;
+  min-height: 44px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+}
+
+.glass-card__footer {
+  margin-top: 20px;
+  font-size: 0.84rem;
+  color: #6f7c6f;
+}
+.glass-card__footer a {
+  color: #35502f;
+  text-decoration: none;
+  font-weight: 600;
+}
+.glass-card__footer a:hover {
+  text-decoration: underline;
+}
+
+.glass-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap; /* onboarding steps often have 2 buttons — wrap instead of overflow on narrow screens */
+}
+
+.otp-input {
+  letter-spacing: 10px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 1.2rem !important;
+  text-align: left !important;
+  max-width: 220px;
+}
+
+/* ============ Responsive ============ */
+
+@media (max-width: 860px) {
+  .auth-page {
+    padding: 0;
+    align-items: flex-start; /* let the card grow past 100vh and scroll, instead of clipping content */
+  }
+
+  .auth-card {
+    aspect-ratio: auto;
+    min-height: 100vh;
+    height: auto;
+    border-radius: 0;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  /* ---- Hero: switch from absolute-pinned text to normal flow ----
+     This is the fix for the overlap/clipping bug: .auth-logo and
+     .auth-headline no longer fight over the same absolute space, they
+     just stack top-to-bottom like any other flex children. */
+  .auth-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 220px;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 24px 24px;
+  }
+  .auth-logo {
+    position: static;
+    align-self: flex-start;
+  }
+  .auth-headline {
+    position: static;
+    max-width: 100%;
+    margin-top: 18px;
+  }
+  .auth-headline h2 {
+    font-size: 1.4rem;
+  }
+  .auth-headline p {
+    max-width: 100%;
+  }
+
+  .auth-panel {
+    width: 100%;
+    height: auto;
+    padding: 26px 24px 36px;
+  }
+  .auth-vnav {
+    justify-content: center;
+  }
+  .auth-panel__content {
+    align-items: center;
+    text-align: center;
+  }
+  .glass-card .field,
+  .glass-card__subtitle,
+  .glass-card .form-error-banner {
+    max-width: 360px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .glass-card__eyebrow {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .auth-panel form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .glass-card__actions {
+    width: 100%;
+    max-width: 360px;
+    justify-content: center;
+  }
+  .otp-input {
+    max-width: 100%;
+  }
+}
+
+/* Small phones (iPhone SE / narrow Android, ~375px and under) */
+@media (max-width: 380px) {
+  .auth-image {
+    min-height: 190px;
+    padding: 16px 18px 18px;
+  }
+  .auth-headline h2 {
+    font-size: 1.2rem;
+  }
+  .auth-headline p {
+    font-size: 0.8rem;
+  }
+  .auth-panel {
+    padding: 22px 16px 28px;
+  }
+  .glass-card__title {
+    font-size: 1.5rem;
+  }
+  .glass-card button.primary {
+    width: 100%; /* full-width tap target when horizontal space is tight */
+  }
+}
+
+/* Short / landscape viewports (e.g. phone rotated, keyboard open) —
+   stop the hero eating half the visible screen */
+@media (max-width: 860px) and (max-height: 500px) {
+  .auth-image {
+    min-height: 0;
+    padding: 14px 24px;
+  }
+  .auth-headline p {
+    display: none; /* keep the tagline out of the way when vertical space is scarce */
+  }
+  .auth-headline h2 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  .auth-logo {
+    font-size: 0.9rem;
+  }
+}

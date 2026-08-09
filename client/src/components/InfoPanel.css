@@ -1,0 +1,223 @@
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.2vw, 28px);
+  border: 1px solid rgba(255, 255, 255, 0.01);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    165deg,
+    rgba(27, 39, 69, 0.1) 0%,
+    rgba(8, 13, 26, 0.1) 100%
+  );
+  backdrop-filter: blur(52px) saturate(140%);
+  -webkit-backdrop-filter: blur(52px) saturate(140%);
+  box-shadow: 0 0 0 1px var(--era-primary-dim),
+    0 24px 48px -34px rgba(0, 0, 0, 0.22), 0 0 40px -8px var(--era-glow);
+  /* A very subtle idle float — the panel is a permanent fixture, this is
+     just ambient motion to separate it from the environment, like a
+     lightweight holographic display. Not tied to exhibit changes in any
+     way, so it keeps running continuously regardless of which dinosaur
+     is showing. Blur/background here are never animated — always
+     "finished glass" from the first frame. */
+  animation: info-panel-float 6s ease-in-out infinite alternate;
+}
+
+@keyframes info-panel-float {
+  from {
+    transform: translateY(-1.5px);
+  }
+  to {
+    transform: translateY(1.5px);
+  }
+}
+
+.info-panel__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--era-primary);
+  margin-bottom: 6px;
+}
+
+/* Title and body each mount fresh per exhibit (see InfoPanel.jsx's `key`
+   usage) so these entrance animations restart every time, first exhibit
+   included. Title first, body ~100ms behind it. */
+@keyframes info-panel-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes info-panel-body-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-panel__name {
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+  /* Starts once the background cross-fade has settled (~650ms, see
+     SceneLayer.css) plus a short pause. */
+  animation: info-panel-title-in 350ms cubic-bezier(0.16, 1, 0.3, 1) 775ms both;
+}
+
+/* Facts + CTA animate together as one block, not line by line. Starts
+   ~100ms after the title animation begins (775ms + 100ms). */
+.info-panel__body {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  animation: info-panel-body-in 350ms cubic-bezier(0.16, 1, 0.3, 1) 875ms both;
+}
+
+.info-panel__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+.info-panel__fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.info-panel__fact dt {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.info-panel__fact dd {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-align: right;
+}
+
+.info-panel__cta {
+  padding: 12px 20px;
+  border: 1px solid var(--era-primary-dim);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--era-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background var(--duration-fast) var(--ease-cinematic),
+    color var(--duration-fast) var(--ease-cinematic);
+}
+
+.info-panel__cta:hover,
+.info-panel__cta:focus-visible {
+  background: var(--era-primary-dim);
+  color: var(--color-text-primary);
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile summary card — a distinct, purpose-built view, not the full  */
+/* panel compressed. Same glass recipe as .info-panel for aesthetic    */
+/* consistency, but its own rules so .info-panel above stays untouched.*/
+/* ------------------------------------------------------------------ */
+
+.info-panel-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .info-panel {
+    display: none;
+  }
+
+  .info-panel-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 16px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.01);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(
+      165deg,
+      rgba(27, 39, 69, 0.1) 0%,
+      rgba(8, 13, 26, 0.1) 100%
+    );
+    backdrop-filter: blur(52px) saturate(140%);
+    -webkit-backdrop-filter: blur(52px) saturate(140%);
+    box-shadow: 0 0 0 1px var(--era-primary-dim),
+      0 24px 48px -34px rgba(0, 0, 0, 0.22),
+      0 0 40px -8px var(--era-glow);
+    animation: info-panel-float 6s ease-in-out infinite alternate;
+  }
+
+  .info-panel-mobile__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    animation: info-panel-title-in 350ms cubic-bezier(0.16, 1, 0.3, 1) 775ms both;
+  }
+
+  .info-panel-mobile__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: info-panel-body-in 350ms cubic-bezier(0.16, 1, 0.3, 1) 875ms both;
+  }
+
+  .info-panel-mobile__meta {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+  }
+
+  .info-panel-mobile__cta {
+    padding: 10px 18px;
+    border: 1px solid var(--era-primary-dim);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--era-primary);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background var(--duration-fast) var(--ease-cinematic),
+      color var(--duration-fast) var(--ease-cinematic);
+  }
+
+  .info-panel-mobile__cta:hover,
+  .info-panel-mobile__cta:focus-visible {
+    background: var(--era-primary-dim);
+    color: var(--color-text-primary);
+  }
+}

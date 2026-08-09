@@ -1,0 +1,409 @@
+/* Dimmed backdrop — lets the timeline stay visible behind it, per spec.
+   Unchanged from the first version of this component. */
+.detail-drawer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 6, 11, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms var(--ease-cinematic);
+}
+
+.detail-drawer__backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Desktop: a side panel sliding in from the right, flush with the
+   viewport edge, rounded only on the inward-facing (left) corners.
+   Width is now ~48-50% of the viewport (clamped so it stays readable on
+   narrow windows and doesn't sprawl on ultra-wide monitors) — the scene
+   remains visible behind it through the dimmed backdrop. The slide/
+   opening transition itself is unchanged from earlier versions. */
+.detail-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  width: clamp(560px, 49vw, 820px);
+  background: linear-gradient(
+    165deg,
+    rgba(16, 25, 47, 0.97) 0%,
+    rgba(8, 13, 26, 0.97) 100%
+  );
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  box-shadow: -32px 0 64px -32px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transform: translateX(100%);
+  transition: transform 400ms var(--ease-cinematic);
+}
+
+.detail-drawer--open {
+  transform: translateX(0);
+}
+
+.detail-drawer__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(8, 13, 26, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--color-text-primary);
+  font-size: 0.85rem;
+  line-height: 1;
+  transition: border-color var(--duration-fast) var(--ease-cinematic),
+    color var(--duration-fast) var(--ease-cinematic);
+}
+
+.detail-drawer__close:hover,
+.detail-drawer__close:focus-visible {
+  border-color: var(--color-cyan-dim);
+  color: var(--color-cyan);
+}
+
+.detail-drawer__scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.detail-drawer__hero {
+  height: 260px;
+  background-size: cover;
+  background-position: center;
+  background-color: #0a1712;
+}
+
+/* Vertical padding trimmed (24/40 -> 20/32); the extra horizontal room
+   from the wider drawer goes into side padding for breathing room. */
+.detail-drawer__content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px clamp(24px, 3vw, 36px) 32px;
+}
+
+.detail-drawer__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.detail-drawer__scientific {
+  margin: 4px 0 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+
+/* --------------------------------------------------------------- */
+/* Pronunciation + speech synthesis                                 */
+/* --------------------------------------------------------------- */
+
+.detail-drawer__pronunciation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.detail-drawer__speaker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(111, 228, 224, 0.08);
+  color: var(--color-cyan);
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: border-color var(--duration-fast) var(--ease-cinematic),
+    background var(--duration-fast) var(--ease-cinematic);
+}
+
+.detail-drawer__speaker:hover,
+.detail-drawer__speaker:focus-visible {
+  border-color: var(--color-cyan-dim);
+  background: rgba(111, 228, 224, 0.18);
+}
+
+.detail-drawer__speaker--speaking {
+  animation: detail-drawer-speaker-pulse 0.7s ease-in-out infinite;
+}
+
+@keyframes detail-drawer-speaker-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.detail-drawer__pronunciation-text {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------- */
+/* Species chips                                                    */
+/* --------------------------------------------------------------- */
+
+.detail-drawer__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.detail-drawer__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(111, 228, 224, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------- */
+/* Museum information board — 2 columns on desktop, spans:           */
+/*   Overview | Quick Facts                                          */
+/*   Life in its Environment | Did You Know                          */
+/*   Gallery (full width)                                            */
+/* Collapses to a single stacked column below 1000px, and again as    */
+/* part of the full mobile bottom-sheet layout below 768px.           */
+/* --------------------------------------------------------------- */
+
+.detail-drawer__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 28px;
+  row-gap: 4px;
+  margin-top: 8px;
+}
+
+.detail-drawer__section {
+  margin-top: 22px;
+}
+
+.detail-drawer__section--full {
+  grid-column: 1 / -1;
+}
+
+.detail-drawer__heading {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+  margin: 0 0 12px;
+}
+
+.detail-drawer__text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.detail-drawer__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.detail-drawer__fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.detail-drawer__fact dt {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.detail-drawer__fact dd {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-align: right;
+}
+
+/* --------------------------------------------------------------- */
+/* Did You Know?                                                    */
+/* --------------------------------------------------------------- */
+
+.detail-drawer__fun-fact {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(111, 228, 224, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(111, 228, 224, 0.05);
+}
+
+.detail-drawer__fun-fact-icon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* --------------------------------------------------------------- */
+/* Gallery — 2-3 preview thumbnails, "+N" opens the placeholder      */
+/* fullscreen view                                                   */
+/* --------------------------------------------------------------- */
+
+.detail-drawer__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.detail-drawer__gallery-item {
+  position: relative;
+  aspect-ratio: 1;
+  border: none;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--duration-fast) var(--ease-cinematic);
+}
+
+.detail-drawer__gallery-item:hover {
+  transform: scale(1.05);
+}
+
+.detail-drawer__gallery-more {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 11, 0.6);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Placeholder fullscreen gallery overlay */
+.detail-drawer__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(4, 6, 11, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.detail-drawer__lightbox-card {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 32px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    165deg,
+    rgba(27, 39, 69, 0.9) 0%,
+    rgba(8, 13, 26, 0.9) 100%
+  );
+  text-align: center;
+}
+
+.detail-drawer__lightbox-text {
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* Collapse the 2-column board to a single column on narrower desktop/
+   tablet windows, before the full mobile bottom-sheet layout kicks in */
+@media (max-width: 1000px) {
+  .detail-drawer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile: the same drawer becomes a bottom sheet. Layout unchanged from
+   earlier versions of this component — only desktop's width/spacing/
+   grid changed above. */
+@media (max-width: 768px) {
+  .detail-drawer {
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 85vh;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 -24px 64px -32px rgba(0, 0, 0, 0.6);
+    transform: translateY(100%);
+  }
+
+  .detail-drawer--open {
+    transform: translateY(0);
+  }
+
+  .detail-drawer__hero {
+    height: 160px;
+  }
+}
