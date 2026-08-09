@@ -52,27 +52,57 @@ export default function HybridLabPreview({
       className="relative min-h-screen overflow-hidden bg-[#030706] text-white"
     >
       {/* =========================================================
-          BACKGROUND
+          BACKGROUND VIDEO
       ========================================================= */}
 
-      {/* Dark cinematic overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#020504] via-[#030806]/95 to-[#06120e]/70" />
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      >
+        <source
+          src="/videos/landing/Jungle-Sunrise.mp4"
+          type="video/mp4"
+        />
+      </video>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-[#020504] via-transparent to-[#020504]/70" />
+      {/* =========================================================
+          VIDEO DARKENING
+      ========================================================= */}
 
-      {/* Ambient cyan glow */}
-      <div className="absolute right-[-150px] top-[10%] h-[550px] w-[550px] rounded-full bg-cyan-400/[0.07] blur-[150px]" />
+      {/* Main cinematic dark overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-[#020504]/70" />
 
-      {/* Ambient green glow */}
-      <div className="absolute bottom-[-150px] left-[-150px] h-[500px] w-[500px] rounded-full bg-emerald-500/[0.07] blur-[150px]" />
+      {/* Stronger darkness on the left for text */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/95 via-[#020504]/80 to-[#020504]/45" />
 
-      {/* Tiny laboratory atmosphere */}
+      {/* Stronger darkness toward bottom */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020504]/95 via-transparent to-[#020504]/50" />
+
+      {/* Slight green/cyan atmosphere */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-950/20 via-transparent to-cyan-950/20" />
+
+      {/* =========================================================
+          AMBIENT LIGHT
+      ========================================================= */}
+
+      <div className="pointer-events-none absolute right-[-150px] top-[10%] h-[550px] w-[550px] rounded-full bg-cyan-400/[0.07] blur-[150px]" />
+
+      <div className="pointer-events-none absolute bottom-[-150px] left-[-150px] h-[500px] w-[500px] rounded-full bg-emerald-500/[0.07] blur-[150px]" />
+
+      {/* =========================================================
+          SMALL FLOATING LIGHT PARTICLES
+      ========================================================= */}
+
       <div className="pointer-events-none absolute right-[18%] top-[20%] h-1 w-1 rounded-full bg-cyan-300 shadow-[0_0_15px_5px_rgba(34,211,238,.35)]" />
 
       <div className="pointer-events-none absolute right-[8%] bottom-[30%] h-1 w-1 rounded-full bg-emerald-300 shadow-[0_0_15px_5px_rgba(52,211,153,.3)]" />
 
       {/* =========================================================
-          CONTENT
+          MAIN CONTENT
       ========================================================= */}
 
       <div className="relative z-20 mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-16 px-6 py-24 lg:flex-row lg:items-center">
@@ -87,12 +117,10 @@ export default function HybridLabPreview({
           transition={{ duration: 0.7 }}
           className="relative z-10 max-w-xl"
         >
-          {/* Eyebrow */}
           <p className="mb-4 text-xs uppercase tracking-[0.4em] text-cyan-300">
             Beyond the Museum
           </p>
 
-          {/* Heading */}
           <h2 className="text-4xl font-black leading-tight text-white md:text-6xl">
             Beyond the Museum.
 
@@ -101,7 +129,6 @@ export default function HybridLabPreview({
             </span>
           </h2>
 
-          {/* Description */}
           <p className="mt-6 max-w-md text-base leading-7 text-gray-300 md:text-lg">
             Hidden beneath the rainforest lies a place where extinct life
             is studied in ways the museum never could. Explore ancient DNA,
@@ -109,7 +136,6 @@ export default function HybridLabPreview({
             possible.
           </p>
 
-          {/* CTA */}
           <div className="mt-10 flex flex-wrap gap-4">
             <button
               onClick={handleEnter}
@@ -118,7 +144,7 @@ export default function HybridLabPreview({
               className="
                 rounded-full
                 border border-cyan-400/30
-                bg-white/[0.04]
+                bg-black/20
                 px-8 py-4
                 text-sm
                 font-semibold
@@ -158,8 +184,7 @@ export default function HybridLabPreview({
         </motion.div>
 
         {/* =====================================================
-            RIGHT — HYBRID LAB
-            NO LARGE CIRCLE
+            RIGHT — LAB PANEL
         ===================================================== */}
 
         <motion.div
@@ -172,11 +197,7 @@ export default function HybridLabPreview({
           onMouseLeave={() => setPortalHover(false)}
         >
           <div className="relative mx-auto w-full max-w-[600px]">
-
-            {/* =================================================
-                LAB GLOW
-            ================================================= */}
-
+            {/* Lab glow */}
             <div className="pointer-events-none absolute -inset-20 bg-cyan-400/[0.025] blur-[100px]" />
 
             {/* =================================================
@@ -195,15 +216,15 @@ export default function HybridLabPreview({
                 rounded-[32px]
                 border
                 border-cyan-300/[0.12]
-                bg-[#06100d]/75
+                bg-[#06100d]/65
                 shadow-[0_30px_100px_rgba(0,0,0,.55)]
                 backdrop-blur-xl
               "
             >
               {/* Top glass reflection */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-cyan-300/[0.04] to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-cyan-300/[0.05] to-transparent" />
 
-              {/* Grid */}
+              {/* Scientific grid */}
               <div
                 className="
                   pointer-events-none
@@ -216,7 +237,7 @@ export default function HybridLabPreview({
               />
 
               {/* =================================================
-                  CORNER TECH MARKERS
+                  CORNER MARKERS
               ================================================= */}
 
               <div className="absolute left-6 top-6 h-8 w-8 border-l border-t border-cyan-300/40" />
@@ -228,7 +249,7 @@ export default function HybridLabPreview({
               <div className="absolute bottom-6 right-6 h-8 w-8 border-b border-r border-cyan-300/40" />
 
               {/* =================================================
-                  ONLINE CHIP
+                  ONLINE
               ================================================= */}
 
               <div className="absolute left-8 top-8 z-20 flex items-center gap-2 rounded-full border border-cyan-400/20 bg-black/40 px-4 py-2 backdrop-blur-xl">
@@ -240,7 +261,7 @@ export default function HybridLabPreview({
               </div>
 
               {/* =================================================
-                  LAB TITLE
+                  TITLE
               ================================================= */}
 
               <div className="absolute left-8 top-24 z-20">
@@ -258,16 +279,12 @@ export default function HybridLabPreview({
               ================================================= */}
 
               <div className="absolute inset-0 flex items-center justify-center">
-
-                {/* Glow behind DNA */}
                 <motion.div
                   animate={{
                     opacity: portalHover ? 0.8 : 0.45,
                     scale: portalHover ? 1.1 : 1,
                   }}
-                  transition={{
-                    duration: 0.6,
-                  }}
+                  transition={{ duration: 0.6 }}
                   className="
                     absolute
                     h-48
@@ -277,7 +294,6 @@ export default function HybridLabPreview({
                   "
                 />
 
-                {/* DNA SVG */}
                 <motion.svg
                   animate={{
                     scale: portalHover ? 1.08 : 1,
@@ -358,7 +374,7 @@ export default function HybridLabPreview({
               </div>
 
               {/* =================================================
-                  SCANNER LINE
+                  SCANNER
               ================================================= */}
 
               <motion.div
@@ -386,7 +402,7 @@ export default function HybridLabPreview({
               />
 
               {/* =================================================
-                  LEFT TECH READOUT
+                  DNA READOUT
               ================================================= */}
 
               <div className="absolute bottom-10 left-8 z-20">
@@ -409,7 +425,7 @@ export default function HybridLabPreview({
               </div>
 
               {/* =================================================
-                  RIGHT STATUS
+                  SPECIMEN STATUS
               ================================================= */}
 
               <div className="absolute bottom-10 right-8 z-20 text-right">
@@ -424,7 +440,8 @@ export default function HybridLabPreview({
             </motion.div>
 
             {/* =================================================
-                ACCESS LEVEL CARD
+                ACCESS CARD
+                STAYS INSIDE LAB AREA BUT NOT BEHIND DINO
             ================================================= */}
 
             <motion.div
@@ -435,17 +452,16 @@ export default function HybridLabPreview({
               className="
                 absolute
                 -bottom-7
-                right-4
+                right-8
                 z-30
                 rounded-2xl
                 border
                 border-cyan-400/20
-                bg-[#06110e]/90
+                bg-[#06110e]/95
                 px-5
                 py-3
                 shadow-[0_15px_40px_rgba(0,0,0,.4)]
                 backdrop-blur-xl
-                md:right-8
               "
             >
               <p className="text-[9px] uppercase tracking-[0.3em] text-cyan-300/70">
@@ -456,28 +472,35 @@ export default function HybridLabPreview({
                 Genetics Research Lab
               </p>
             </motion.div>
-
-            {/* =================================================
-                DINO GUIDE
-            ================================================= */}
-
-            <div
-              className="
-                absolute
-                -bottom-14
-                -right-10
-                z-40
-                scale-[0.8]
-                origin-bottom-right
-                md:-bottom-16
-                md:-right-12
-                md:scale-[0.9]
-              "
-            >
-              <DinoGuide section="hybridLab" />
-            </div>
           </div>
         </motion.div>
+      </div>
+
+      {/* =========================================================
+          DINO GUIDE
+          IMPORTANT:
+          OUTSIDE THE LAB PANEL
+          ANCHORED TO THE SECTION'S BOTTOM-RIGHT
+      ========================================================= */}
+
+      <div
+        className="
+          pointer-events-auto
+          absolute
+          bottom-5
+          right-5
+          z-[60]
+          scale-[0.72]
+          origin-bottom-right
+          sm:scale-[0.78]
+          md:right-8
+          md:scale-[0.85]
+          lg:right-12
+          lg:scale-[0.9]
+          xl:right-16
+        "
+      >
+        <DinoGuide section="hybridLab" />
       </div>
     </section>
   );
