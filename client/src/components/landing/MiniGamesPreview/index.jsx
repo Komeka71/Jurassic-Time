@@ -29,10 +29,10 @@ export default function MiniGamesPreview() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-[1150px] overflow-hidden bg-[#07120c] md:min-h-[1250px] lg:min-h-[1350px]"
-    >
+ <section
+  ref={sectionRef}
+  className="relative min-h-[900px] overflow-hidden bg-[#07120c] md:min-h-[950px] lg:min-h-[1000px]"
+>
       {/* BACKGROUND */}
       <motion.div
         className="absolute inset-0 z-0"
@@ -157,25 +157,26 @@ export default function MiniGamesPreview() {
             The extra section height is used here instead of leaving
             a random empty gap.
         */}
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.35, duration: 0.6 }}
-          className="
-            relative
-            mt-20
-            flex
-            justify-center
-            lg:mt-24
-            lg:justify-end
-            lg:pr-8
-          "
-        >
-          <div className="relative z-30">
-            <DinoGuide section="miniGames" />
-          </div>
-        </motion.div>
+    {/* DINO GUIDE */}
+<motion.div
+  initial={{ opacity: 0, y: 35 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ delay: 0.35, duration: 0.6 }}
+  className="
+    relative
+    mt-12
+    flex
+    justify-center
+    lg:mt-14
+    lg:justify-end
+    lg:pr-8
+  "
+>
+  <div className="relative z-30">
+    <DinoGuide section="miniGames" />
+  </div>
+</motion.div>
 
       </div>
     </section>

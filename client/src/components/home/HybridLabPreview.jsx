@@ -64,7 +64,7 @@ export default function HybridLabPreview({
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       >
         <source
-          src="/videos/landing/Jungle-Sunrise.mp4"
+          src="/videos/hybrid-preview/lab.mp4"
           type="video/mp4"
         />
       </video>
@@ -483,25 +483,28 @@ export default function HybridLabPreview({
           ANCHORED TO THE SECTION'S BOTTOM-RIGHT
       ========================================================= */}
 
-      <div
-        className="
-          pointer-events-auto
-          absolute
-          bottom-5
-          right-5
-          z-[60]
-          scale-[0.72]
-          origin-bottom-right
-          sm:scale-[0.78]
-          md:right-8
-          md:scale-[0.85]
-          lg:right-12
-          lg:scale-[0.9]
-          xl:right-16
-        "
-      >
-        <DinoGuide section="hybridLab" />
-      </div>
+<div
+  className="
+    pointer-events-auto
+    absolute
+    bottom-[-25px]
+    right-[-45px]
+    z-[60]
+    scale-[0.72]
+    origin-bottom-right
+    sm:scale-[0.78]
+    md:right-[-50px]
+    md:bottom-[-30px]
+    md:scale-[0.85]
+    lg:right-[-60px]
+    lg:bottom-[-35px]
+    lg:scale-[0.9]
+    xl:right-[-70px]
+    xl:bottom-[-40px]
+  "
+>
+  <DinoGuide section="hybridLab" />
+</div>
     </section>
   );
 }
