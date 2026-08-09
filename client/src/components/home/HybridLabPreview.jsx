@@ -79,16 +79,16 @@ export default function HybridLabPreview({
       ========================================================= */}
 
       {/* Main cinematic dark overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-[#020504]/35" />
+      <div className="pointer-events-none absolute inset-0 bg-[#020504]/50" />
 
       {/* Stronger darkness on the left for text */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/70 via-[#020504]/45 to-[#020504]/15" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020504]/85 via-[#020504]/60 to-[#020504]/25" />
 
       {/* Stronger darkness toward bottom */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020504]/60 via-transparent to-[#020504]/25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020504]/75 via-transparent to-[#020504]/35" />
 
       {/* Slight green/cyan atmosphere */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-950/10 via-transparent to-cyan-950/10" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-950/15 via-transparent to-cyan-950/15" />
 
       {/* =========================================================
           AMBIENT LIGHT
@@ -495,20 +495,20 @@ export default function HybridLabPreview({
   className="
     pointer-events-auto
     absolute
-    bottom-0
-    right-[-20px]
+    bottom-8
+    right-8
     z-[60]
     scale-[0.72]
     origin-bottom-right
     sm:scale-[0.78]
-    md:right-[-25px]
-    md:bottom-2
+    md:right-12
+    md:bottom-10
     md:scale-[0.85]
-    lg:right-[-30px]
-    lg:bottom-4
+    lg:right-16
+    lg:bottom-12
     lg:scale-[0.9]
-    xl:right-[-40px]
-    xl:bottom-6
+    xl:right-20
+    xl:bottom-14
   "
 >
   <DinoGuide section="hybridLab" />
