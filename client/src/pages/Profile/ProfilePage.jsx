@@ -1,3 +1,4 @@
+// ProfilePage.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,9 @@ import EditProfileModal from "./components/EditProfileModal";
 import AccountInfo from "./components/AccountInfo";
 import SectionNav from "./components/SectionNav";
 import JungleBackdrop from "./components/JungleBackdrop";
-import HomeButton from "../../components/Homebtn.jsx"; // adjust path to match where Homebtn.jsx actually lives relative to this file
+import HomeButton from "../../components/Homebtn.jsx";
+import DinoGuide from "../../components/guide/DinoGuide"; // adjust path to match your actual DinoGuide location relative to this file
+import { useGuide } from "../../context/GuideContext"; // adjust path to match your actual GuideContext location
 import "./profile.css";
 
 const SECTIONS = [
@@ -36,8 +39,16 @@ const SECTIONS = [
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { profile, loading, error, refresh, updateProfile, claimMission } = useProfile();
+  const { setCurrentPage } = useGuide();
   const [editOpen, setEditOpen] = useState(false);
   const [active, setActive] = useState("overview");
+
+  // Standalone route (not a scroll-section on a longer landing page), so
+  // we just claim "profile" once on mount rather than using an
+  // IntersectionObserver like Hero/HybridLabPreview do.
+  useEffect(() => {
+    setCurrentPage("profile");
+  }, [setCurrentPage]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -130,6 +141,25 @@ export default function ProfilePage() {
             <SettingsSection settings={profile.settings} onChange={updateProfile} />
           </section> */}
         </main>
+      </div>
+
+      {/* Fixed, page-level DinoGuide — sits above the SectionNav rail so
+          it doesn't get scrolled away, and stays clear of HomeButton
+          (right) and SectionNav (left edge). */}
+      <div
+        className="
+          fixed
+          bottom-5
+          left-24
+          md:left-28
+          z-40
+          scale-[0.85]
+          md:scale-[0.95]
+          origin-bottom-left
+          pointer-events-auto
+        "
+      >
+        <DinoGuide section="profile" />
       </div>
 
       <AnimatePresence>
