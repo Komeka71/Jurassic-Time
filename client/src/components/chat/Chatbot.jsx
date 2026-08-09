@@ -146,7 +146,7 @@ function appendAssistantMessage(setMessages, text) {
 
 export default function Chatbot({ personalization, page, userName }) {
   const [open, setOpen] = useState(false);
-  const { currentPage, currentDinosaur, lastAction } = useGuide();
+  const { currentPage, currentDinosaur, lastAction, quizActive } = useGuide();
 
   // A page can pass its own identity explicitly so the guide's very first
   // welcome message never has to guess from shared context before that
@@ -249,6 +249,14 @@ export default function Chatbot({ personalization, page, userName }) {
 
           page: effectivePage,
           userName,
+
+          // True only while the user is actively answering a quiz question
+          // (i.e. before the reward chest/summary screen appears). Drives a
+          // hard server-side lock so Paleo can never leak or hint at an
+          // answer, regardless of how the question is phrased.
+          quizActive: effectivePage?.startsWith("quiz")
+            ? !!quizActive
+            : false,
 
           purpose:
             personalization?.purpose || personalization?.preferences?.purpose,

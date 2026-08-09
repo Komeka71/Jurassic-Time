@@ -14,6 +14,7 @@ async function chat(req, res) {
       guide,
       hero,
       userName,
+      quizActive,
     } = req.body;
 
     if (!message) {
@@ -31,6 +32,7 @@ async function chat(req, res) {
       guide,
       hero,
       userName,
+      quizActive,
     });
 
     res.json({
