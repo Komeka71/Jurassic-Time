@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-
+import LoaderPage from "./components/LoaderPage.jsx";
 /* =========================
    GLOBAL
 ========================= */
