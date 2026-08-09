@@ -381,6 +381,23 @@ hybridLab: {
       "Another museum, fully explored!",
     ],
   },
+  // messages.js — inside sectionMessages
+  museumIntro: {
+    idle: [
+      "Welcome to the Deep Time Collection.",
+      "Every record here is verified.",
+      "The archive goes back millions of years.",
+      "Step inside when you're ready.",
+    ],
+    thinking: [
+      "Archive or Virtual Tour — where to first?",
+      "So much history behind these doors...",
+    ],
+    pointingRight: [
+      "Try the Virtual Tour!",
+      "The Archive is this way.",
+    ],
+  },
   camp: {
     idle: [
       "Welcome back to camp.",

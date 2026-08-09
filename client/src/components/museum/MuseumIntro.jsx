@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import DinoGuide from "../guide/DinoGuide"; // adjust path to match actual location relative to this file
 import "./MuseumIntro.css";
 
 const LEDGER_ITEMS = [
@@ -153,6 +154,18 @@ export default function MuseumIntro({
         <span className="mi-scroll-line" />
         <span className="mi-scroll-label">SCROLL</span>
       </div>
+
+      {/* DinoGuide — bottom-right of the splash, above the chat bubble that
+          already lives in that corner. Small, absolute (not fixed) since
+          this is a single-screen cinematic intro, not a long scroll. */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={loaded ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.75 }}
+        className="mi-dino-guide"
+      >
+        <DinoGuide section="museumIntro" />
+      </motion.div>
     </section>
   );
 }

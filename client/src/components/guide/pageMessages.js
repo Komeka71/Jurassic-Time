@@ -78,6 +78,12 @@ hybridLab: [
     "🎧 Try the audio guide for the full experience.",
     "🗺️ Pick a museum and start exploring.",
   ],
+  // pageMessages.js
+  museumIntro: [
+    "🏛️ Welcome to the Museum Archive.",
+    "🦴 Step through and explore Earth's deep past.",
+    "🎬 Try the Virtual Tour for a guided walk.",
+  ],
 };
 
 export function getPageMessage(page = "default") {

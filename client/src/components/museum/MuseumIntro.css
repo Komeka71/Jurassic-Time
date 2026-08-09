@@ -598,3 +598,27 @@
 .mi-btn-secondary {
   pointer-events: auto;
 }
+
+.mi-dino-guide {
+  position: absolute;
+  bottom: 110px;
+  right: 24px;
+  z-index: 40;
+  transform: scale(0.6);
+  transform-origin: bottom right;
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .mi-dino-guide {
+    bottom: 130px;
+    right: 40px;
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 480px) {
+  .mi-dino-guide {
+    display: none; /* keep the splash uncluttered on small phones */
+  }
+}
