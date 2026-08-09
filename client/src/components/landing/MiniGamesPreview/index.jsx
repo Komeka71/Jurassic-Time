@@ -406,7 +406,7 @@ export default function MiniGamesPreview() {
             lg:pr-8
           "
         >
-          <div className="relative z-30">
+          <div className="relative z-20">
             <DinoGuide section="miniGames" />
           </div>
         </motion.div>
