@@ -621,24 +621,24 @@ export default function EraSorting() {
           onBackToGames={onNavigateGames}
         />
       )}
-
-      {(phase === 'intro' || phase === 'playing') && (
-        <div
-          className="
-            fixed
-            bottom-28
-            right-4
-            md:bottom-32
-            md:right-6
-            z-[9999]
-            scale-[0.55]
-            md:scale-[0.65]
-            origin-bottom-right
-          "
-        >
-          <DinoGuide section="eraSorting" />
-        </div>
-      )}
+{(phase === 'intro' || phase === 'playing') && (
+  <div
+    className="
+      fixed
+      bottom-2
+      right-4
+      md:bottom-3
+      md:right-6
+      z-[9999]
+      scale-[0.55]
+      md:scale-[0.65]
+      origin-bottom-right
+      pointer-events-none
+    "
+  >
+    <DinoGuide section="eraSorting" />
+  </div>
+)}
     </div>
   );
 }
