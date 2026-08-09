@@ -1,10 +1,20 @@
-import { allDinosaurs } from '../../data/allDinosaurs.js'
+import { getAllDinosaurs } from '../../api/client.js'
 import { registerSearchCollection } from '../searchService.js'
 
 /**
  * Registers dinosaurs as a searchable collection — Phase 1 of Global
  * Museum Search. Matches on name, scientificName, and era (case-
  * insensitive, trimmed, partial — handled generically by searchService).
+ *
+ * Phase 6B: `getItems` now fetches from the backend (MongoDB, via
+ * GET /api/v1/dinosaurs — see api/client.js's getAllDinosaurs, which
+ * walks pagination rather than assuming everything fits on one page)
+ * instead of returning the local data/allDinosaurs.js array. This is
+ * exactly the swap this function's original comment anticipated —
+ * `getItems` was already async-capable for this reason. Nothing else
+ * changes: `toResult`, `searchFields`, and searchService.js's own
+ * matching logic (itemMatches) are all untouched, so Search's UI and
+ * behavior are identical — only the data source moved to MongoDB.
  *
  * `toResult` is the only place that knows dinosaurs' specific field
  * names; every UI component downstream (SearchCard, etc.) only ever
@@ -17,7 +27,7 @@ registerSearchCollection({
   id: 'dinosaurs',
   label: 'Dinosaurs',
   searchFields: ['name', 'scientificName', 'era'],
-  getItems: () => allDinosaurs,
+  getItems: () => getAllDinosaurs(),
   toResult: (dinosaur) => ({
     id: `dinosaurs:${dinosaur.id}`,
     type: 'dinosaurs',

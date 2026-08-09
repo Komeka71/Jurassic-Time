@@ -2,10 +2,6 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import './ExhibitPanel.css'
 
-// Only this many thumbnails show inline; a 4th "+N" tile opens the
-// (placeholder) fullscreen gallery view when more exist.
-const GALLERY_PREVIEW_COUNT = 3
-
 const MOBILE_QUERY = '(max-width: 768px)'
 
 // Every card/section shares this: opacity + a small translateY only.
@@ -28,54 +24,66 @@ const containerVariants = {
 }
 
 /**
- * A small, reusable "museum plaque" card — an icon, a heading, and
- * whatever content is passed as children. Used for Overview, Quick
- * Facts, Life in its Environment, and Museum Highlight.
+ * One long-form research section — an eyebrow label, then a paragraph.
+ * Renders nothing if `text` is empty, matching the rest of this panel's
+ * existing pattern of skipping a section rather than showing an empty
+ * one. Deliberately plain (no bordered "card" box) — the museum/wiki
+ * brief calls for reading like an encyclopedia entry, not a dashboard
+ * tile, so these sit directly on the panel background as flowing text.
  */
-function InfoCard({ icon, heading, highlight, children }) {
+function ResearchSection({ eyebrow, text, fallback }) {
+  const body = text || fallback
+  if (!body) return null
+
   return (
-    <motion.section
-      className={'exhibit-panel__card' + (highlight ? ' exhibit-panel__card--highlight' : '')}
-      variants={itemVariants}
-    >
-      <h3 className="exhibit-panel__card-heading">
-        <span aria-hidden="true">{icon}</span> {heading}
-      </h3>
-      {children}
+    <motion.section className="exhibit-panel__section" variants={itemVariants}>
+      <h3 className="exhibit-panel__section-heading">{eyebrow}</h3>
+      <p className="exhibit-panel__text">{body}</p>
     </motion.section>
   )
 }
 
 /**
  * Reusable dinosaur Exhibit Panel — the final exhibit page for a
- * dinosaur, styled as a centered, floating museum panel rather than a
- * sidebar. Fully controlled by its two props: pass a dinosaur object to
- * open it, pass null/undefined to close it.
+ * dinosaur, styled as a centered, floating museum specimen record
+ * rather than a dashboard of small fact cards. Fully controlled by its
+ * two props: pass a dinosaur object to open it, pass null/undefined to
+ * close it.
  *
- * Desktop/tablet: a centered panel that scales up (96% → 100%) and
- * fades/lifts in over the dimmed, lightly blurred timeline — the scene
- * stays visible in the margins around it. Overview/Quick Facts/Life in
- * its Environment/Museum Highlight lay out as a 2x2 museum information
- * board; Gallery spans the full width beneath.
+ * Redesigned for a museum/encyclopedia feel (Phase 6A): a horizontal
+ * hero (image + identity + short intro), one horizontal stats bar (not
+ * individual cards), then long-form research sections alongside a
+ * gallery and a "Did You Know?" note. Every value below is read
+ * straight from the `dinosaur` prop — nothing here is hardcoded for
+ * Brachiosaurus or any other single species; swap in any dinosaur
+ * object from data/*.js (or, later, GET /api/v1/dinosaurs/:slug — same
+ * field names) and the whole panel renders correctly.
+ *
+ * Two fields this redesign reaches for don't exist in the data yet:
+ *   - `dinosaur.discovery` (Discovery & Fossil History prose) — every
+ *     current dinosaur has none, so this section shows the same kind
+ *     of graceful fallback line the codebase already uses for a
+ *     missing scientificName, rather than inventing fossil-history text.
+ *   - `dinosaur.gallery` is real but currently empty for all 31
+ *     dinosaurs — the gallery below falls back to the one image every
+ *     dinosaur does have (`sceneImage`) so it never renders broken/empty,
+ *     and automatically upgrades to a real multi-image gallery the
+ *     moment gallery data exists, with no code change needed.
+ * Both are called out in the Phase 6A report, not silently patched
+ * over the backend — see the task's explicit instruction not to invent
+ * new backend fields during this pass.
  *
  * Mobile (<768px): the existing bottom-sheet approach is preserved
  * unchanged in spirit — the panel slides up from the bottom edge and
- * every section stacks in a single column — this large desktop layout is
- * never forced onto phones.
- *
- * Every section is read straight from the dinosaur object and is skipped
- * when its field is missing/empty — nothing here is hardcoded
- * per-dinosaur. Any page can reuse this the same way: keep a
- * `selectedDinosaur` state locally, mount one
- * <ExhibitPanel dinosaur={selectedDinosaur} onClose={...} />, and set
- * that state (from a timeline card, a search result, a map pin) to open
- * it.
+ * every section stacks in a single column, stats bar included (as a
+ * horizontal scroller, not a wrapped grid).
  */
 function ExhibitPanel({ dinosaur, onClose }) {
   const isOpen = Boolean(dinosaur)
 
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
   const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window
 
@@ -113,6 +121,7 @@ function ExhibitPanel({ dinosaur, onClose }) {
       if (speechSupported) window.speechSynthesis.cancel()
       setIsSpeaking(false)
       setIsGalleryOpen(false)
+      setActiveGalleryIndex(0)
     }
   }, [isOpen, speechSupported])
 
@@ -145,8 +154,24 @@ function ExhibitPanel({ dinosaur, onClose }) {
         transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
       }
 
-  const galleryPreview = dinosaur?.gallery?.slice(0, GALLERY_PREVIEW_COUNT) ?? []
-  const galleryRemaining = (dinosaur?.gallery?.length ?? 0) - GALLERY_PREVIEW_COUNT
+  // Gallery images, with a graceful fallback to the one image every
+  // dinosaur already has when `gallery` is empty (true for all current
+  // data) — see the component doc comment above.
+  const galleryImages =
+    dinosaur?.gallery && dinosaur.gallery.length > 0
+      ? dinosaur.gallery
+      : dinosaur?.sceneImage
+        ? [dinosaur.sceneImage]
+        : []
+  const hasMultipleImages = galleryImages.length > 1
+  const [primaryImage, ...secondaryImages] = galleryImages
+  const previewSecondary = secondaryImages.slice(0, 2)
+  const remainingCount = galleryImages.length - 1 - previewSecondary.length
+
+  const openGalleryAt = (index) => {
+    setActiveGalleryIndex(index)
+    setIsGalleryOpen(true)
+  }
 
   return (
     <>
@@ -199,6 +224,9 @@ function ExhibitPanel({ dinosaur, onClose }) {
                 initial="hidden"
                 animate="visible"
               >
+                {/* ---------------------------------------------------- */}
+                {/* Hero: image | identity + short intro                  */}
+                {/* ---------------------------------------------------- */}
                 <div className="exhibit-panel__hero-row">
                   <motion.div
                     className="exhibit-panel__hero-image"
@@ -207,6 +235,7 @@ function ExhibitPanel({ dinosaur, onClose }) {
                   />
 
                   <motion.div className="exhibit-panel__hero-info" variants={itemVariants}>
+                    <p className="exhibit-panel__eyebrow">Specimen Record</p>
                     <h2 className="exhibit-panel__name">{dinosaur.name}</h2>
                     <p className="exhibit-panel__scientific">
                       {dinosaur.scientificName || 'Scientific name coming soon'}
@@ -241,94 +270,129 @@ function ExhibitPanel({ dinosaur, onClose }) {
                     {(dinosaur.diet || dinosaur.period || dinosaur.region) && (
                       <div className="exhibit-panel__chips">
                         {dinosaur.diet && (
-                          <span className="exhibit-panel__chip">
-                            <span aria-hidden="true">🦕</span> {dinosaur.diet}
-                          </span>
+                          <span className="exhibit-panel__chip">{dinosaur.diet}</span>
                         )}
                         {dinosaur.period && (
-                          <span className="exhibit-panel__chip">
-                            <span aria-hidden="true">🌿</span> {dinosaur.period}
-                          </span>
+                          <span className="exhibit-panel__chip">{dinosaur.period}</span>
                         )}
                         {dinosaur.region && (
-                          <span className="exhibit-panel__chip">
-                            <span aria-hidden="true">🌍</span> {dinosaur.region}
-                          </span>
+                          <span className="exhibit-panel__chip">{dinosaur.region}</span>
                         )}
                       </div>
+                    )}
+
+                    {dinosaur.overview && (
+                      <p className="exhibit-panel__intro">{dinosaur.overview}</p>
                     )}
                   </motion.div>
                 </div>
 
-                {/* Museum information board: 2x2 on desktop/tablet
-                    (Overview | Quick Facts / Life | Museum Highlight),
-                    a single stacked column on mobile. */}
-                <div className="exhibit-panel__grid">
-                  {dinosaur.overview && (
-                    <InfoCard icon="📖" heading="Overview">
-                      <p className="exhibit-panel__text">{dinosaur.overview}</p>
-                    </InfoCard>
-                  )}
-
-                  <InfoCard icon="📋" heading="Quick Facts">
-                    <dl className="exhibit-panel__facts">
-                      {dinosaur.facts.map(({ label, value }) => (
-                        <div className="exhibit-panel__fact" key={label}>
-                          <dt>{label}</dt>
-                          <dd>{value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </InfoCard>
-
-                  {dinosaur.lifeEnvironment && (
-                    <InfoCard icon="🌿" heading="Life in its Environment">
-                      <p className="exhibit-panel__text">{dinosaur.lifeEnvironment}</p>
-                    </InfoCard>
-                  )}
-
-                  {dinosaur.museumHighlight && (
-                    <InfoCard icon="🦴" heading="Museum Highlight" highlight>
-                      <p className="exhibit-panel__text">{dinosaur.museumHighlight}</p>
-                    </InfoCard>
-                  )}
-                </div>
-
-                {galleryPreview.length > 0 && (
-                  <motion.section
-                    className="exhibit-panel__gallery-section"
-                    variants={itemVariants}
-                  >
-                    <h3 className="exhibit-panel__card-heading">
-                      <span aria-hidden="true">🖼</span> Gallery
-                    </h3>
-                    <div className="exhibit-panel__gallery">
-                      {galleryPreview.map((src) => (
-                        <button
-                          key={src}
-                          type="button"
-                          className="exhibit-panel__gallery-item"
-                          style={{ backgroundImage: `url(${src})` }}
-                          onClick={() => setIsGalleryOpen(true)}
-                          aria-label={`Open gallery for ${dinosaur.name}`}
-                        />
-                      ))}
-                      {galleryRemaining > 0 && (
-                        <button
-                          type="button"
-                          className="exhibit-panel__gallery-more"
-                          onClick={() => setIsGalleryOpen(true)}
-                          aria-label={`View all ${dinosaur.gallery.length} photos`}
-                        >
-                          <span className="exhibit-panel__gallery-more-count">
-                            +{galleryRemaining}
-                          </span>
-                          <span className="exhibit-panel__gallery-more-label">View All</span>
-                        </button>
-                      )}
-                    </div>
-                  </motion.section>
+                {/* ---------------------------------------------------- */}
+                {/* Horizontal stats bar — one bar, not individual cards.  */}
+                {/* Driven entirely by dinosaur.facts (label/value pairs   */}
+                {/* already authored per-dinosaur) so it works for any      */}
+                {/* species with zero changes here, and never shows a       */}
+                {/* stat that isn't real data (see Phase 6A report for       */}
+                {/* fields like Length/Family/Discovered that don't exist    */}
+                {/* in the current data and are intentionally not invented). */}
+                {/* ---------------------------------------------------- */}
+                {dinosaur.facts?.length > 0 && (
+                  <motion.div className="exhibit-panel__statbar" variants={itemVariants}>
+                    {dinosaur.facts.map(({ label, value }) => (
+                      <div className="exhibit-panel__stat" key={label}>
+                        <span className="exhibit-panel__stat-value">{value}</span>
+                        <span className="exhibit-panel__stat-label">{label}</span>
+                      </div>
+                    ))}
+                  </motion.div>
                 )}
+
+                {/* ---------------------------------------------------- */}
+                {/* Research content | Gallery + Did You Know              */}
+                {/* ---------------------------------------------------- */}
+                <div className="exhibit-panel__body">
+                  <div className="exhibit-panel__research">
+                    <ResearchSection eyebrow="About" text={dinosaur.overview} />
+                    <ResearchSection
+                      eyebrow="Discovery & Fossil History"
+                      text={dinosaur.discovery}
+                      fallback="Discovery details for this specimen are still being catalogued."
+                    />
+                    <ResearchSection eyebrow="Life & Habitat" text={dinosaur.lifeEnvironment} />
+                  </div>
+
+                  <div className="exhibit-panel__aside">
+                    {galleryImages.length > 0 && (
+                      <motion.section className="exhibit-panel__gallery-section" variants={itemVariants}>
+                        <h3 className="exhibit-panel__section-heading">Gallery</h3>
+
+                        <button
+                          type="button"
+                          className="exhibit-panel__gallery-primary"
+                          style={{ backgroundImage: `url(${primaryImage})` }}
+                          onClick={() => openGalleryAt(0)}
+                          aria-label={`View larger image of ${dinosaur.name}`}
+                        />
+
+                        {previewSecondary.length > 0 && (
+                          <div className="exhibit-panel__gallery-row">
+                            {previewSecondary.map((src, index) => (
+                              <button
+                                key={src}
+                                type="button"
+                                className="exhibit-panel__gallery-thumb"
+                                style={{ backgroundImage: `url(${src})` }}
+                                onClick={() => openGalleryAt(index + 1)}
+                                aria-label={`View image ${index + 2} of ${dinosaur.name}`}
+                              />
+                            ))}
+                            {remainingCount > 0 && (
+                              <button
+                                type="button"
+                                className="exhibit-panel__gallery-thumb exhibit-panel__gallery-thumb--more"
+                                onClick={() => openGalleryAt(3)}
+                                aria-label={`View all ${galleryImages.length} photos`}
+                              >
+                                +{remainingCount}
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        {hasMultipleImages && (
+                          <div className="exhibit-panel__gallery-dots" aria-hidden="true">
+                            {galleryImages.map((src, index) => (
+                              <span
+                                key={src}
+                                className={
+                                  'exhibit-panel__gallery-dot' +
+                                  (index === 0 ? ' exhibit-panel__gallery-dot--active' : '')
+                                }
+                              />
+                            ))}
+                          </div>
+                        )}
+
+                        {hasMultipleImages && (
+                          <button
+                            type="button"
+                            className="exhibit-panel__gallery-viewall"
+                            onClick={() => openGalleryAt(0)}
+                          >
+                            View all {galleryImages.length} photos
+                          </button>
+                        )}
+                      </motion.section>
+                    )}
+
+                    {dinosaur.museumHighlight && (
+                      <motion.section className="exhibit-panel__didyouknow" variants={itemVariants}>
+                        <h3 className="exhibit-panel__section-heading">Did You Know?</h3>
+                        <p className="exhibit-panel__text">{dinosaur.museumHighlight}</p>
+                      </motion.section>
+                    )}
+                  </div>
+                </div>
               </motion.div>
             </motion.aside>
           </motion.div>
@@ -338,7 +402,7 @@ function ExhibitPanel({ dinosaur, onClose }) {
       {/* Placeholder fullscreen gallery — a real lightbox with
           navigation is future work; for now this confirms the
           interaction and shows how many photos exist. */}
-      {isGalleryOpen && dinosaur && (
+      {isGalleryOpen && dinosaur && galleryImages.length > 0 && (
         <div className="exhibit-panel__lightbox" onClick={() => setIsGalleryOpen(false)}>
           <div
             className="exhibit-panel__lightbox-card"
@@ -352,9 +416,13 @@ function ExhibitPanel({ dinosaur, onClose }) {
             >
               ✕
             </button>
+            <div
+              className="exhibit-panel__lightbox-image"
+              style={{ backgroundImage: `url(${galleryImages[activeGalleryIndex] ?? primaryImage})` }}
+            />
             <p className="exhibit-panel__lightbox-text">
-              Full gallery view coming soon — {dinosaur.gallery.length} photo
-              {dinosaur.gallery.length === 1 ? '' : 's'} of {dinosaur.name}.
+              Photo {activeGalleryIndex + 1} of {galleryImages.length} — {dinosaur.name}.
+              {!hasMultipleImages && ' Full gallery view coming soon.'}
             </p>
           </div>
         </div>

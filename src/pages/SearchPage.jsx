@@ -15,14 +15,22 @@ import '../search/registerCollections.js'
 import './SearchPage.css'
 
 /**
- * Global Museum Search results page. Reads ?q= from the URL (so the
- * query, and therefore the results, survive refresh and browser back/
- * forward with zero extra state management) and calls the shared search
- * service — the exact same service a future navbar "quick results"
- * dropdown or any other search UI would call. This page owns the actual
- * search request and the optional era filter; SearchResults/SearchCard/
- * SearchEmptyState are all pure display components with no fetching
- * logic of their own.
+ * Global Museum Search — a spacious, hero-style museum page rather than
+ * a generic search-results page. Reads ?q= from the URL (so the query,
+ * and therefore the results, survive refresh and browser back/forward
+ * with zero extra state management) and calls the shared search
+ * service — the exact same service any future navbar "quick results"
+ * dropdown or other search UI would call.
+ *
+ * Owns three independent filters (era / diet / region), AND-combined
+ * client-side over whatever the search service already returned — the
+ * search service itself never knows filters exist. Region uses a
+ * "contains" match rather than strict equality, since the dropdown's
+ * continent-level options (e.g. "Asia") don't always exactly equal the
+ * data's more specific region values (e.g. "Central Asia").
+ *
+ * SearchResults/SearchCard/SearchEmptyState remain pure display
+ * components with no fetching or filtering logic of their own.
  */
 function SearchPage() {
   const [searchParams] = useSearchParams()
@@ -30,11 +38,15 @@ function SearchPage() {
 
   const [results, setResults] = useState([])
   const [status, setStatus] = useState('idle') // 'idle' | 'loading' | 'done'
-  const [activeEra, setActiveEra] = useState(null)
+  const [era, setEra] = useState(null)
+  const [diet, setDiet] = useState(null)
+  const [region, setRegion] = useState(null)
 
   useEffect(() => {
     let cancelled = false
-    setActiveEra(null)
+    setEra(null)
+    setDiet(null)
+    setRegion(null)
 
     if (!query.trim()) {
       setResults([])
@@ -56,8 +68,14 @@ function SearchPage() {
   }, [query])
 
   const visibleResults = useMemo(
-    () => (activeEra ? results.filter((result) => result.era === activeEra) : results),
-    [results, activeEra],
+    () =>
+      results.filter((result) => {
+        if (era && result.era !== era) return false
+        if (diet && result.diet !== diet) return false
+        if (region && !result.region?.toLowerCase().includes(region.toLowerCase())) return false
+        return true
+      }),
+    [results, era, diet, region],
   )
 
   return (
@@ -68,30 +86,44 @@ function SearchPage() {
       <main className="search-page__content">
         <header className="search-page__header">
           <p className="search-page__eyebrow">Museum Search</p>
-          <h1 className="search-page__title">
-            {query ? `Results for \u201c${query}\u201d` : 'Search the Museum'}
-          </h1>
+          <h1 className="search-page__title">Search the Museum</h1>
+          <p className="search-page__subtitle">
+            Find dinosaurs by name, scientific name, or era across every exhibit.
+          </p>
           <div className="search-page__bar">
             <SearchBar />
           </div>
         </header>
 
-        {!query.trim() && (
-          <p className="search-page__prompt">
-            Search dinosaurs by name, scientific name, or era to begin.
-          </p>
-        )}
+        <section className="search-page__body">
+          {!query.trim() && (
+            <p className="search-page__prompt">
+              Start typing above to explore the collection.
+            </p>
+          )}
 
-        {status === 'loading' && <p className="search-page__prompt">Searching…</p>}
+          {status === 'loading' && <p className="search-page__prompt">Searching…</p>}
 
-        {status === 'done' && results.length === 0 && <SearchEmptyState query={query} />}
+          {status === 'done' && results.length === 0 && <SearchEmptyState query={query} />}
 
-        {status === 'done' && results.length > 0 && (
-          <>
-            <SearchFilters results={results} activeEra={activeEra} onChange={setActiveEra} />
-            <SearchResults results={visibleResults} />
-          </>
-        )}
+          {status === 'done' && results.length > 0 && (
+            <>
+              <SearchFilters
+                era={era}
+                diet={diet}
+                region={region}
+                onEraChange={setEra}
+                onDietChange={setDiet}
+                onRegionChange={setRegion}
+              />
+              {visibleResults.length > 0 ? (
+                <SearchResults results={visibleResults} />
+              ) : (
+                <SearchEmptyState query={query} />
+              )}
+            </>
+          )}
+        </section>
       </main>
     </div>
   )

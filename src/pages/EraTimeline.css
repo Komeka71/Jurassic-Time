@@ -33,6 +33,54 @@
   min-height: 100%;
 }
 
+/* Loading / error / empty states for the async dinosaur fetch (Phase
+   6B) — reuses the same full-height snap-section sizing as the hero and
+   exhibits so it fits the existing scroll rhythm instead of looking
+   like an unstyled gap. */
+.era-timeline__snap-section--status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.era-timeline__status {
+  max-width: 480px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.era-timeline__status-text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.era-timeline__status-retry {
+  padding: 10px 22px;
+  border: 1px solid var(--era-primary-dim, rgba(255, 255, 255, 0.16));
+  border-radius: 999px;
+  background: var(--era-chip-background, rgba(255, 255, 255, 0.04));
+  color: var(--era-primary, var(--color-text-primary));
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-cinematic),
+    background var(--duration-fast) var(--ease-cinematic);
+}
+
+.era-timeline__status-retry:hover,
+.era-timeline__status-retry:focus-visible {
+  border-color: var(--era-primary, rgba(255, 255, 255, 0.4));
+  background: var(--era-primary-dim, rgba(255, 255, 255, 0.08));
+}
+
 /* Shared chrome, like the navbar and back button: represents progress
    across ALL exhibits, so it lives once at the page level rather than
    being duplicated inside every exhibit. Hidden while the hero is in

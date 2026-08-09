@@ -10,6 +10,7 @@ import ExhibitNav from '../components/ExhibitNav.jsx'
 import InfoPanel from '../components/InfoPanel.jsx'
 import ExhibitPanel from '../components/ExhibitPanel.jsx'
 import { eras } from '../data/eraTimelines.js'
+import { getDinosaursForEra } from '../api/client.js'
 import './EraTimeline.css'
 
 /**
@@ -45,10 +46,17 @@ import './EraTimeline.css'
  * exhibitDinosaur is separate from activeIndex so the panel keeps
  * showing that dinosaur even if the visitor scrolls elsewhere.
  *
- * Data source today: static arrays under src/data/. When this migrates
- * to a backend (e.g. GET /api/eras/:era), only data/eraTimelines.js's
- * internals need to change — this component consumes `eras[slug]`
- * either way and requires no further architectural changes.
+ * Data source (Phase 6B): era metadata (theme, hero copy, chronology)
+ * still comes from data/eraTimelines.js — unchanged, since none of that
+ * is "dinosaur content" per se. The dinosaur roster for the current era,
+ * however, is now fetched from the backend (GET /api/v1/eras/:era/
+ * dinosaurs — see api/client.js), which is itself backed by MongoDB.
+ * `dinosaurs` below is state, populated by an effect keyed on the era
+ * slug, with loading/error/empty handling in the render — everything
+ * else in this file (activeIndex, the IntersectionObserver, goToIndex,
+ * the ?exhibit= deep-link effect) is unchanged and works identically
+ * whether `dinosaurs` came from a local array or an API response, since
+ * none of it assumed synchronous data to begin with.
  *
  * Each era also carries its own `theme` (colors only — never layout,
  * type, or animation). It's applied once here as CSS custom properties
@@ -78,8 +86,48 @@ function EraTimeline() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const dinosaurs = eraConfig?.dinosaurs ?? []
+  // Dinosaur content for the current era now comes from the backend
+  // (MongoDB via GET /api/v1/eras/:era/dinosaurs) instead of
+  // eraConfig.dinosaurs. `retryToken` exists only to let the error
+  // state's "Try again" button re-trigger the effect below.
+  const [dinosaurs, setDinosaurs] = useState([])
+  const [dinosaursStatus, setDinosaursStatus] = useState('idle') // idle | loading | success | error
+  const [dinosaursError, setDinosaursError] = useState(null)
+  const [retryToken, setRetryToken] = useState(0)
 
+  useEffect(() => {
+    if (!eraConfig) return undefined
+
+    let cancelled = false
+    setDinosaursStatus('loading')
+    setDinosaursError(null)
+
+    getDinosaursForEra(eraSlug)
+      .then(({ items }) => {
+        if (cancelled) return
+        setDinosaurs(items)
+        setDinosaursStatus('success')
+      })
+      .catch((error) => {
+        if (cancelled) return
+        setDinosaurs([])
+        setDinosaursError(error.message)
+        setDinosaursStatus('error')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [eraSlug, eraConfig, retryToken])
+
+  // Depends on `dinosaurs` (Phase 6B): exhibit sections now mount
+  // asynchronously once the API fetch resolves, instead of being
+  // present on the very first render like the old synchronous local
+  // data was. Re-running this effect when the list changes re-attaches
+  // the observer to the sections that actually exist now — without
+  // this dependency, sections that mount after the initial (empty,
+  // still-loading) render would never be observed, and active-exhibit
+  // tracking would silently stop working.
   useEffect(() => {
     const root = scrollRef.current
     if (!root) return undefined
@@ -108,7 +156,7 @@ function EraTimeline() {
     sectionRefs.current.forEach((el) => el && observer.observe(el))
 
     return () => observer.disconnect()
-  }, [])
+  }, [dinosaurs])
 
   const goToIndex = useCallback(
     (index) => {
@@ -240,6 +288,42 @@ function EraTimeline() {
             heroImage={eraConfig.heroImage}
           />
         </section>
+
+        {dinosaursStatus === 'loading' && (
+          <section className="era-timeline__snap-section era-timeline__snap-section--status">
+            <div className="era-timeline__status">
+              <p className="era-timeline__status-text">Loading exhibits…</p>
+            </div>
+          </section>
+        )}
+
+        {dinosaursStatus === 'error' && (
+          <section className="era-timeline__snap-section era-timeline__snap-section--status">
+            <div className="era-timeline__status">
+              <p className="era-timeline__status-text">
+                We couldn't load this era's exhibits.
+                {dinosaursError ? ` (${dinosaursError})` : ''}
+              </p>
+              <button
+                type="button"
+                className="era-timeline__status-retry"
+                onClick={() => setRetryToken((token) => token + 1)}
+              >
+                Try again
+              </button>
+            </div>
+          </section>
+        )}
+
+        {dinosaursStatus === 'success' && dinosaurs.length === 0 && (
+          <section className="era-timeline__snap-section era-timeline__snap-section--status">
+            <div className="era-timeline__status">
+              <p className="era-timeline__status-text">
+                No exhibits are available for this era yet.
+              </p>
+            </div>
+          </section>
+        )}
 
         {dinosaurs.map((dinosaur, index) => (
           <ExhibitSection
