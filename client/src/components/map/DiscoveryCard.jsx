@@ -213,7 +213,7 @@ text-3xl
           </div>
 
           {/* Button */}
-          <button
+          {/* <button
             className="
               mt-8
 
@@ -248,7 +248,7 @@ text-3xl
           >
             View Expedition
             <ArrowRight size={18} />
-          </button>
+          </button> */}
 
           {/* Footer */}
           <div className="mt-8">
