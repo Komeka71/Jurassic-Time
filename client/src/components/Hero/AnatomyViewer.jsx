@@ -11,6 +11,9 @@ const REVEAL_OFFSET_Y = 0;
 // touch-and-hold gesture, so returning users aren't nagged forever.
 const HINT_SEEN_KEY = "paleora_anatomy_touch_hint_seen";
 
+// Same idea, but for desktop — shown once until the visitor hovers.
+const HOVER_HINT_SEEN_KEY = "paleora_anatomy_hover_hint_seen";
+
 export default function AnatomyViewer({
   dinosaur,
   hoveredPart,
@@ -39,6 +42,10 @@ export default function AnatomyViewer({
   // on mobile, and only until the user actually holds once.
   const [showHint, setShowHint] = useState(false);
 
+  // Whether to show the "Hover to scan" hint. Only relevant on
+  // desktop, and only until the user actually hovers once.
+  const [showHoverHint, setShowHoverHint] = useState(false);
+
   const activePartRef = useRef(null);
   const assets = dinosaurAssets[dinosaur];
 
@@ -66,10 +73,26 @@ export default function AnatomyViewer({
     }
   }, [isMobile]);
 
+  // Same, but for desktop's hover hint.
+  useEffect(() => {
+    if (isMobile) return;
+
+    const seen = localStorage.getItem(HOVER_HINT_SEEN_KEY) === "true";
+    if (!seen) {
+      setShowHoverHint(true);
+    }
+  }, [isMobile]);
+
   const dismissHint = () => {
     if (!showHint) return;
     setShowHint(false);
     localStorage.setItem(HINT_SEEN_KEY, "true");
+  };
+
+  const dismissHoverHint = () => {
+    if (!showHoverHint) return;
+    setShowHoverHint(false);
+    localStorage.setItem(HOVER_HINT_SEEN_KEY, "true");
   };
 
   useEffect(() => {
@@ -287,6 +310,7 @@ lg:cursor-crosshair
         if (isMobile) return;
 
         setInside(true);
+        dismissHoverHint();
 
         if (skeletonRef.current) {
           skeletonRef.current.style.clipPath = "circle(0px at 0px 0px)";
@@ -381,6 +405,51 @@ pointer-events-none
           }}
         />
       )}
+
+      {/* Hover Hint (desktop only, first visit) */}
+      <AnimatePresence>
+        {!isMobile && showHoverHint && !inside && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3 }}
+            className="
+absolute
+left-1/2
+bottom-3
+-translate-x-1/2
+
+z-10
+
+flex
+items-center
+gap-2
+
+rounded-full
+border
+border-green-400/40
+bg-black/70
+
+px-4
+py-2
+
+backdrop-blur-sm
+
+pointer-events-none
+"
+          >
+            <motion.span
+              animate={{ scale: [1, 1.35, 1], opacity: [1, 0.4, 1] }}
+              transition={{ duration: 1.4, repeat: Infinity }}
+              className="h-2.5 w-2.5 rounded-full bg-green-400"
+            />
+            <span className="text-xs font-medium tracking-wide text-white/90">
+              Hover to scan the skeleton
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Touch & Hold Hint (mobile only, first visit) */}
       <AnimatePresence>
