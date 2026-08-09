@@ -72,6 +72,12 @@ hybridLab: [
     "👋 Welcome back!",
     "🦖 Ready for another adventure?",
   ],
+  museum: [
+    "🏛️ Welcome to the Museum Explorer!",
+    "🦴 Every hall holds a different era of Earth's history.",
+    "🎧 Try the audio guide for the full experience.",
+    "🗺️ Pick a museum and start exploring.",
+  ],
 };
 
 export function getPageMessage(page = "default") {

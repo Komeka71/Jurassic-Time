@@ -345,6 +345,42 @@ hybridLab: {
       "That's classified equipment, Explorer!",
     ],
   },
+  museum: {
+    idle: [
+      "🏛️ So many halls, so little time.",
+      "Every specimen here has a story.",
+      "This collection took decades to build.",
+      "I could spend all day in these galleries.",
+    ],
+
+    lookingAround: [
+      "That skeleton looks freshly excavated.",
+      "I wonder how long that mount took to build.",
+      "Something in this hall feels ancient.",
+    ],
+
+    thinking: [
+      "Which gallery should we visit first?",
+      "So many museums, so many stories...",
+      "I wonder what's in the archive today.",
+    ],
+
+    pointingRight: [
+      "Try the audio guide for this one!",
+      "That exhibit is worth a closer look.",
+      "Don't skip the virtual tour!",
+    ],
+
+    happy: [
+      "Great choice of museum!",
+      "This collection is one of my favorites.",
+    ],
+
+    celebrate: [
+      "You've explored the whole gallery!",
+      "Another museum, fully explored!",
+    ],
+  },
   camp: {
     idle: [
       "Welcome back to camp.",
