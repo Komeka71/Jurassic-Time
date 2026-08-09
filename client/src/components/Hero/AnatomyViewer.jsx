@@ -7,13 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 const REVEAL_OFFSET_X = 10;
 const REVEAL_OFFSET_Y = 0;
 
-// Shown once per browser until the visitor actually performs the
-// touch-and-hold gesture, so returning users aren't nagged forever.
-const HINT_SEEN_KEY = "paleora_anatomy_touch_hint_seen";
-
-// Same idea, but for desktop — shown once until the visitor hovers.
-const HOVER_HINT_SEEN_KEY = "paleora_anatomy_hover_hint_seen";
-
 export default function AnatomyViewer({
   dinosaur,
   hoveredPart,
@@ -39,11 +32,13 @@ export default function AnatomyViewer({
   const [holding, setHolding] = useState(false);
 
   // Whether to show the "Touch & hold to scan" hint. Only relevant
-  // on mobile, and only until the user actually holds once.
+  // on mobile. Shows on every load/refresh, and dismisses once the
+  // user actually holds — for that viewing session only.
   const [showHint, setShowHint] = useState(false);
 
   // Whether to show the "Hover to scan" hint. Only relevant on
-  // desktop, and only until the user actually hovers once.
+  // desktop. Shows on every load/refresh, and dismisses once the
+  // user actually hovers — for that viewing session only.
   const [showHoverHint, setShowHoverHint] = useState(false);
 
   const activePartRef = useRef(null);
@@ -62,37 +57,27 @@ export default function AnatomyViewer({
       ? 60
       : 75;
 
-  // Reveal the hint on mobile once, the first time this component
-  // mounts, unless the visitor has already discovered the gesture.
+  // Reveal the hint on mobile every time this component mounts
+  // (i.e. every page load/refresh), regardless of past visits.
   useEffect(() => {
     if (!isMobile) return;
-
-    const seen = localStorage.getItem(HINT_SEEN_KEY) === "true";
-    if (!seen) {
-      setShowHint(true);
-    }
+    setShowHint(true);
   }, [isMobile]);
 
   // Same, but for desktop's hover hint.
   useEffect(() => {
     if (isMobile) return;
-
-    const seen = localStorage.getItem(HOVER_HINT_SEEN_KEY) === "true";
-    if (!seen) {
-      setShowHoverHint(true);
-    }
+    setShowHoverHint(true);
   }, [isMobile]);
 
   const dismissHint = () => {
     if (!showHint) return;
     setShowHint(false);
-    localStorage.setItem(HINT_SEEN_KEY, "true");
   };
 
   const dismissHoverHint = () => {
     if (!showHoverHint) return;
     setShowHoverHint(false);
-    localStorage.setItem(HOVER_HINT_SEEN_KEY, "true");
   };
 
   useEffect(() => {
