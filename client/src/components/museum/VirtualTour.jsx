@@ -22,6 +22,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { useAudioGuide } from "./AudioGuideContext.jsx";
+import { useGuide } from "../../context/GuideContext"; // adjust path to match actual location relative to this file
 
 const clip = (text, max = 150) => {
   if (!text) return "";
@@ -114,6 +115,9 @@ export default function VirtualTour({ museum, stepDuration = 7000 }) {
     setTourActive,
   } = useAudioGuide();
 
+  // Drives DinoGuide's position (right normally, left while the tour overlay is open)
+  const { setTourActive: setGuideTourActive } = useGuide();
+
   const [phase, setPhase] = useState("idle");
   const [stepIndex, setStepIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -134,12 +138,17 @@ export default function VirtualTour({ museum, stepDuration = 7000 }) {
   const isComplete = phase === "complete";
   const isOverlayOpen = isTouring || isLoading || isComplete;
 
-  // Let the floating audio guide button know to step aside while the
+  // Let the floating audio guide button (AudioGuideContext) AND the
+  // DinoGuide toggle (GuideContext) know to step aside while the
   // immersive overlay (with its own transport controls) is open.
   useEffect(() => {
     setTourActive(isOverlayOpen);
-    return () => setTourActive(false);
-  }, [isOverlayOpen, setTourActive]);
+    setGuideTourActive(isOverlayOpen);
+    return () => {
+      setTourActive(false);
+      setGuideTourActive(false);
+    };
+  }, [isOverlayOpen, setTourActive, setGuideTourActive]);
 
   const goToStep = useCallback(
     (index, dir = 1) => {
