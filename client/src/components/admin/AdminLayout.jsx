@@ -45,7 +45,7 @@ export default function AdminLayout() {
     <img
       src="/logo.png"
       alt="Paleora"
-      className="h-8 w-auto object-contain"
+      className="h-12 w-auto object-contain"
     />
   )}
   <button
