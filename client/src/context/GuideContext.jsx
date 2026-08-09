@@ -21,9 +21,15 @@ export function GuideProvider({ children }) {
 
   const [notifications, setNotifications] =
     useState([]);
-const [guideHidden, setGuideHidden] = useState(() => {
-  return localStorage.getItem("guideHidden") === "true";
-});
+
+  const [guideHidden, setGuideHidden] = useState(() => {
+    return localStorage.getItem("guideHidden") === "true";
+  });
+
+  // True while an immersive overlay (e.g. VirtualTour) is open,
+  // so GuideToggle knows to get out of the way.
+  const [tourActive, setTourActive] = useState(false);
+
   const value = useMemo(
     () => ({
       currentPage,
@@ -43,6 +49,9 @@ const [guideHidden, setGuideHidden] = useState(() => {
 
       guideHidden,
       setGuideHidden,
+
+      tourActive,
+      setTourActive,
     }),
     [
       currentPage,
@@ -51,14 +60,17 @@ const [guideHidden, setGuideHidden] = useState(() => {
       lastAction,
       notifications,
       guideHidden,
+      tourActive,
     ]
   );
-useEffect(() => {
-  localStorage.setItem(
-    "guideHidden",
-    String(guideHidden)
-  );
-}, [guideHidden]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "guideHidden",
+      String(guideHidden)
+    );
+  }, [guideHidden]);
+
   return (
     <GuideContext.Provider value={value}>
       {children}
