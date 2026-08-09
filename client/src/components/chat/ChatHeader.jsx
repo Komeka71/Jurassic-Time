@@ -41,7 +41,7 @@ export default function ChatHeader({ onClose }) {
           </h2>
 
           <p className="text-xs text-emerald-300">
-            AI Museum Guide
+            AI Guide
           </p>
         </div>
       </div>
