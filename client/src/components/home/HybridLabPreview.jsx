@@ -492,26 +492,26 @@ export default function HybridLabPreview({
   className="
     pointer-events-auto
     absolute
-    bottom-16
+    bottom-24
     right-12
     z-[60]
-    scale-[0.68]
+    scale-[0.9]
     origin-bottom-right
 
     sm:right-16
-    sm:bottom-16
+    sm:bottom-24
     sm:scale-[0.74]
 
     md:right-20
-    md:bottom-18
+    md:bottom-26
     md:scale-[0.80]
 
     lg:right-24
-    lg:bottom-20
+    lg:bottom-28
     lg:scale-[0.84]
 
     xl:right-28
-    xl:bottom-22
+    xl:bottom-30
     xl:scale-[0.86]
   "
 >
