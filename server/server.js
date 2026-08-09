@@ -1,7 +1,7 @@
 require("dotenv").config();
 require("./utils/dailyMissionReset");
 const { env } = require("./config/env");
-const timelineV1Routes = require("./routes/v1/index.js");
+// const timelineV1Routes = require("./routes/v1/index.js");
 
 const express = require("express");
 const mongoose = require("mongoose");
