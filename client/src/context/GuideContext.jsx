@@ -5,7 +5,29 @@ import {
   useState,
   useEffect,
 } from "react";
+
 const GuideContext = createContext();
+
+const MOBILE_BREAKPOINT = 768;
+
+function isMobileViewport() {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth <= MOBILE_BREAKPOINT;
+}
+
+function getInitialGuideHidden() {
+  const stored = localStorage.getItem("guideHidden");
+
+  // User has an explicit saved preference (from a previous toggle) —
+  // always respect it, regardless of device.
+  if (stored !== null) {
+    return stored === "true";
+  }
+
+  // No preference saved yet (first-ever visit): default hidden on
+  // mobile, visible everywhere else.
+  return isMobileViewport();
+}
 
 export function GuideProvider({ children }) {
   const [currentPage, setCurrentPage] = useState("hero");
@@ -22,9 +44,7 @@ export function GuideProvider({ children }) {
   const [notifications, setNotifications] =
     useState([]);
 
-  const [guideHidden, setGuideHidden] = useState(() => {
-    return localStorage.getItem("guideHidden") === "true";
-  });
+  const [guideHidden, setGuideHidden] = useState(getInitialGuideHidden);
 
   // True while an immersive overlay (e.g. VirtualTour) is open,
   // so GuideToggle knows to get out of the way.
