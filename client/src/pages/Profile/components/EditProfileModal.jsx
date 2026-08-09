@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
-import Avatar from "../../Avatar";
+import Avatar from "../../../components/Avatar";
 import { DINO_COLORS } from "../../../data/avatarAssets";
 
 const AGE_GROUPS = ["kid", "teen", "adult"];
