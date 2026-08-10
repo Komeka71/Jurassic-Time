@@ -24,7 +24,6 @@ import { getUserProgress } from "../utils/userProgress";
 //   completeLevel,
 // } from "../utils/playerProgress";
 
-// >>>>>>> 437461b8231e83b90eb3d3cc010ec8a954a988bc
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Quiz() {
@@ -88,14 +87,18 @@ const [player, setPlayer] = useState({
 
 useEffect(() => {
   async function loadPlayer() {
-    const progress = await getUserProgress();
+    try {
+      const progress = await getUserProgress();
 
-    setPlayer((prev) => ({
-      ...prev,
-      coins: progress.coins,
-      xp: progress.xp,
-      level: progress.level,
-    }));
+      setPlayer((prev) => ({
+        ...prev,
+        coins: progress.coins,
+        xp: progress.xp,
+        level: progress.level,
+      }));
+    } catch (err) {
+      console.error("Failed to load player progress:", err);
+    }
   }
 
   loadPlayer();
@@ -485,7 +488,7 @@ playEffect("wrong");
         )
       );
 
-const response = await fetch(`${API_URL}/quiz/submit`, {
+const response = await fetch(`${API_URL}/api/quiz/submit`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -634,75 +637,6 @@ const data = await response.json();
   ========================================
   */
 
-//   const handleChestOpen = async () => {
-//     console.log("Chest Clicked");
-//     if (quizSaving) {
-//       return;
-//     }
-
-//     setMood("celebrate");
-
-//     setMessage(
-//       "✨ Recording your prehistoric discovery..."
-//     );
-
-//     /*
-//     ========================================
-//     SAVE QUIZ TO MONGODB
-//     ========================================
-//     */
-
-//     const saved =
-//       await submitQuizToBackend();
-//  console.log("quiz saved",saved);
-//     if (!saved) {
-//       return;
-//     }
-// /*
-// ========================================
-// UPDATE DAILY MISSIONS
-// ========================================
-// */
-
-
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-
-//   body: JSON.stringify({
-//     expeditions: 1,
-//     questions: questions.length,
-//     xp: correctAnswers * 20,
-//   }),
-// });
-// console.log("daily progrss updated");
-//     /*
-//     ========================================
-//     COMPLETE LEVEL LOCALLY
-//     ========================================
-//     */
-
-//     setPlayer((prev) =>
-//       completeLevel(prev, level)
-//     );
-// SoapDispenserDroplet.log("player updated");
-//     setTimeout(() => {
-//       setMood("loveHappy");
-//     }, 1500);
-
-//     setChestOpened(true);
-// console.log("chest opened");
-//     setExpeditionComplete(true);
-//   };
-// newwww 
-
-
-// const handleChestOpen = () => {
-//   console.log("Chest Clicked");
-
-//   setChestOpened(true);
-//   setExpeditionComplete(true);
-// };
 const handleChestOpen = async () => {
   console.log("Chest Clicked");
 
@@ -746,7 +680,7 @@ if (!isGuest) {
   // ============================
  if (!isGuest) {
   try {
-const res = await fetch(`${API_URL}/daily/${USERNAME}/progress`, {
+const res = await fetch(`${API_URL}/api/daily/${USERNAME}/progress`, {
   method: "PATCH",
   headers: {
     "Content-Type": "application/json",
@@ -767,7 +701,6 @@ const res = await fetch(`${API_URL}/daily/${USERNAME}/progress`, {
 }
 };
 
-console.log("expedition complete");
   /*
   ========================================
   LOADING
@@ -991,43 +924,6 @@ console.log("expedition complete");
                 currentQuestion?.coins || 0
               }
             />
-{/* 
-            {showChest ? (
-              chestOpened ? (
-                <ExpeditionComplete
-                  xp={xp}
-                  coins={coins}
-                  accuracy={accuracy}
-                  bestStreak={
-                    player.bestQuestionStreak
-                  }
-                  level={level}
-                />
-              ) : (
-                <TreasureChest
-                  onOpen={
-                    handleChestOpen
-                  }
-                />
-              )
-            ) : (
-              <QuestionCard
-                level={level}
-                question={currentQuestion}
-                currentIndex={currentIndex}
-                selectedAnswer={
-                  selectedAnswer
-                }
-                setSelectedAnswer={
-                  setSelectedAnswer
-                }
-                setMessage={setMessage}
-                setMood={setMood}
-                onSubmit={handleSubmit}
-                submitted={submitted}
-                nextQuestion={nextQuestion}
-              />
-            )} */}
             {showChest ? (
   chestOpened ? (
     <div
