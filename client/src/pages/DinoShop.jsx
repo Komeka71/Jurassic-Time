@@ -193,7 +193,7 @@ if (!user) {
 }
 
 const response = await fetch(
-  `${API_URL}/user/${user.username}`
+  `${API_URL}/api/user/${user.username}`
 );
 
         if (!response.ok) {
@@ -446,7 +446,7 @@ if (!user) {
       ========================================
       */
 const response = await fetch(
-  `${API_URL}/user/${user.username}/shop/buy`,
+  `${API_URL}/api/user/${user.username}/shop/buy`,
         {
           method: "POST",
 
@@ -621,7 +621,7 @@ const response = await fetch(
 
 
       const response = await fetch(
-        `${API_URL}/user/${user.username}/shop/unequip`,
+      `${API_URL}/api/user/${user.username}/shop/unequip`,
         {
           method: "PATCH",
 
@@ -809,7 +809,7 @@ const equipItem = async (item) => {
       );
 
       const response = await fetch(
-        `${API_URL}/user/${user.username}/shop/unequip`,
+`${API_URL}/api/user/${user.username}/shop/unequip`,
         {
           method: "PATCH",
           headers: {
@@ -885,7 +885,7 @@ const equipItem = async (item) => {
       );
 
       const response = await fetch(
-        `${API_URL}/user/${user.username}/shop/unequip`,
+`${API_URL}/api/user/${user.username}/shop/unequip`,
         {
           method: "PATCH",
           headers: {
@@ -923,7 +923,7 @@ const equipItem = async (item) => {
     );
 
     const response = await fetch(
-      `${API_URL}/user/${user.username}/shop/equip`,
+     `${API_URL}/api/user/${user.username}/shop/equip`,
       {
         method: "PATCH",
         headers: {
