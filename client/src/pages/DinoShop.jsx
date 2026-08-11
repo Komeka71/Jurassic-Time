@@ -21,8 +21,7 @@ import ParallaxShopCard from "../shop/ParallaxShopCard";
 API CONFIG
 ========================================
 */
-
-const API_URL = `${import.meta.env.VITE_API_URL}`; //ll
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 // const USERNAME = user?.username;
 
