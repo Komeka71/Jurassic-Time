@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useSearchAutocomplete } from "../../services/useSearchAutocomplete.js";
+// import { useSearchAutocomplete } from "../../../../server/services/useSearchAutocomplete";
+import { useSearchAutocomplete } from "../../hooks/useSearchAutocomplete";
 import { Search } from "lucide-react";
 
 import {

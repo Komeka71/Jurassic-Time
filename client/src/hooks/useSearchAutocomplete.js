@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { search } from './searchService.js'
-
+import { search } from '../search/searchService.js'
 const MAX_SUGGESTIONS = 6
 const MIN_QUERY_LENGTH = 2
 
@@ -22,13 +21,20 @@ export function useSearchAutocomplete() {
       return
     }
 
-    search(value).then((found) => {
-      if (requestId !== requestIdRef.current) return
-      const next = found.slice(0, MAX_SUGGESTIONS)
-      setSuggestions(next)
-      setIsOpen(next.length > 0)
-      setHighlightedIndex(-1)
-    })
+    search(value)
+      .then((found) => {
+        if (requestId !== requestIdRef.current) return
+        const next = (found ?? []).slice(0, MAX_SUGGESTIONS)
+        setSuggestions(next)
+        setIsOpen(next.length > 0)
+        setHighlightedIndex(-1)
+      })
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Search autocomplete failed:', err)
+        setSuggestions([])
+        setIsOpen(false)
+      })
   }
 
   const selectSuggestion = (result) => {
