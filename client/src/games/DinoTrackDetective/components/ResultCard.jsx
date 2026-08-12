@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import ArtworkImage from '../../../shared/components/ArtworkImage.jsx';
 import {
@@ -14,6 +12,7 @@ export default function ResultCard({
   onLearnMore,
   isLastTrail,
 }) {
+  console.log('DINO:', dino);
   const Illustration =
     dinosaurIllustrations[dino.id] || DefaultIllustration;
 
@@ -23,7 +22,7 @@ export default function ResultCard({
         <ArtworkImage
           id={dino.id}
           alt={dino.name}
-          basePath="/assets/dino-detective"
+          basePath="/assets/dinosaurs"
           className="result-card__art"
           fallbackClassName="result-card__art result-card__art--fallback"
           fallback={<Illustration className="result-card__art-illustration" />}
