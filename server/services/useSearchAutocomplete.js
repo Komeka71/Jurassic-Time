@@ -1,53 +1,85 @@
-// inside your homepage navbar component
-import { useRef } from 'react'
-import { useSearchAutocomplete } from '../search/useSearchAutocomplete.js'
+import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { search } from './searchService.js'
 
-function HomeSearchBar() {
-  const inputRef = useRef(null)
-  const containerRef = useRef(null)
-  const {
-    suggestions, isOpen, highlightedIndex,
-    setIsOpen, setHighlightedIndex,
-    fetchSuggestions, selectSuggestion, handleKeyDown,
-  } = useSearchAutocomplete()
+const MAX_SUGGESTIONS = 6
+const MIN_QUERY_LENGTH = 2
 
-  return (
-    <div className="home-search" ref={containerRef} style={{ position: 'relative' }}>
-      <input
-        ref={inputRef}
-        type="search"
-        autoComplete="off"
-        placeholder="Search dinosaurs, fossils, anatomy…"
-        onChange={(e) => fetchSuggestions(e.target.value)}
-        onKeyDown={(e) => handleKeyDown(e, inputRef.current.value)}
-        onFocus={(e) => fetchSuggestions(e.target.value)}
-        onBlur={() => setTimeout(() => setIsOpen(false), 100)}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-autocomplete="list"
-      />
+export function useSearchAutocomplete() {
+  const navigate = useNavigate()
+  const requestIdRef = useRef(0)
 
-      {isOpen && (
-        <ul className="home-search__suggestions" role="listbox">
-          {suggestions.map((result, index) => (
-            <li
-              key={result.dinosaurId ?? result.title}
-              role="option"
-              aria-selected={index === highlightedIndex}
-              className={index === highlightedIndex ? 'active' : ''}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              onMouseDown={(e) => {
-                e.preventDefault()
-                selectSuggestion(result)
-              }}
-            >
-              <span>{result.title}</span>
-              {result.subtitle && <span className="dim">{result.subtitle}</span>}
-              {result.era && <span className="dim">{result.era}</span>}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  )
+  const [suggestions, setSuggestions] = useState([])
+  const [isOpen, setIsOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(-1)
+
+  const fetchSuggestions = (value) => {
+    const requestId = ++requestIdRef.current
+    if (value.trim().length < MIN_QUERY_LENGTH) {
+      setSuggestions([])
+      setIsOpen(false)
+      setHighlightedIndex(-1)
+      return
+    }
+
+    search(value).then((found) => {
+      if (requestId !== requestIdRef.current) return
+      const next = found.slice(0, MAX_SUGGESTIONS)
+      setSuggestions(next)
+      setIsOpen(next.length > 0)
+      setHighlightedIndex(-1)
+    })
+  }
+
+  const selectSuggestion = (result) => {
+    if (!result?.eraSlug) return
+    setIsOpen(false)
+    setSuggestions([])
+    setHighlightedIndex(-1)
+    navigate(`/timeline/${result.eraSlug}?exhibit=${encodeURIComponent(result.dinosaurId ?? '')}`)
+  }
+
+  const goToSearchPage = (value) => {
+    setIsOpen(false)
+    navigate(`/search?q=${encodeURIComponent(value)}`)
+  }
+
+  const handleKeyDown = (event, currentValue) => {
+    if (!isOpen || suggestions.length === 0) {
+      if (event.key === 'Enter' && currentValue.trim()) {
+        goToSearchPage(currentValue)
+      }
+      return
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setHighlightedIndex((prev) => Math.min(prev + 1, suggestions.length - 1))
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      setHighlightedIndex((prev) => Math.max(prev - 1, 0))
+    } else if (event.key === 'Enter') {
+      event.preventDefault()
+      if (highlightedIndex >= 0) {
+        selectSuggestion(suggestions[highlightedIndex])
+      } else if (currentValue.trim()) {
+        goToSearchPage(currentValue)
+      }
+    } else if (event.key === 'Escape') {
+      setIsOpen(false)
+      setHighlightedIndex(-1)
+    }
+  }
+
+  return {
+    suggestions,
+    isOpen,
+    highlightedIndex,
+    setIsOpen,
+    setHighlightedIndex,
+    fetchSuggestions,
+    selectSuggestion,
+    goToSearchPage,
+    handleKeyDown,
+  }
 }
