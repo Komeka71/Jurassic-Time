@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import api from "../../../api/axios"; // adjust to match this file's depth from src/
 import {
   ArrowDown,
   ScrollText,
@@ -9,10 +10,6 @@ import {
 } from "lucide-react";
 
 export default function ArchiveHero() {
-  const API =
-    import.meta.env.VITE_API_URL ||
-    `${import.meta.env.VITE_API_URL}`;
-
   const [statsData, setStatsData] = useState({
     archivedFossils: "--",
     verifiedPercent: "--",
@@ -23,12 +20,7 @@ export default function ArchiveHero() {
   useEffect(() => {
     async function loadStats() {
       try {
-        const res = await fetch(
-          `${API}/discoveries/archive-stats`
-        );
-
-        const data = await res.json();
-
+        const { data } = await api.get(`/discoveries/archive-stats`);
         setStatsData(data);
       } catch (err) {
         console.error(err);
@@ -43,7 +35,7 @@ export default function ArchiveHero() {
     }
 
     loadStats();
-  }, [API]);
+  }, []);
 
   const stats = [
     {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../../../api/axios"; // adjust to match this file's depth from src/
 
 import VerificationHero from "./VerificationHero";
 import VerificationTimeline from "./VerificationTimeline";
@@ -11,11 +12,7 @@ export default function VerificationPipeline() {
   useEffect(() => {
     async function fetchDiscovery() {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/discoveries/latest` //ll
-        );
-
-        const data = await res.json();
+        const { data } = await api.get(`/discoveries/latest`);
 
         if (data.success && data.discoveries.length > 0) {
           setDiscovery(data.discoveries[0]);

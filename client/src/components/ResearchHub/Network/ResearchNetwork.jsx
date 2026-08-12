@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../api/axios";
 import {
   Activity,
   ArrowUpRight,
@@ -88,10 +88,10 @@ export default function ResearchNetwork() {
     const fetchAll = async () => {
       const [statsResult, activityResult, contributorResult, healthResult] =
         await Promise.allSettled([
-          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/network-stats`), //ll
-          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/activity`),
-          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/top-contributors`),
-          axios.get(`${import.meta.env.VITE_API_URL}/discoveries/network-health`),
+          api.get(`/discoveries/network-stats`),
+          api.get(`/discoveries/activity`),
+          api.get(`/discoveries/top-contributors`),
+          api.get(`/discoveries/network-health`),
         ]);
 
       if (statsResult.status === "fulfilled") {

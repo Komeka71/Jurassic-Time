@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../api/axios"; // adjust to match this file's depth from src/
 
 import { mapPin } from "../../../utils/mapPin";
 import MapTooltip from "./MapTooltip";
@@ -38,10 +38,6 @@ const statusStyles = {
 };
 
 export default function ExpeditionPins() {
-  const API =
-    import.meta.env.VITE_API_URL ||
-    `${import.meta.env.VITE_API_URL}`; //ll
-
   const [hovered, setHovered] = useState(null);
   const [sites, setSites] = useState([]);
 
@@ -51,9 +47,7 @@ export default function ExpeditionPins() {
 
   async function fetchSites() {
     try {
-      const { data } = await axios.get(
-        `${API}/discoveries`
-      );
+      const { data } = await api.get(`/discoveries`);
 
       setSites(
         (data.discoveries || []).map(mapPin)

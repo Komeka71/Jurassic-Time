@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../api/axios"; // adjust to match this file's depth from src/
 
 import {
   BookOpen,
@@ -9,10 +9,6 @@ import {
 } from "lucide-react";
 
 export default function ArchiveStats() {
-  const API =
-    import.meta.env.VITE_API_URL ||
-    `${import.meta.env.VITE_API_URL}`;
-
   const [stats, setStats] = useState({
     discoveries: "--",
     sites: "--",
@@ -26,9 +22,7 @@ export default function ArchiveStats() {
 
   async function fetchStats() {
     try {
-      const { data } = await axios.get(
-        `${API}/discoveries`
-      );
+      const { data } = await api.get(`/discoveries`);
 
       const discoveries = data.discoveries;
 

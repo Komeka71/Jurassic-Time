@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Microscope } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useGuide } from "../../../context/GuideContext";
-import axios from "axios";
+import api from "../../../api/axios"; // adjust to match this file's depth from src/
 import { mapDiscovery } from "../../../utils/mapDiscovery";
 import DiscoveryCard from "./DiscoveryCard";
 import DiscoveryDrawer from "./DiscoveryDrawer";
@@ -25,13 +25,7 @@ const {
 } = useGuide();
 async function fetchDiscoveries() {
   try {
-   const API =
-  import.meta.env.VITE_API_URL ||
-  `${import.meta.env.VITE_API_URL}`; //ll
-
-const { data } = await axios.get(
-  `${API}/discoveries/latest`
-);
+    const { data } = await api.get(`/discoveries/latest`);
     setDiscoveries(
       data.discoveries.map(mapDiscovery)
     );
