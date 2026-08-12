@@ -1,7 +1,16 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://paleora.onrender.com/api/:path*" },
-    { "source": "/uploads/:path*", "destination": "https://paleora.onrender.com/uploads/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://paleora.onrender.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://paleora.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }

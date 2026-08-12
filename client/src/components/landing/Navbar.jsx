@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+// import { useSearchAutocomplete } from "../../../../server/services/useSearchAutocomplete";
+import { useSearchAutocomplete } from "../../hooks/useSearchAutocomplete";
 import { Search } from "lucide-react";
 
 import {
@@ -41,8 +43,21 @@ export default function Navbar() {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
-  const [search, setSearch] = useState("");
   const navigate = useNavigate();
+
+  // --- Search autocomplete (shared logic with /search page) ---
+  const inputRef = useRef(null);
+  const searchContainerRef = useRef(null);
+  const {
+    suggestions,
+    isOpen,
+    highlightedIndex,
+    setIsOpen,
+    setHighlightedIndex,
+    fetchSuggestions,
+    selectSuggestion,
+    handleKeyDown,
+  } = useSearchAutocomplete();
 
   const handleMiniGamesClick = () => {
     if (location.pathname === "/") {
@@ -496,16 +511,25 @@ export default function Navbar() {
               )}
             </nav>
 
-            <div className="relative w-full max-w-md">
+            {/* Search with autocomplete */}
+            <div className="relative w-full max-w-md" ref={searchContainerRef}>
               <Search
                 size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8ea672]"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8ea672] z-10"
               />
               <input
+                ref={inputRef}
                 type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                autoComplete="off"
+                onChange={(e) => fetchSuggestions(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, inputRef.current.value)}
+                onFocus={(e) => fetchSuggestions(e.target.value)}
+                onBlur={() => setTimeout(() => setIsOpen(false), 120)}
                 placeholder="Search dinosaurs, fossils, anatomy..."
+                role="combobox"
+                aria-expanded={isOpen}
+                aria-autocomplete="list"
+                aria-controls="navbar-search-suggestions"
                 className="
                   w-full rounded-full border border-green-500/15
                   bg-[#111814]/80 py-3 pl-12 pr-5 text-white
@@ -514,6 +538,57 @@ export default function Navbar() {
                   focus:border-green-400/40 focus:ring-4 focus:ring-green-500/10
                 "
               />
+
+              {isOpen && (
+                <ul
+                  id="navbar-search-suggestions"
+                  role="listbox"
+                  className="
+                    absolute left-0 right-0 top-full mt-2 z-[10000]
+                    max-h-80 overflow-y-auto
+                    rounded-2xl border border-green-500/15
+                    bg-[#0d130f]/95 backdrop-blur-xl
+                    shadow-[0_10px_40px_rgba(0,0,0,.5)]
+                    py-2
+                  "
+                >
+                  {suggestions.map((result, index) => (
+                    <li
+                      key={result.dinosaurId ?? result.title}
+                      role="option"
+                      aria-selected={index === highlightedIndex}
+                      onMouseEnter={() => setHighlightedIndex(index)}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        selectSuggestion(result);
+                      }}
+                      className={`
+                        flex items-center justify-between gap-3
+                        px-4 py-2.5 cursor-pointer text-sm
+                        ${
+                          index === highlightedIndex
+                            ? "bg-green-500/10 text-green-300"
+                            : "text-white/80 hover:bg-white/[0.05]"
+                        }
+                      `}
+                    >
+                      <span className="flex flex-col">
+                        <span className="font-medium">{result.title}</span>
+                        {result.subtitle && (
+                          <span className="text-xs text-white/40">
+                            {result.subtitle}
+                          </span>
+                        )}
+                      </span>
+                      {result.era && (
+                        <span className="text-[10px] uppercase tracking-wide text-[#8ea672]">
+                          {result.era}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
