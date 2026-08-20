@@ -48,7 +48,7 @@ useEffect(() => {
       if (!user) return;
 
       const res = await fetch(
-        `${BASE_URL}/daily/${encodeURIComponent(user.username)}`
+        `${BASE_URL}/api/daily/${encodeURIComponent(user.username)}`
       );
 
       if (!res.ok) {
@@ -79,7 +79,7 @@ useEffect(() => {
   async function claimReward(title) {
     try {
       const res = await fetch(
-        `${BASE_URL}/daily/${encodeURIComponent(user.username)}/claim`,
+        `${BASE_URL}/api/daily/${encodeURIComponent(user.username)}/claim`,
         {
           method: "PATCH",
           headers: {
