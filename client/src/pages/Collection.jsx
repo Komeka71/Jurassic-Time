@@ -318,7 +318,7 @@ export default function Collection() {
 }
 
 const response = await fetch(
-  `${API_URL}/user/${user.username}`
+  `${API_URL}/api/user/${user.username}`
 );
 
         if (!response.ok) {
@@ -417,7 +417,7 @@ const response = await fetch(
       try {
         for (const dinosaur of missingDinosaurs) {
           const response = await fetch(
-            `${API_URL}/collection/${user.username}/discover`,
+            `${API_URL}/api/collection/${user.username}/discover`,
             {
               method: "POST",
               headers: {
