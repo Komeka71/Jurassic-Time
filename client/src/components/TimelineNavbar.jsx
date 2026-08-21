@@ -25,7 +25,6 @@ function TimelineNavbar() {
       <Link
   className="timeline-navbar__search-btn"
   to="/search"
-  title="Search"
   onClick={(event) => {
     if (onSearchPage) event.preventDefault()
   }}
