@@ -19,13 +19,6 @@ import LeaderboardHero from "../leaderboard/LeaderboardHero";
 import Podium from "../leaderboard/Podium";
 import LeaderboardRow from "../leaderboard/LeaderboardRow";
 
-// import leaderboardData from "../data/leaderboardData";
-
-// import {
-//   getPlayerProgress,
-//   getPlayerRank,
-// } from "../utils/playerProgress";
-
 /*
 ========================================
 FILTERS
@@ -37,6 +30,7 @@ const leaderboardFilters = [
   "Weekly",
   "Streak",
 ];
+
 function getRankTitle(xp) {
   if (xp >= 5000) return "Legend";
   if (xp >= 3000) return "Master";
@@ -44,6 +38,7 @@ function getRankTitle(xp) {
   if (xp >= 500) return "Ranger";
   return "Beginner";
 }
+
 /*
 ========================================
 LEADERBOARD
@@ -56,13 +51,14 @@ export default function Leaderboard() {
   STATE
   ========================================
   */
-const { user } = useAuth();
+  const { user } = useAuth();
 
-const [player, setPlayer] = useState({
-  level: 1,
-  xp: 0,
-  coins: 0,
-});
+  const [player, setPlayer] = useState({
+    level: 1,
+    xp: 0,
+    coins: 0,
+  });
+
   const [menuOpen, setMenuOpen] =
     useState(false);
 
@@ -71,55 +67,65 @@ const [player, setPlayer] = useState({
 
   const [searchQuery, setSearchQuery] =
     useState("");
-const [leaderboardData, setLeaderboardData] =
-  useState([]);
+
+  const [leaderboardData, setLeaderboardData] =
+    useState([]);
+
   useEffect(() => {
-  const loadLeaderboard = async () => {
-    try {
-      const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/leaderboard` //ll
-);
+    const loadLeaderboard = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/leaderboard`
+        );
 
-      const data = await response.json();
+        if (!response.ok) {
+          throw new Error(`Leaderboard request failed: ${response.status}`);
+        }
 
-      const formatted = data.map((player) => ({
-  id: player.username,
-  name: player.username,
-  avatar: "🦖",
-title: getRankTitle(player.xp || 0),
-  xp: player.xp || 0,
-  streak: player.dailyStreak || 0,
-  discoveries:
-    player.discoveredDinosaurs?.length || 0,
-  level: player.level || 1,
-}));
+        const data = await response.json();
 
-      setLeaderboardData(formatted);
-    } catch (err) {
-      console.error(
-        "Failed to load leaderboard",
-        err
-      );
+        // Guard against a non-array response (error payload, HTML 404
+        // page, etc.) so a bad response degrades to an empty leaderboard
+        // instead of crashing the whole page with data.map is not a function.
+        if (!Array.isArray(data)) {
+          console.error("Leaderboard response was not an array:", data);
+          setLeaderboardData([]);
+          return;
+        }
+
+        const formatted = data.map((player) => ({
+          id: player.username,
+          name: player.username,
+          avatar: "🦖",
+          title: getRankTitle(player.xp || 0),
+          xp: player.xp || 0,
+          streak: player.dailyStreak || 0,
+          discoveries:
+            player.discoveredDinosaurs?.length || 0,
+          level: player.level || 1,
+        }));
+
+        setLeaderboardData(formatted);
+      } catch (err) {
+        console.error(
+          "Failed to load leaderboard",
+          err
+        );
+        setLeaderboardData([]);
+      }
+    };
+
+    loadLeaderboard();
+  }, []);
+
+  useEffect(() => {
+    async function loadPlayer() {
+      const progress = await getUserProgress();
+      setPlayer(progress);
     }
-  };
 
-  loadLeaderboard();
-}, []);
-useEffect(() => {
-  async function loadPlayer() {
-    const progress = await getUserProgress();
-    setPlayer(progress);
-  }
-
-  loadPlayer();
-}, []);
-  /*
-  ========================================
-  CURRENT PLAYER
-  ========================================
-  */
-
-
+    loadPlayer();
+  }, []);
 
   /*
   ========================================
@@ -127,15 +133,16 @@ useEffect(() => {
   ========================================
   */
 
-const currentPlayer = useMemo(() => {
-  if (!user) return null;
+  const currentPlayer = useMemo(() => {
+    if (!user) return null;
 
-  return (
-    leaderboardData.find(
-      (p) => p.name === user.username
-    ) || null
-  );
-}, [leaderboardData, user]);
+    return (
+      leaderboardData.find(
+        (p) => p.name === user.username
+      ) || null
+    );
+  }, [leaderboardData, user]);
+
   /*
   ========================================
   SORT LEADERBOARD
@@ -145,14 +152,14 @@ const currentPlayer = useMemo(() => {
   const rankedPlayers = useMemo(() => {
     const players = [...leaderboardData];
 
-if (
-  currentPlayer &&
-  !players.some(
-    (player) => player.id === currentPlayer.id
-  )
-) {
-  players.push(currentPlayer);
-}
+    if (
+      currentPlayer &&
+      !players.some(
+        (player) => player.id === currentPlayer.id
+      )
+    ) {
+      players.push(currentPlayer);
+    }
 
     if (activeFilter === "Weekly") {
       return players.sort(
@@ -174,7 +181,7 @@ if (
       (a, b) =>
         (b.xp || 0) - (a.xp || 0)
     );
-}, [activeFilter, currentPlayer, leaderboardData]);
+  }, [activeFilter, currentPlayer, leaderboardData]);
 
   /*
   ========================================
@@ -182,14 +189,14 @@ if (
   ========================================
   */
 
-const currentPlayerRank =
-  currentPlayer
-    ? rankedPlayers.findIndex(
-        (leaderboardPlayer) =>
-          leaderboardPlayer.id ===
-          currentPlayer.id
-      ) + 1
-    : 0;
+  const currentPlayerRank =
+    currentPlayer
+      ? rankedPlayers.findIndex(
+          (leaderboardPlayer) =>
+            leaderboardPlayer.id ===
+            currentPlayer.id
+        ) + 1
+      : 0;
 
   /*
   ========================================
@@ -211,11 +218,11 @@ const currentPlayerRank =
   */
 
   const tablePlayers =
-  searchQuery.trim().length > 0
-    ? searchedPlayers
-    : rankedPlayers.length > 3
-      ? rankedPlayers.slice(3)
-      : rankedPlayers;
+    searchQuery.trim().length > 0
+      ? searchedPlayers
+      : rankedPlayers.length > 3
+        ? rankedPlayers.slice(3)
+        : rankedPlayers;
 
   /*
   ========================================
@@ -453,15 +460,16 @@ const currentPlayerRank =
       >
         {/* HERO */}
 
-       <LeaderboardHero
-  playerRank={currentPlayerRank}
-  playerXp={player.xp}
-  playerStreak={currentPlayer?.streak || 0}
-  totalExplorers={rankedPlayers.length}
-/>
+        <LeaderboardHero
+          playerRank={currentPlayerRank}
+          playerXp={player.xp}
+          playerStreak={currentPlayer?.streak || 0}
+          totalExplorers={rankedPlayers.length}
+        />
+
         {/* PODIUM */}
 
-      <Podium players={rankedPlayers} />
+        <Podium players={rankedPlayers} />
 
         {/* LEADERBOARD SECTION */}
 
@@ -750,9 +758,9 @@ const currentPlayerRank =
                     rank={actualRank}
                     index={index}
                     isCurrentPlayer={
-  currentPlayer &&
-  leaderboardPlayer.id === currentPlayer.id
-}
+                      currentPlayer &&
+                      leaderboardPlayer.id === currentPlayer.id
+                    }
                   />
                 );
               }
