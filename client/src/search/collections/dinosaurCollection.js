@@ -19,10 +19,15 @@ registerSearchCollection({
   searchFields: ['name', 'scientificName', 'era'],
   
  
+  // getItems: async () => {
+  //   const { data } = await api.get('/v1/dinosaurs')
+  //   return data.data
+  // },
+
   getItems: async () => {
-    const { data } = await api.get('/v1/dinosaurs')
-    return data.data
-  },
+  const { data } = await api.get('/v1/dinosaurs', { params: { limit: 100 } })
+  return data.data
+},
 
   toResult: (dinosaur) => ({
     id: `dinosaurs:${dinosaur.id}`,
