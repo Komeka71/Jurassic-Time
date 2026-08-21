@@ -1,6 +1,9 @@
+import { useEffect, useRef, useState } from "react";
 import AnswerCard from "./AnswerCard";
 import FactCard from "./FactCard";
 import StoryBanner from "./StoryBanner";
+
+const QUESTION_TIME = 25; // seconds per question
 
 const themes = {
   1: {
@@ -82,6 +85,56 @@ export default function QuestionCard({
   nextQuestion,
 }) {
   const theme = themes[level] || themes[1];
+
+  /*
+  ========================================
+  TIMER
+  ========================================
+  Counts down from QUESTION_TIME every time a
+  new question loads (tracked via currentIndex).
+  Stops counting once the question is submitted.
+  Auto-submits when it hits 0 so a stalled quiz
+  can't hang forever.
+  */
+
+  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME);
+  const intervalRef = useRef(null);
+  const onSubmitRef = useRef(onSubmit);
+
+  // keep latest onSubmit without re-triggering the timer effect
+  useEffect(() => {
+    onSubmitRef.current = onSubmit;
+  }, [onSubmit]);
+
+  // reset timer whenever a new question appears
+  useEffect(() => {
+    setTimeLeft(QUESTION_TIME);
+  }, [currentIndex]);
+
+  // run / stop the countdown
+  useEffect(() => {
+    if (submitted) {
+      clearInterval(intervalRef.current);
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current);
+          // time's up — auto-submit whatever (or nothing) is selected
+          onSubmitRef.current?.();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, [currentIndex, submitted]);
+
+  const timerLow = timeLeft <= 10;
+  const timerCritical = timeLeft <= 5;
 
   return (
     <div
@@ -181,19 +234,27 @@ export default function QuestionCard({
         </div>
 
         <div
-          className="
+          className={`
             px-3
             py-1.5
             rounded-full
-            bg-orange-500/10
             border
-            border-orange-500/30
-            text-orange-300
             text-sm
             font-medium
-          "
+            transition-colors
+            duration-300
+            ${
+              submitted
+                ? "bg-white/5 border-white/10 text-gray-400"
+                : timerCritical
+                ? "bg-red-500/20 border-red-500/40 text-red-300 animate-pulse"
+                : timerLow
+                ? "bg-orange-500/15 border-orange-500/35 text-orange-300"
+                : "bg-orange-500/10 border-orange-500/30 text-orange-300"
+            }
+          `}
         >
-          ⏱ 25 sec
+          ⏱ {timeLeft} sec
         </div>
 
       </div>
