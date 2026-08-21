@@ -1,4 +1,4 @@
-.info-panel {
+/* .info-panel {
   display: flex;
   flex-direction: column;
   padding: clamp(20px, 2.2vw, 28px);
@@ -19,8 +19,35 @@
      way, so it keeps running continuously regardless of which dinosaur
      is showing. Blur/background here are never animated — always
      "finished glass" from the first frame. */
+ /* animation: info-panel-float 6s ease-in-out infinite alternate;
+} */
+
+
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.2vw, 28px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+
+  background: linear-gradient(
+    165deg,
+    rgba(27, 39, 69, 0.18) 0%,
+    rgba(8, 13, 26, 0.22) 100%
+  );
+
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+
+  box-shadow:
+    0 0 0 1px var(--era-primary-dim),
+    0 24px 48px -34px rgba(0, 0, 0, 0.35),
+    0 0 40px -8px var(--era-glow);
+
   animation: info-panel-float 6s ease-in-out infinite alternate;
 }
+
 
 @keyframes info-panel-float {
   from {
