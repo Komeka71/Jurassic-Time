@@ -12,7 +12,7 @@ function TimelineNavbar() {
 
   return (
     <nav className="timeline-navbar" aria-label="Primary">
-      <Link
+      {/* <Link
         className="timeline-navbar__search-btn"
         to="/search"
         onClick={(event) => {
@@ -21,7 +21,18 @@ function TimelineNavbar() {
         aria-label="Search"
       >
         🔍
-      </Link>
+      </Link> */}
+      <Link
+  className="timeline-navbar__search-btn"
+  to="/search"
+  title="Search"
+  onClick={(event) => {
+    if (onSearchPage) event.preventDefault()
+  }}
+  aria-label="Search"
+>
+  🔍
+</Link>
     </nav>
   )
 }
